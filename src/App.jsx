@@ -2,6 +2,7 @@ import "./App.css";
 import NavBar from "./components/NavBar.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RecoverPassword from "./pages/RecoverPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 /*
 
@@ -29,6 +30,7 @@ function App() {
           }
         />
         <Route path="/recover-password" element={<RecoverPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );
