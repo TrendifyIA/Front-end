@@ -1,15 +1,20 @@
 import './App.css'
 import NavBar from './components/NavBar.jsx'
+import { Routes, Route, Link } from 'react-router-dom';
+import TerminosYCond from './components/TerminosYCond.jsx';
 
 function App() {
-
   return (
-    <>
-      <h1 class="text-3xl font-bold underline text-center">
-        Hola mundo Trendify
-      </h1>
-    </>
-  )
+    <div>
+      <nav class="bg-blue-900 text-white p-4 flex gap-4">
+        <Link to="/terminos" class="hover:underline">Términos y Condiciones</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/terminos" element={<TerminosYCond />} />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;
