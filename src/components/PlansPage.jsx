@@ -58,7 +58,7 @@ const PlansPage = () => {
   return (
     <div className="bg-primary-500 min-h-screen py-12">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold text-center text-white mb-16">
+        <h1 className="text-6xl font-bold text-center text-white mb-16">
           Elije el plan ideal
         </h1>
 

@@ -10,7 +10,7 @@ const PlanCard = ({ title, price, description, features, excludedFeatures = [], 
       }`}
     >
       <h3 className={`text-2xl font-bold ${
-        isPopular ? "text-blue-800" : "text-blue-700"
+        isPopular ? "text-4xl text-blue-800" : "text-4xl text-blue-700"
       }`}>
         {title}
       </h3>
