@@ -1,15 +1,14 @@
-import './App.css'
-import NavBar from './components/NavBar.jsx'
+import React from "react";
+import Servicios from "./components/Servicios";
+import Equipo from "./components/Equipo";
 
 function App() {
-
   return (
-    <>
-      <h1 class="text-3xl font-bold underline text-center">
-        Hola mundo Trendify
-      </h1>
-    </>
-  )
+    <div>
+      <Servicios />
+      <Equipo />
+    </div>
+  );
 }
 
-export default App
+export default App;
