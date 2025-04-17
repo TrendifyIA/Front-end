@@ -17,7 +17,7 @@ const FAQSection = () => {
   ];
 
   return (
-    <div className="bg-blue-50 rounded-xl p-8 my-12">
+    <div className="bg-blue-200 rounded-xl p-8 my-12">
       <h2 className="text-2xl font-bold text-center text-blue-800 mb-8">Preguntas frecuentes</h2>
       <div className="space-y-6 max-w-2xl mx-auto">
         {faqs.map((faq, index) => (

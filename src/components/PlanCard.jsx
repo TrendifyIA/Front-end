@@ -6,7 +6,7 @@ const PlanCard = ({ title, price, description, features, excludedFeatures = [], 
       className={`rounded-xl p-8 shadow-lg ${
         isPopular 
           ? "bg-white"
-          : "bg-blue-50"
+          : "bg-blue-200"
       }`}
     >
       <h3 className={`text-2xl font-bold ${
