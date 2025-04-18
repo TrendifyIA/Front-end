@@ -1,32 +1,35 @@
 import React from 'react'
-import Logo from '../assets/images/Trendify.svg'
+import Logo from '../assets/images/Trendify.png'
+import PrimaryButton from './PrimaryButton.jsx'
+import { Link } from 'react-router-dom'
 
 const NavBar = () => {
   return (
-    <div>
-      <header>
-        <nav class="bg-primary-500 flex justify-between items-center w-full font-family p-4">
-            <div>
+    <div class="w-full fixed">
+      <header class="bg-primary-500 flex w-full justify-center">
+        <nav class="bg-primary-500 flex justify-between items-center w-[95%] font-family p-4">
+            <div class="cursor-pointer">
                 <img src={Logo} alt="logo" />
             </div>
             <div class="">
-                <ul class="flex items-center gap-[4vw]">
+                <ul class="flex items-center gap-[4vw] [&>li:hover]:scale-105">
                     <li>
-                        <a href="#" class="text-white">Home</a>
+                        <Link to="/" class="text-white">Home</Link>
                     </li>
                     <li>
-                        <a href="#" class="text-white">Planes</a>
+                        <Link to="/planes" class="text-white">Planes</Link>
                     </li>
                     <li>
-                        <a href="#" class="text-white">Servicios</a>
+                        <Link to="/servicios" class="text-white">Servicios</Link>
                     </li>
                     <li>
-                        <a href="#" class="text-white">Nosotros</a>
+                        <Link to="/nosotros" class="text-white">Nosotros</Link>
                     </li>
                 </ul>
             </div>
-            <div>
-                <button class="bg-amber-400 text-white px-5 py-2 rounded-b-full">Iniciar Sesion</button>
+            <div class="flex gap-[1vw]">
+                <PrimaryButton texto="Inicia Sesión" ></PrimaryButton>
+                <PrimaryButton texto="Regístrate" ></PrimaryButton> 
             </div>
         </nav>
       </header>
