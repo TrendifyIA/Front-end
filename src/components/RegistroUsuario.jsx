@@ -57,13 +57,6 @@ const Registro = () => {
             </label>
             <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Registrarme</button>
           </form>
-
-          {/* Iconos de inicio de sesión */}
-          <div className="flex justify-around mt-6">
-            <img src="https://img.icons8.com/color/48/microsoft.png" alt="Microsoft" className="h-8 w-8" />
-            <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google" className="h-8 w-8" />
-            <img src="https://img.icons8.com/color/48/linkedin.png" alt="LinkedIn" className="h-8 w-8" />
-          </div>
         </div>
       </div>
     </div>
