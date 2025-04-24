@@ -12,6 +12,7 @@ import Nosotros from "./pages/Nosotros.jsx";
 import Dashboard from "./pages/users/Dashboard.jsx";
 import RecuperarPassword from "./pages/RecuperarPassword.jsx";
 import RestablecerPassword from "./pages/RestablecerPassword.jsx";
+import Perfil from "./pages/users/Perfil.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -40,7 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <RecuperarPassword />, // Ruta para la página de restablecer contraseña
-  },
+  },{
+    path: "/perfil",
+    element: <Perfil />
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(
