@@ -1,14 +1,16 @@
-import './App.css'
-import NavBar from './components/NavBar.jsx'
+import NavBar from './components/NavBar.jsx';
+import SideBar from './components/SideBar.jsx';
+import { Outlet } from 'react-router-dom'; //Permite renderizar páginas 
 
 function App() {
 
   return (
-    <>
-      <h1 class="text-3xl font-bold underline text-center">
-        Hola mundo Trendify
-      </h1>
-    </>
+    <div class="flex flex-col h-screen">
+      <SideBar></SideBar>
+      <main>
+        <Outlet />
+      </main>
+    </div>
   )
 }
 

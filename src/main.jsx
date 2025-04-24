@@ -12,12 +12,9 @@ import Nosotros from "./pages/Nosotros.jsx";
 import Dashboard from "./pages/users/Dashboard.jsx";
 import RecuperarPassword from "./pages/RecuperarPassword.jsx";
 import RestablecerPassword from "./pages/RestablecerPassword.jsx";
-import Notificaciones from "./pages/users/Notificaciones.jsx";
-import Perfil from "./pages/users/Perfil.jsx";
-
 
 const router = createBrowserRouter([
-  // Arreglo que contiene las rutas de la app
+  // Arreglo que continene las rutas de la app
   {
     path: "/",
     element: <PublicLayout />,
@@ -33,8 +30,7 @@ const router = createBrowserRouter([
     element: <UsersLayout />,
     children: [
       { index: true, element: <Dashboard /> }, // Ruta por defecto
-      { path: "perfil", element: <Perfil /> }, // Ruta para la página de perfil
-      { path: "notificaciones", element: <Notificaciones /> }, // Ruta para la página de notificaciones
+      {},
     ],
   },
   {
