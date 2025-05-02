@@ -1,9 +1,6 @@
-import './App.css'
-import NavBar from './components/NavBar.jsx' 
-import { useState } from 'react';
-import Encuestas from './components/Encuestas';
-import FolderEncuesta from './components/FolderEncuesta';
-
+import NavBar from './components/NavBar.jsx';
+import SideBar from './components/SideBar.jsx';
+import { Outlet } from 'react-router-dom'; //Permite renderizar páginas 
 
 function App() {
   const [encuestas, setEncuestas] = useState([]);
@@ -33,22 +30,13 @@ function App() {
   };
 
   return (
-    <>
-      <NavBar/>
-      {encuestaActiva ? (
-        <FolderEncuesta
-          encuestaInicial={encuestaActiva}
-          onTerminarEncuesta={guardarEncuesta}
-        />
-      ) : (
-        <Encuestas
-          encuestas={encuestas}
-          onAgregarEncuesta={agregarNuevaEncuesta}
-          onEditarEncuesta={editarEncuesta}
-        />
-      )}
-    </>
-  );
+    <div class="flex flex-col h-screen">
+      <SideBar></SideBar>
+      <main>
+        <Outlet />
+      </main>
+    </div>
+  )
 }
 
 export default App;
