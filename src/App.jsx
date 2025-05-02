@@ -1,14 +1,17 @@
-import React from "react";
-import Servicios from "./components/Servicios";
-import Equipo from "./components/Equipo";
+import NavBar from './components/NavBar.jsx';
+import SideBar from './components/SideBar.jsx';
+import { Outlet } from 'react-router-dom'; //Permite renderizar páginas 
 
 function App() {
+
   return (
-    <div>
-      <Servicios />
-      <Equipo />
+    <div class="flex flex-col h-screen">
+      <SideBar></SideBar>
+      <main>
+        <Outlet />
+      </main>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
