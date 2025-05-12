@@ -1,12 +1,15 @@
-import './App.css'
-import NavBar from './components/NavBar.jsx'
-import Empresa from './components/Empresa.jsx'
+import NavBar from './components/NavBar.jsx';
+import SideBar from './components/SideBar.jsx';
+import { Outlet } from 'react-router-dom'; //Permite renderizar páginas 
 
 function App() {
 
   return (
-    <div class="bg-neutral-200 h-full w-full p-5">
-      <Empresa></Empresa>
+    <div class="flex flex-col h-screen">
+      <SideBar></SideBar>
+      <main>
+        <Outlet />
+      </main>
     </div>
   )
 }
