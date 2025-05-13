@@ -18,10 +18,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0A1B44] font-sans">
+    <div className="min-h-screen flex items-center justify-center bg-primary-500 font-sans">
       <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden w-[90%] max-w-5xl">
         {/* Panel izquierdo */}
-        <div className="bg-[#0A1B44] text-white p-8 md:w-1/2 flex flex-col justify-center">
+        <div className="bg-primary-500 text-white p-8 md:w-1/2 flex flex-col justify-center">
           <h1 className="text-5xl font-bold mb-4">¡Hola!</h1>
           <p className="mb-4">Bienvenido a KeySpotting.</p>
           <p className="mb-4">Inicia sesión para poder acceder a la mejor herramienta de tendencias en el mercado.</p>

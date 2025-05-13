@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoKebabHorizontal } from "react-icons/go";
-import PreguntaPopup from './PreguntaPopup'; 
+import PreguntaPopup from '../../components/PreguntaPopup'; 
 import { LuPencil } from 'react-icons/lu';
 
 function FolderEncuesta({ encuestaInicial, onTerminarEncuesta }) {

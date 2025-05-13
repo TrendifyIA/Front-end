@@ -5,7 +5,7 @@ const PublicLayout = () => {
   return (
     <div class="flex flex-col h-screen">
       <NavBar></NavBar>
-      <main class="pt-18 h-full overflow-y-auto">
+      <main class="pt-16 h-full overflow-y-auto">
         <Outlet />
       </main>
     </div>
