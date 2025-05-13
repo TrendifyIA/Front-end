@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import Illustration from "../assets/images/landing1.png";
 import ChartIcon from "../assets/images/landing2.png";
 import TrendIcon from "../assets/images/landing3.png";
@@ -10,8 +9,6 @@ import Illustration2 from "../assets/images/landing6.png";
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[#0c1f57] flex flex-col font-family">
-      <NavBar />
-
       <div className="flex flex-1 items-center justify-center px-6">
         <div className="flex flex-col md:flex-row items-center justify-between max-w-8xl w-full mx-auto py-16">
           <div className="text-white md:w-1/2 mb-8 md:mb-0">

@@ -4,15 +4,18 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"; // Impor
 import "./index.css";
 import PublicLayout from "./pages/layouts/PublicLayout.jsx"; // Importación de los layouts
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
+import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import App from "./App.jsx";
-import Home from "./pages/Home.jsx";
-import Planes from "./pages/Planes.jsx";
+import Landing from "./pages/LandingPage.jsx";
+import Planes from "./pages/PlansPage.jsx";
 import Servicios from "./pages/Servicios.jsx";
-import Nosotros from "./pages/Nosotros.jsx";
+import Nosotros from "./pages/AboutUsPage.jsx";
 import Dashboard from "./pages/users/Dashboard.jsx";
-import RecuperarPassword from "./pages/RecuperarPassword.jsx";
-import RestablecerPassword from "./pages/RestablecerPassword.jsx";
-import Perfil from "./pages/users/Perfil.jsx";
+//import RecuperarPassword from "./pages/RecuperarPassword.jsx";
+//import RestablecerPassword from "./pages/RestablecerPassword.jsx";
+//import Perfil from "./pages/users/Perfil.jsx";
+import Registro from "./pages/RegistroUsuario.jsx";
+import Login from "./pages/Login.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -20,7 +23,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <PublicLayout />,
     children: [
-      { index: true, element: <Home /> }, // Ruta por defecto
+      { index: true, element: <Landing /> }, // Ruta por defecto
       { path: "planes", element: <Planes /> }, // Ruta para la página de planes
       { path: "servicios", element: <Servicios /> }, // Ruta para la página de servicios
       { path: "nosotros", element: <Nosotros /> }, // Ruta para la página de nosotros
@@ -35,15 +38,12 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/recuperar-password",
-    element: <RestablecerPassword />, // Ruta para la página de recuperar contraseña
-  },
-  {
-    path: "/reset-password",
-    element: <RecuperarPassword />, // Ruta para la página de restablecer contraseña
-  },{
-    path: "/perfil",
-    element: <Perfil />
+    path: "/simple",
+    element: <SimpleLayout />,
+    children: [
+      { path: "registro", element: <Registro /> }, // Ruta por defecto
+      { path: "login", element: <Login /> },
+    ]
   }
 ]);
 
