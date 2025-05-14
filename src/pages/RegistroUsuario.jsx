@@ -90,7 +90,13 @@ const handleSubmit = async (e) => {
               <input name="acepta" type="checkbox" checked={form.acepta} onChange={handleChange} className="mr-2" />
               Acepta nuestras <a href="#" className="text-blue-600 underline ml-1">Condiciones de uso</a> y <a href="#" className="text-blue-600 underline ml-1">Política de privacidad</a>
             </label>
-            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Registrarme</button>
+            <CustomeButton
+              texto="Registrarse"
+              onClick={() => console.log('Iniciando sesión...')}
+              tipo='primario'
+              extraClases="text-center w-full"
+              type="submit"
+            />
           </form>
         </div>
       </div>
