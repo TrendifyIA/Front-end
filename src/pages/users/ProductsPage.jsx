@@ -1,4 +1,4 @@
-import { FaEdit, FaTrashAlt, FaSyncAlt } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaSyncAlt, FaCheck } from "react-icons/fa";
 
 const ProductsPage = () => {
   const productos = [
@@ -20,18 +20,16 @@ const ProductsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <h1 className="text-4xl font-extrabold text-gray-900 mb-6">
-        Empresa: Sabritas
-      </h1>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-2xl font-bold text-gray-900 mb-4">Empresa: Sabritas</h1>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-50">
           + Agregar producto
         </button>
       </div>
 
-      <div className="mb-6 flex gap-4">
+      <div className="mb-4 flex gap-4">
         <input
           type="text"
           placeholder="Ingresa un producto o campaña"
@@ -44,20 +42,22 @@ const ProductsPage = () => {
         </select>
       </div>
 
-      <div className="rounded-lg bg-white shadow overflow-x-auto">
-        <table className="w-full table-fixed">
+      <div className="rounded-lg bg-white shadow">
+        <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
-              {["Nombre del producto", "Campaña", "Estatus", "Acciones"].map(
-                (header) => (
-                  <th
-                    key={header}
-                    className="px-6 py-3 text-left text-sm font-semibold text-gray-700"
-                  >
-                    {header}
-                  </th>
-                )
-              )}
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/4">
+                Nombre del producto
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/4">
+                Campaña
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/6">
+                Estatus
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/3">
+                Acciones
+              </th>
             </tr>
           </thead>
 
@@ -68,13 +68,13 @@ const ProductsPage = () => {
                   {campañaIndex === 0 && (
                     <td
                       rowSpan={producto.campañas.length}
-                      className="px-6 py-4 text-sm text-gray-900 font-medium align-middle"
+                      className="px-4 py-3 text-sm text-gray-900 font-medium align-middle w-1/4"
                     >
                       {producto.nombre}
                     </td>
                   )}
 
-                  <td className="px-6 py-4 text-sm text-blue-600 font-medium">
+                  <td className="px-4 py-3 text-sm text-blue-600 font-medium w-1/4">
                     {campaña.nombre === "Añadir" ? (
                       <button className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700">
                         + Añadir
@@ -86,7 +86,7 @@ const ProductsPage = () => {
                     )}
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3 w-1/6">
                     <span
                       className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
                         campaña.estatus === "Procesado"
@@ -98,7 +98,7 @@ const ProductsPage = () => {
                     </span>
                   </td>
 
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3 w-1/3">
                     <div className="flex gap-2">
                       <button className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700">
                         <FaEdit className="text-white" />
@@ -108,10 +108,17 @@ const ProductsPage = () => {
                         <FaTrashAlt className="text-white" />
                         Eliminar
                       </button>
-                      <button className="flex items-center gap-1 bg-gray-400 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-500">
-                        <FaSyncAlt className="text-white" />
-                        Procesar
-                      </button>
+                      {campaña.estatus === "Sin procesar" ? (
+                        <button className="flex items-center gap-1 bg-gray-400 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-500">
+                          <FaSyncAlt className="text-white" />
+                          Procesar
+                        </button>
+                      ) : (
+                        <button className="flex items-center gap-1 bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700">
+                          <FaCheck className="text-white" />
+                          Visualizar
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
