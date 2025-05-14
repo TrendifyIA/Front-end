@@ -8,23 +8,25 @@ const estilos = {
   normal: ""
 };
 
-const CustomButton = ({texto, onClick, tipo = "primario", extraClases = "", ruta}) => {
+const CustomButton = ({ texto, onClick, tipo = "primario", extraClases = "", ruta, type = "button" }) => {
   const navigate = useNavigate();
   const clase = `${estilos[tipo] || estilos.primario} ${extraClases}`;
 
-  const handleClick = () => {
-    if (ruta){
+  const handleClick = (e) => {
+    if (ruta) {
+      e.preventDefault(); // Previene que un botón con type="submit" recargue si es necesario
       navigate(ruta);
-    }else if(onClick){
-      onClick();
+    } else if (onClick) {
+      onClick(e);
     }
   };
-  
+
   return (
-    <div class={clase} onClick={handleClick}>
+    <button type={type} className={clase} onClick={handleClick}>
       {texto}
-    </div>
+    </button>
   );
 };
+
 
 export default CustomButton
