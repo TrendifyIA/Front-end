@@ -55,9 +55,7 @@ const handleSubmit = async (e) => {
           <p className="mb-6">¿Aún no tienes una cuenta? Regístrate dando clic en el siguiente botón.</p>
           <CustomeButton
             texto="Registrarse"
-            onClick={() => console.log('Redirigiendo a registro...')}
             tipo='terciario'
-            // Centrado del texto con tailwind
             extraClases="text-center"
             ruta="/simple/registro"
           />
