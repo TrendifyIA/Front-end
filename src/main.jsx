@@ -10,6 +10,8 @@ import Planes from './pages/Planes.jsx'
 import Servicios from './pages/Servicios.jsx'
 import Nosotros from './pages/Nosotros.jsx'
 import Dashboard from './pages/users/Dashboard.jsx'
+import ResumenTendencias9 from './pages/users/ResumenTendencias9.jsx'
+import DetalleTendencia10 from './pages/users/DetalleTendencia10.jsx'
 
 
 const router = createBrowserRouter([ // Arreglo que continene las rutas de la app
@@ -28,7 +30,8 @@ const router = createBrowserRouter([ // Arreglo que continene las rutas de la ap
     element: <UsersLayout />,
     children: [
       {index: true, element: <Dashboard />}, // Ruta por defecto
-      {}
+      { path: 'resumen-tendencias', element: <ResumenTendencias9 /> },
+      {path: 'detalle-tendencia', element: <DetalleTendencia10 /> }
     ]
   },
 ]) 
