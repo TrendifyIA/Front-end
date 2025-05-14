@@ -17,6 +17,9 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
 
+import Producto from "./pages/users/Producto.jsx";
+import Campana from "./pages/users/Campana.jsx";
+
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
   {
@@ -34,7 +37,8 @@ const router = createBrowserRouter([
     element: <UsersLayout />,
     children: [
       { index: true, element: <Dashboard /> }, // Ruta por defecto
-      {},
+      { path: "producto", element: <Producto /> }, 
+      { path: "campana", element: <Campana /> }, 
     ],
   },
   {
