@@ -76,7 +76,7 @@ const ConfirmacionDatos = () => {
 
             <CustomButton
               texto="Continuar"
-              ruta="ruta que vaya a tener Pablo en la pantalla 6"
+              ruta="users/resumen"
               extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md"
             />
           </div>

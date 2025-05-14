@@ -12,7 +12,7 @@ const Procesando = () => {
     }, 6000);
 
     const timer2 = setTimeout(() => {
-      navigate("ruta que vaya a tener Fer en pantalla 9"); 
+      navigate("users/resumen-tendencias"); 
     }, 8000);
 
     return () => {
