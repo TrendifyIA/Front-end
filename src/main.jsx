@@ -17,6 +17,7 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
 import ProductsPage from "./pages/users/ProductsPage.jsx";
+import SummaryPage from "./pages/users/SummaryPage.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
     element: <UsersLayout />,
     children: [
       { index: true, element: <Dashboard /> }, // Ruta por defecto
-      { path: "productos", element: <ProductsPage /> }, // Ruta para la página de productos
+      { path: "adminproductos", element: <ProductsPage /> }, // Ruta para la página de productos
+      { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
       {},
     ],
   },
