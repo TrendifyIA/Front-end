@@ -1,6 +1,6 @@
-import MissionVision from './MissionVision';
-import Strengths from './Strengths';
-import TeamMember from './TeamMember';
+import MissionVision from '../components/MissionVision';
+import Strengths from '../components/Strengths';
+import TeamMember from '../components/TeamMember';
 
 // Imagenes de los miembros del equipo
 import YaelPhoto from '../assets/images/profile.jpg';

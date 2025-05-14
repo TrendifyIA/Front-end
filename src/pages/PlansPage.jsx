@@ -1,8 +1,8 @@
 import React from "react";
-import PlanCard from "./PlanCard";
-import PaymentMethods from "./PaymentMethods";
-import FAQSection from "./FAQSection";
-import PriceDisclaimer from "./PriceDisclaimer";
+import PlanCard from "../components/PlanCard";
+import PaymentMethods from "../components/PaymentMethods";
+import FAQSection from "../components/FAQSection";
+import PriceDisclaimer from "../components/PriceDisclaimer";
 
 const PlansPage = () => {
   const plans = [
