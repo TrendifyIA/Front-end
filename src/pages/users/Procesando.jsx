@@ -12,7 +12,7 @@ const Procesando = () => {
     }, 6000);
 
     const timer2 = setTimeout(() => {
-      navigate("users/resumen-tendencias"); 
+      navigate("/users/resumen-tendencias"); 
     }, 8000);
 
     return () => {
