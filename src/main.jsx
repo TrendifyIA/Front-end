@@ -16,6 +16,8 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 //import Perfil from "./pages/users/Perfil.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
+import Empresa from "./pages/users/Empresa.jsx";
+import Bienvenida from "./pages/users/Bienvenida.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -34,7 +36,8 @@ const router = createBrowserRouter([
     element: <UsersLayout />,
     children: [
       { index: true, element: <Dashboard /> }, // Ruta por defecto
-      {},
+      { path: "empresa", element: <Empresa /> }, // Ruta para la página de empresa
+      { path: "bienvenida", element: <Bienvenida /> }, // Ruta para la página de bienvenida
     ],
   },
   {
