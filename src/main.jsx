@@ -16,6 +16,8 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 //import Perfil from "./pages/users/Perfil.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
+import ConfirmacionDatos from "./pages/users/ConfirmarDatos.jsx";
+import Procesando from "./pages/users/Procesando.jsx"; 
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -34,6 +36,10 @@ const router = createBrowserRouter([
     element: <UsersLayout />,
     children: [
       { index: true, element: <Dashboard /> }, // Ruta por defecto
+      { path: "confirmacion", element: <ConfirmacionDatos />}, // Ruta para la página de confirmación de datos
+      { path: "procesando", element: <Procesando />}, // Ruta para la página de procesando
+
+
       {},
     ],
   },
