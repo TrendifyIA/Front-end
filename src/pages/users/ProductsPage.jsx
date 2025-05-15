@@ -2,6 +2,7 @@ import { FaEdit, FaTrashAlt, FaSyncAlt, FaCheck } from "react-icons/fa";
 import sabritaslimon from '../../assets/images/sabritaslimon.png';
 import sabritasadobadas from '../../assets/images/sabritasadobadas.png';
 import sabritashabanero from '../../assets/images/sabritashabanero.png';
+import ProductImage from './ProductImage'; // Importa el nuevo componente
 
 const ProductsPage = () => {
   const productos = [
@@ -76,13 +77,13 @@ const ProductsPage = () => {
                       rowSpan={producto.campañas.length}
                       className="px-4 py-3 text-sm text-gray-900 font-medium align-middle w-1/4"
                     >
-                      <div className="flex items-center justify-between">
-                        <span>{producto.nombre}</span>
-                        <img 
-                          src={producto.imagen} 
-                          alt={producto.nombre} 
-                          className="w-16 h-16 object-contain rounded-md"
+                      <div className="flex items-center">
+                        <ProductImage 
+                          src={producto.imagen}
+                          alt={producto.nombre}
+                          className="w-16 h-16 mr-2"
                         />
+                        <span>{producto.nombre}</span>
                       </div>
                     </td>
                   )}
