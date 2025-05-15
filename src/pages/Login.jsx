@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import CustomeButton from '../components/CustomButton.jsx';
+import CustomButton from '../components/CustomButton.jsx';
 
 
 const Login = () => {
   const [credenciales, setCredenciales] = useState({
-    correo: '',
-    contraseña: '',
+    email: '',
+    password: '',
   });
 
   const handleChange = (e) => {
@@ -23,18 +23,20 @@ const handleSubmit = async (e) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: credenciales.correo,      // ← usa el nombre que espera el backend
-        password: credenciales.contraseña
+        email: credenciales.email,      // ← usa el nombre que espera el backend
+        password: credenciales.password
       }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      console.log("Login exitoso:", data);
       localStorage.setItem("token", data.access_token); // Guarda el token si es necesario
-      // Redirige o cambia el estado según el caso
-    } else {
+      if (data.suscripcion == 1) {
+        window.location.href = "/users/bienvenida"; // Redirige a la página de bienvenida
+      } else {
+        window.location.href = "planes_protected";
+      }
       alert(data.error || "Error en el inicio de sesión");
     }
   } catch (error) {
@@ -53,7 +55,7 @@ const handleSubmit = async (e) => {
           <p className="mb-4">Bienvenido a KeySpotting.</p>
           <p className="mb-4">Inicia sesión para poder acceder a la mejor herramienta de tendencias en el mercado.</p>
           <p className="mb-6">¿Aún no tienes una cuenta? Regístrate dando clic en el siguiente botón.</p>
-          <CustomeButton
+          <CustomButton
             texto="Registrarse"
             tipo='terciario'
             extraClases="text-center"
@@ -67,8 +69,8 @@ const handleSubmit = async (e) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <input
-                name="correo"
-                value={credenciales.correo}
+                name="email"
+                value={credenciales.email}
                 onChange={handleChange}
                 type="email"
                 placeholder="Correo Electrónico"
@@ -78,8 +80,8 @@ const handleSubmit = async (e) => {
             </div>
             <div>
               <input
-                name="contraseña"
-                value={credenciales.contraseña}
+                name="password"
+                value={credenciales.password}
                 onChange={handleChange}
                 type="password"
                 placeholder="Contraseña"
@@ -90,7 +92,7 @@ const handleSubmit = async (e) => {
             <p className="text-sm">
               ¿Has olvidado tu contraseña? Da clic <a href="#" className="text-blue-600 underline">aquí</a> para poder recuperarla.
             </p>
-            <CustomeButton
+            <CustomButton
               texto="Iniciar Sesión"
               onClick={() => console.log('Iniciando sesión...')}
               tipo='primario'
