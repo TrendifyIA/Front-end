@@ -1,9 +1,13 @@
 import { FaEdit, FaTrashAlt, FaSyncAlt, FaCheck } from "react-icons/fa";
+import sabritaslimon from '../../assets/images/sabritaslimon.png';
+import sabritasadobadas from '../../assets/images/sabritasadobadas.png';
+import sabritashabanero from '../../assets/images/sabritashabanero.png';
 
 const ProductsPage = () => {
   const productos = [
     {
       nombre: "Sabritas limón",
+      imagen: sabritaslimon,
       campañas: [
         { nombre: "Menos sodio", estatus: "Procesado" },
         { nombre: "Más producto", estatus: "Procesado" },
@@ -11,10 +15,12 @@ const ProductsPage = () => {
     },
     {
       nombre: "Sabritas adobadas",
+      imagen: sabritasadobadas,
       campañas: [{ nombre: "Salsa secreta", estatus: "Procesado" }],
     },
     {
       nombre: "Sabritas habanero",
+      imagen: sabritashabanero,
       campañas: [{ nombre: "Añadir", estatus: "Sin procesar" }],
     },
   ];
@@ -70,7 +76,14 @@ const ProductsPage = () => {
                       rowSpan={producto.campañas.length}
                       className="px-4 py-3 text-sm text-gray-900 font-medium align-middle w-1/4"
                     >
-                      {producto.nombre}
+                      <div className="flex items-center justify-between">
+                        <span>{producto.nombre}</span>
+                        <img 
+                          src={producto.imagen} 
+                          alt={producto.nombre} 
+                          className="w-16 h-16 object-contain rounded-md"
+                        />
+                      </div>
                     </td>
                   )}
 
