@@ -23,6 +23,7 @@ import Campana from "./pages/users/Campana.jsx";
 import Empresa from "./pages/users/Empresa.jsx";
 import Bienvenida from "./pages/users/Bienvenida.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
+import SubscribedRoute from "./components/SubscribedRoute.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -39,9 +40,9 @@ const router = createBrowserRouter([
   {
     path: "/users",
     element: (
-      <PrivateRoute>
+      <SubscribedRoute>
         <UsersLayout />
-      </PrivateRoute>
+      </SubscribedRoute>
     ),
     children: [
       { index: true, element: <Dashboard /> },
