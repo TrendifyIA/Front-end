@@ -20,7 +20,7 @@ import Login from "./pages/Login.jsx";
 
 import Producto from "./pages/users/Producto.jsx";
 import Campana from "./pages/users/Campana.jsx";
-import Empresa from "./pages/users/Empresa.jsx";
+import TutorialEmpresa from "./pages/users/Empresa.jsx";
 import Bienvenida from "./pages/users/Bienvenida.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "producto", element: <Producto /> },
       { path: "campana", element: <Campana /> },
-      { path: "empresa", element: <Empresa /> },
+      { path: "empresa", element: <TutorialEmpresa /> },
       { path: "bienvenida", element: <Bienvenida /> },
     ],
   },
@@ -67,7 +67,7 @@ const router = createBrowserRouter([
         ),
       },
     ],
-  }
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(

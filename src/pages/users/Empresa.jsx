@@ -1,9 +1,14 @@
 import React from "react";
-import { BsBuildings, BsBoxSeam, BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import {
+  BsBuildings,
+  BsBoxSeam,
+  BsArrowLeft,
+  BsArrowRight,
+} from "react-icons/bs";
 import { RiMegaphoneLine } from "react-icons/ri";
 import CustomButton from "../../components/CustomButton";
 
-const Empresa = () => {
+const TutorialEmpresa = () => {
   return (
     <div className="bg-gray-100 min-h-screen font-sans">
       <div className="bg-[#0B2C63] text-white p-6">
@@ -11,10 +16,10 @@ const Empresa = () => {
           Por favor, complete los siguientes campos para registrar su empresa.
         </h1>
         <p className="text-sm">
-          Asegúrese de completar todos los campos para obtener resultados más precisos y útiles en el análisis.
+          Asegúrese de completar todos los campos para obtener resultados más
+          precisos y útiles en el análisis.
         </p>
       </div>
-
 
       <div className="flex justify-center items-center my-12 space-x-8">
         <div className="flex flex-col items-center">
@@ -44,7 +49,9 @@ const Empresa = () => {
         <form>
           <div className="flex flex-row gap-4 w-full">
             <div className="flex flex-col gap-2 mb-4 w-1/2">
-              <label htmlFor="nameCompany" className="font-medium">Nombre de la empresa:</label>
+              <label htmlFor="nameCompany" className="font-medium">
+                Nombre de la empresa:
+              </label>
               <input
                 required
                 type="text"
@@ -53,11 +60,14 @@ const Empresa = () => {
               />
             </div>
             <div className="flex flex-col gap-2 mb-4 w-1/2">
-              <label htmlFor="segment" className="font-medium">Segmento de mercado:</label>
+              <label htmlFor="segment" className="font-medium">
+                Segmento de mercado:
+              </label>
               <select
                 required
                 id="segment"
-                className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400">
+                className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
+              >
                 <option value="">Selecciona uno o varios</option>
                 <option value="1">Alimentos</option>
                 <option value="2">Finanzas</option>
@@ -67,12 +77,15 @@ const Empresa = () => {
             </div>
           </div>
           <div className="flex flex-col gap-2 mb-4 w-full">
-            <label htmlFor="location" className="font-medium">Dirección física:</label>
+            <label htmlFor="location" className="font-medium">
+              Dirección física:
+            </label>
             <input
               required
               type="text"
               id="location"
-              className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"/>
+              className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
+            />
           </div>
           <div className="flex flex-row gap-4 w-full">
             <div className="flex flex-col gap-2 mb-4 w-1/2">
@@ -80,31 +93,37 @@ const Empresa = () => {
               <input
                 required
                 type="text"
-                className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"/>
+                className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
+              />
             </div>
             <div className="flex flex-col gap-2 mb-4 w-1/2">
               <label className="font-medium">Público objetivo:</label>
               <input
                 required
                 type="text"
-                className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"/>
+                className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
+              />
             </div>
           </div>
           <div className="flex flex-col gap-2 mb-4 w-full">
-            <label className="font-medium">Descripción de servicios/productos</label>
+            <label className="font-medium">
+              Descripción de servicios/productos
+            </label>
             <input
               required
               type="text"
-              className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"/>
+              className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
+            />
           </div>
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Competidores</label>
             <input
               required
               type="text"
-              className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"/>
+              className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
+            />
           </div>
-          
+
           <div className="flex justify-between px-10">
             <CustomButton
               texto={<BsArrowLeft className="text-2xl" />}
@@ -123,4 +142,4 @@ const Empresa = () => {
   );
 };
 
-export default Empresa;
+export default TutorialEmpresa;
