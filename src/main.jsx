@@ -8,6 +8,7 @@ import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import App from "./App.jsx";
 import Landing from "./pages/LandingPage.jsx";
 import Planes from "./pages/PlansPage.jsx";
+import PlanesProtected from "./pages/PlansPageProtected.jsx";
 import Servicios from "./pages/Servicios.jsx";
 import Nosotros from "./pages/AboutUsPage.jsx";
 import Dashboard from "./pages/users/Dashboard.jsx";
@@ -16,6 +17,13 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 //import Perfil from "./pages/users/Perfil.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
+
+import Producto from "./pages/users/Producto.jsx";
+import Campana from "./pages/users/Campana.jsx";
+import Empresa from "./pages/users/Empresa.jsx";
+import Bienvenida from "./pages/users/Bienvenida.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
+import SubscribedRoute from "./components/SubscribedRoute.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -31,19 +39,34 @@ const router = createBrowserRouter([
   },
   {
     path: "/users",
-    element: <UsersLayout />,
+    element: (
+      <SubscribedRoute>
+        <UsersLayout />
+      </SubscribedRoute>
+    ),
     children: [
-      { index: true, element: <Dashboard /> }, // Ruta por defecto
-      {},
+      { index: true, element: <Dashboard /> },
+      { path: "producto", element: <Producto /> },
+      { path: "campana", element: <Campana /> },
+      { path: "empresa", element: <Empresa /> },
+      { path: "bienvenida", element: <Bienvenida /> },
     ],
   },
   {
     path: "/simple",
     element: <SimpleLayout />,
     children: [
-      { path: "registro", element: <Registro /> }, // Ruta por defecto
+      { path: "registro", element: <Registro /> },
       { path: "login", element: <Login /> },
-    ]
+      {
+        path: "planes_protected",
+        element: (
+          <PrivateRoute>
+            <PlanesProtected />
+          </PrivateRoute>
+        ),
+      },
+    ],
   }
 ]);
 

@@ -15,22 +15,51 @@ function CheckoutForm({ onClose }) {
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!stripe || !elements) return;
 
-    setIsLoading(true);
+  setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: "http://localhost:5173/simple/login",
-      },
-    });
+  const { error, paymentIntent } = await stripe.confirmPayment({
+  elements,
+  redirect: "if_required" // Esto evitará la redirección automática si no es necesaria
+});
 
-    if (error) alert(error.message);
+if (error) {
+  console.error("Error de pago:", error);
+  alert("Error al procesar el pago. Inténtalo de nuevo.");
+  setIsLoading(false);
+  return;
+}
+
+// Si llegamos aquí, pago confirmado sin redirección
+try {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/usuario/suscripcion`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify({ suscripcion: 1 }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert("No se pudo actualizar la suscripción: " + (data.error || data.message || ""));
     setIsLoading(false);
-  };
+    return;
+  }
+
+  alert("Pago exitoso y suscripción activada. Redirigiendo...");
+  window.location.href = "/simple/login";
+} catch (error) {
+  console.error("Error al actualizar la suscripción:", error);
+  alert("Error inesperado al actualizar la suscripción");
+  setIsLoading(false);
+}
+};
 
   return (
     <div className="bg-white p-6 rounded shadow max-w-md w-full">
@@ -56,6 +85,10 @@ export default function StripeModal({ onClose }) {
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/pago`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
