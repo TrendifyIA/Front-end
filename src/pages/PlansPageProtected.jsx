@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 const PlansPageProtected = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verificarSuscripcion = async () => {
@@ -28,19 +28,18 @@ const PlansPageProtected = () => {
 
         const data = await res.json();
 
-        if (res.ok && data.suscripcion === 1) {
-            console.log("Usuario tiene suscripción activa");
-          navigate("/"); // Usuario ya tiene suscripción, redirige al dashboard
-        }
-        else{
-            console.log("No tienes suscripción activa");
+        if (res.ok && data.activa === true) {
+          console.log("Usuario tiene suscripción activa");
+          navigate("/"); // Redirige al dashboard
+        } else {
+          console.log("No tienes suscripción activa");
+          // Se queda en esta página para mostrar planes
         }
       } catch (err) {
         console.error("Error al verificar suscripción:", err);
         navigate("/simple/login");
       }
     };
-
     verificarSuscripcion();
   }, [navigate]);
   const plans = [
