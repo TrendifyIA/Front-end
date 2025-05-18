@@ -32,7 +32,7 @@ const handleSubmit = async (e) => {
 
     if (response.ok) {
       localStorage.setItem("token", data.access_token); // Guarda el token si es necesario
-      if (data.suscripcion == 1) {
+      if (data.activa === true) {
         window.location.href = "/users/bienvenida"; // Redirige a la página de bienvenida
       } else {
         window.location.href = "planes_protected";

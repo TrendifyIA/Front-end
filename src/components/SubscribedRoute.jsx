@@ -25,7 +25,7 @@ const SubscribedRoute = ({ children }) => {
 
         const data = await res.json();
 
-        if (res.ok && data.suscripcion === 1) {
+        if (res.ok && data.activa === true) {
           setHasAccess(true);
         } else {
           setHasAccess(false);
