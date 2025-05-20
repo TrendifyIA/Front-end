@@ -48,14 +48,13 @@ const handleSubmit = async (e) => {
 
     alert('¡Registro exitoso!');
     setForm({ nombre: '', apellido_paterno: '', apellido_materno: '', email: '', password: '', acepta: false });
+    //Redirigir a Login
+    window.location.href = '/simple/login';
   } catch (error) {
     console.error('Error:', error);
     setError('Hubo un problema con el registro.');
   }
 };
-
-
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-primary-500 font-sans">
@@ -68,7 +67,6 @@ const handleSubmit = async (e) => {
           <p className="mb-6">¿Ya tienes una cuenta? Inicia sesión dando clic en el siguiente botón.</p>
           <CustomButton
             texto="Iniciar Sesión"
-            onClick={() => console.log('Redirigiendo a inicio de sesión...')}
             tipo='terciario'
             extraClases="text-center"
             ruta="/simple/login"
@@ -90,9 +88,9 @@ const handleSubmit = async (e) => {
               <input name="acepta" type="checkbox" checked={form.acepta} onChange={handleChange} className="mr-2" />
               Acepta nuestras <a href="#" className="text-blue-600 underline ml-1">Condiciones de uso</a> y <a href="#" className="text-blue-600 underline ml-1">Política de privacidad</a>
             </label>
-            <CustomeButton
+            <CustomButton
               texto="Registrarse"
-              onClick={() => console.log('Iniciando sesión...')}
+              onClick={() => console.log('Registrando...')}
               tipo='primario'
               extraClases="text-center w-full"
               type="submit"
