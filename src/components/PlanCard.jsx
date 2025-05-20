@@ -1,8 +1,11 @@
-import StripeModal from "./StripeModal";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import StripeModal from "./StripeModal";
+import CustomButton from "./CustomButton";
 
 const PlanCard = ({ title, price, description, features, excludedFeatures = [], isPopular }) => {
   const [showStripe, setShowStripe] = useState(false);
+  const location = useLocation();
 
   return (
     <div className={`rounded-xl p-8 shadow-lg ${isPopular ? "bg-white" : "bg-blue-200"}`}>
@@ -27,12 +30,24 @@ const PlanCard = ({ title, price, description, features, excludedFeatures = [], 
         ))}
       </ul>
 
-      <button
-        className="w-full py-3 rounded-lg font-bold bg-blue-500 text-white hover:bg-blue-600"
-        onClick={() => setShowStripe(true)}
-      >
-        Suscríbete
-      </button>
+      {location.pathname === "/planes" ? (
+        
+        <CustomButton 
+          texto="Suscribirse"
+          tipo="terciario"
+          extraClases="w-full py-3 rounded-lg font-bold"
+          ruta={"/simple/login"}
+        >
+        </CustomButton>
+      ) : location.pathname === "/simple/planes_protected" ? (
+        <CustomButton 
+          texto="Suscribirse"
+          tipo="terciario"
+          extraClases="w-full py-3 rounded-lg font-bold"
+          onClick={() => setShowStripe(true)}
+        >
+        </CustomButton>
+      ) : null}
 
       {showStripe && <StripeModal onClose={() => setShowStripe(false)} />}
     </div>
