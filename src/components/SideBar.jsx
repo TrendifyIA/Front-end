@@ -22,22 +22,22 @@ const SideBar = () => {
             <span class="flex text-white gap-2.5 leading-4"><i class="text-base"><FaRegUser></FaRegUser></i><Link to="/" class="text-white">Mi Perfil</Link></span>
           </li>
           <li>
-            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><GrGroup></GrGroup></i><Link to="/planes" class="text-white">Equipo</Link></span>
+            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><GrGroup></GrGroup></i><Link to="/" class="text-white">Equipo</Link></span>
           </li>
           <li>
-            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><HiOutlineBuildingOffice2></HiOutlineBuildingOffice2></i><Link to="/servicios" class="text-white">Empresa</Link></span>
+            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><HiOutlineBuildingOffice2></HiOutlineBuildingOffice2></i><Link to="/users/empresa" class="text-white">Empresa</Link></span>
           </li>
           <li>
-            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><RiSurveyLine></RiSurveyLine></i><Link to="/nosotros" class="text-white">Encuestas</Link></span>
+            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><RiSurveyLine></RiSurveyLine></i><Link to="/" class="text-white">Encuestas</Link></span>
           </li>
           <li>
-            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><PiGraphDuotone></PiGraphDuotone></i><Link to="/nosotros" class="text-white">Predicciones</Link></span>
+            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><PiGraphDuotone></PiGraphDuotone></i><Link to="/" class="text-white">Predicciones</Link></span>
           </li>
           <li>
-            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><TbBrandGoogleAnalytics></TbBrandGoogleAnalytics></i><Link to="/nosotros" class="text-white">Reportes</Link></span>
+            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><TbBrandGoogleAnalytics></TbBrandGoogleAnalytics></i><Link to="/" class="text-white">Reportes</Link></span>
           </li>
           <li>
-            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><FaRegBell></FaRegBell></i><Link to="/nosotros" class="text-white">Notificaciones</Link></span>
+            <span class="flex text-white gap-2.5 leading-4"><i class="text-lg"><FaRegBell></FaRegBell></i><Link to="/" class="text-white">Notificaciones</Link></span>
           </li>
         </ul>
       </div>

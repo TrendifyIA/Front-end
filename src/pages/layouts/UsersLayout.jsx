@@ -5,7 +5,7 @@ const UsersLayout = () => {
   return (
     <div class="flex h-screen">
         <SideBar></SideBar>
-        <main class="flex-1 bg-neutral-100 overflow-y-auto">
+        <main class="flex-1 bg-neutral-100 overflow-y-auto ml-[280px]">
             <Outlet></Outlet>
         </main>
     </div>
