@@ -1,3 +1,18 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import {createBrowserRouter, RouterProvider} from 'react-router-dom' // Importación de react-router-dom
+import './index.css'
+import PublicLayout from './pages/layouts/PublicLayout.jsx' // Importación de los layouts
+import UsersLayout from './pages/layouts/UsersLayout.jsx'
+import App from './App.jsx'
+import Home from './pages/Home.jsx'
+import Planes from './pages/Planes.jsx'
+import Servicios from './pages/Servicios.jsx'
+import Nosotros from './pages/Nosotros.jsx'
+import Dashboard from './pages/users/Dashboard.jsx'
+import ResumenTendencias9 from './pages/users/ResumenTendencias9.jsx'
+import DetalleTendencia10 from './pages/users/DetalleTendencia10.jsx'
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom"; // Importación de react-router-dom
@@ -47,6 +62,9 @@ const router = createBrowserRouter([
       </SubscribedRoute>
     ),
     children: [
+      {index: true, element: <Dashboard />}, // Ruta por defecto
+      { path: 'resumen-tendencias', element: <ResumenTendencias9 /> },
+      {path: 'detalle-tendencia', element: <DetalleTendencia10 /> },
       { index: true, element: <Dashboard /> },
       { path: "producto", element: <Producto /> },
       { path: "campana", element: <Campana /> },
