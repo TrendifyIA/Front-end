@@ -66,11 +66,7 @@ const Campana = () => {
             <input required className="w-full border rounded px-3 py-2" type="text" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block mb-1 font-medium">Público objetivo:</label>
-              <input required className="w-full border rounded px-3 py-2" type="text" />
-            </div>
+          <div className="mb-4">
             <div>
               <label className="block mb-1 font-medium">Canales de distribución:</label>
               <input required className="w-full border rounded px-3 py-2" type="text" />
