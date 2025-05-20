@@ -90,7 +90,7 @@ const handleSubmit = async (e) => {
               <input name="acepta" type="checkbox" checked={form.acepta} onChange={handleChange} className="mr-2" />
               Acepta nuestras <a href="#" className="text-blue-600 underline ml-1">Condiciones de uso</a> y <a href="#" className="text-blue-600 underline ml-1">Política de privacidad</a>
             </label>
-            <CustomeButton
+            <CustomButton
               texto="Registrarse"
               onClick={() => console.log('Iniciando sesión...')}
               tipo='primario'
