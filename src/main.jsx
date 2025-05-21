@@ -1,9 +1,12 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; // Importación de react-router-dom
-import "./index.css";
-import PublicLayout from "./pages/layouts/PublicLayout.jsx"; // Importación de los layouts
-import UsersLayout from "./pages/layouts/UsersLayout.jsx";
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import {createBrowserRouter, RouterProvider} from 'react-router-dom' // Importación de react-router-dom
+import './index.css'
+import PublicLayout from './pages/layouts/PublicLayout.jsx' // Importación de los layouts
+import UsersLayout from './pages/layouts/UsersLayout.jsx'
+import App from './App.jsx'
+import ResumenTendencias9 from './pages/users/ResumenTendencias9.jsx'
+import DetalleTendencia10 from './pages/users/DetalleTendencia10.jsx'
 import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
 import App from "./App.jsx";
