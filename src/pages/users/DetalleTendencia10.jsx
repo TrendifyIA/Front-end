@@ -20,27 +20,34 @@ ChartJS.register(
 );
 
 const redes = [
-  { id: "facebook", nombre: "Facebook", color: "#111827" },
-  { id: "instagram", nombre: "Instagram", color: "#3b82f6" },
-  { id: "reddit", nombre: "Reddit", color: "#10b981" },
+  { id: "web", nombre: "Web", color: "#111827" },
+  { id: "youtube", nombre: "YouTube", color: "#c4302b" },
+  { id: "reddit", nombre: "Reddit", color: "#FF5700" },
+  // Eliminamos "Random Data" de las opciones gráficas
 ];
 
-const generarDatos = () =>
-  Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
-
-const GraficaRedes = ({ seleccionadas, datosReddit }) => {
+const GraficaRedes = ({ seleccionadas, datosReddit, datosRandom }) => {
   const data = {
     labels:
       datosReddit.length > 0
         ? datosReddit.map((d) => d._id)
-        : Array.from({ length: 10 }, (_, i) => `Mes ${i}`),
+        : Array.from({ length: 10 }, (_, i) => `Día ${i + 1}`),
     datasets: redes
       .filter((r) => seleccionadas.includes(r.id))
       .map((r) => {
-        const dataPoints =
-          r.id === "reddit" && datosReddit.length > 0
-            ? datosReddit.map((d) => d.avg_buzzscore)
-            : generarDatos();
+        let dataPoints = [];
+        
+        if (r.id === "reddit" && datosReddit.length > 0) {
+          dataPoints = datosReddit.map((d) => d.avg_buzzscore);
+        } else if (r.id === "web" && datosRandom.length > 0) {
+          // Usamos EXCLUSIVAMENTE los datos random para "web"
+          dataPoints = datosRandom.map((d) => d.avg_buzzscore);
+        } else if (r.id === "youtube") {
+          // Datos simulados para YouTube
+          dataPoints = datosRandom.length > 0 
+            ? datosRandom.map((d) => d.avg_buzzscore * 1.2) // 20% más alto que web
+            : Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
+        }
 
         return {
           label: r.nombre,
@@ -64,6 +71,7 @@ const GraficaRedes = ({ seleccionadas, datosReddit }) => {
     scales: {
       y: {
         beginAtZero: true,
+        max: 100,
       },
     },
   };
@@ -72,19 +80,29 @@ const GraficaRedes = ({ seleccionadas, datosReddit }) => {
 };
 
 const ResumenTendencias10 = () => {
-  const [seleccionadas, setSeleccionadas] = useState(["instagram", "reddit"]);
+  const [seleccionadas, setSeleccionadas] = useState(["web", "reddit"]);
   const [datosReddit, setDatosReddit] = useState([]);
+  const [datosRandom, setDatosRandom] = useState([]);
+
 
   useEffect(() => {
     const obtenerDatos = async () => {
       try {
-        const response = await fetch(
+        // Obtenemos datos de Reddit
+        const responseReddit = await fetch(
           "http://localhost:8080/social/reddit/trends?topic=Fitness&days=30"
         );
-        const data = await response.json();
-        setDatosReddit(data);
+        const dataReddit = await responseReddit.json();
+        setDatosReddit(dataReddit);
+
+        // Obtenemos datos random (para simular "web")
+        const responseRandom = await fetch(
+          "http://localhost:8080/social/random/trends?topic=Fitness&days=30"
+        );
+        const dataRandom = await responseRandom.json();
+        setDatosRandom(dataRandom);
       } catch (error) {
-        console.error("Error al obtener datos de Reddit:", error);
+        console.error("Error al obtener datos:", error);
       }
     };
 
@@ -99,21 +117,17 @@ const ResumenTendencias10 = () => {
 
   return (
     <div className="pt-6 px-6 w-full">
-      <h1 className="text-3xl font-bold mb-4">
-        Fitness / Tend1
-      </h1>
+      <h1 className="text-3xl font-bold mb-4">Fitness / Tend1</h1>
 
-      {/* Contenedor horizontal: gráfica + checkboxes */}
       <div className="flex items-start mb-6 w-full">
-        {/* Gráfica expandida completamente */}
         <div className="flex-grow bg-white rounded shadow p-6 h-[450px]">
           <GraficaRedes
             seleccionadas={seleccionadas}
             datosReddit={datosReddit}
+            datosRandom={datosRandom}
           />
         </div>
 
-        {/* Checkboxes alineados verticalmente */}
         <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2">
           {redes.map((r) => (
             <label key={r.id} className="flex items-center gap-2">
@@ -128,24 +142,22 @@ const ResumenTendencias10 = () => {
         </div>
       </div>
 
-      {/* Análisis */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h2 className="font-bold text-lg mb-2">
           Análisis general de las tendencias
         </h2>
         <p>
           Como puedes ver en la gráfica, tu campaña tiene una mejor recepción en
-          Instagram que en Reddit. Por lo tanto, proponemos que redobles tus
+          YouTube que en Reddit. Por lo tanto, proponemos que redobles tus
           esfuerzos en esta plataforma y reanudes una estrategia nueva en Reddit
           para lograr más permeabilidad en el público.
         </p>
       </div>
 
-      {/* Recomendaciones */}
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="font-bold text-lg mb-2">Recomendaciones</h2>
         <p>
-          Te recomendamos que inviertas un 10% más en publicidad en Instagram y
+          Te recomendamos que inviertas un 10% más en publicidad en YouTube y
           cambies de estrategia en Reddit, intentando contratar influencers con
           Karma más alto para llegar a más público.
         </p>
