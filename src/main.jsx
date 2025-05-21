@@ -34,15 +34,14 @@ import SubscribedRoute from "./components/SubscribedRoute.jsx";
 import Empresa from "./pages/users/Empresa.jsx";
 
 const router = createBrowserRouter([
-  // Arreglo que continene las rutas de la app
   {
     path: "/",
     element: <PublicLayout />,
     children: [
-      { index: true, element: <Landing /> }, // Ruta por defecto
-      { path: "planes", element: <Planes /> }, // Ruta para la página de planes
-      { path: "servicios", element: <Servicios /> }, // Ruta para la página de servicios
-      { path: "nosotros", element: <Nosotros /> }, // Ruta para la página de nosotros
+      { index: true, element: <Landing /> },
+      { path: "planes", element: <Planes /> },
+      { path: "servicios", element: <Servicios /> },
+      { path: "nosotros", element: <Nosotros /> },
     ],
   },
   {
@@ -62,6 +61,7 @@ const router = createBrowserRouter([
     path: "/simple",
     element: <SimpleLayout />,
     children: [
+      { path: "registro", element: <Registro /> },
       { path: "registro", element: <Registro /> },
       { path: "login", element: <Login /> },
       {
@@ -91,6 +91,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+    <RouterProvider router={router} />
   </StrictMode>
 );

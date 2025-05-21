@@ -1,39 +1,114 @@
-import { useState } from "react";
-import GraficaTendencias from "../../components/GraficaTendencias";
+import { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Legend,
+  Tooltip,
+} from "chart.js";
+import { Link } from "react-router-dom";
+
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Legend,
+  Tooltip
+);
 
 const ResumenTendencias9 = () => {
-  const [seleccionadas, setSeleccionadas] = useState([2, 4, 9]);
+  const [mostrar, setMostrar] = useState(true);
+  const [datosPromedio, setDatosPromedio] = useState([]);
+  const [labels, setLabels] = useState([]);
 
-  const toggleTendencia = (id) => {
-    setSeleccionadas((prev) =>
-      prev.includes(id) ? prev.filter((tid) => tid !== id) : [...prev, id]
-    );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [resReddit, resRandom] = await Promise.all([
+          fetch("http://localhost:8080/social/reddit/trends?topic=Fitness&days=30"),
+          fetch("http://localhost:8080/social/random/trends?topic=Fitness&days=30"),
+        ]);
+
+        const dataReddit = await resReddit.json();
+        const dataRandom = await resRandom.json();
+
+        const promedio = dataReddit.map((item, idx) => {
+          const rBuzz = item.avg_buzzscore || 0;
+          const randBuzz = dataRandom[idx]?.avg_buzzscore || 0;
+          return (rBuzz + randBuzz) / 2;
+        });
+
+        setDatosPromedio(promedio);
+        setLabels(dataReddit.map((d) => d._id));
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const data = {
+    labels,
+    datasets: mostrar
+      ? [
+          {
+            label: "Fitness",
+            data: datosPromedio,
+            borderColor: "#3b82f6",
+            backgroundColor: "#3b82f6",
+            fill: false,
+            tension: 0.4,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+        ]
+      : [],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "top" },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
   };
 
   return (
-    <div className="ml-[280px] p-6">
-      <h1 className="text-3xl font-bold mb-6">
-        Sabritas/ Sabritas de limón / Menos sodio
+    <div className="pt-6 px-6 w-full">
+      <h1 className="text-3xl font-bold mb-4">
+        Análisis general de tendencias
       </h1>
 
-      <div className="flex justify-between items-start gap-6 mb-6">
-        {/* Gráfica */}
-        <div className="bg-white rounded shadow p-4 h-[360px] w-[750px]">
-          <GraficaTendencias seleccionadas={seleccionadas} />
+      {/* Gráfica + checkbox */}
+      <div className="flex items-start mb-6 w-full">
+        <div className="flex-grow bg-white rounded shadow p-6 h-[450px]">
+          <Line data={data} options={options} />
         </div>
 
-        {/* Checkboxes más centrados */}
-        <div className="flex flex-col gap-3 mt-2 px-6"> {/* <-- Aquí está el cambio */}
-          {Array.from({ length: 10 }, (_, i) => i + 1).map((id) => (
-            <label key={id} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={seleccionadas.includes(id)}
-                onChange={() => toggleTendencia(id)}
-              />
-              <span className="font-medium text-sm">{`Tendencia ${id}`}</span>
-            </label>
-          ))}
+        <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={mostrar}
+              onChange={() => setMostrar((prev) => !prev)}
+            />
+            <Link
+              to="/users/detalle-tendencia"
+              className="font-medium text-sm text-black hover:underline"
+            >
+              Fitness
+            </Link>
+          </label>
         </div>
       </div>
 
