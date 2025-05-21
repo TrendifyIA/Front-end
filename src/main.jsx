@@ -30,7 +30,7 @@ import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
 import ProductsPage from "./pages/users/ProductsPage.jsx";
 import SummaryPage from "./pages/tutorial/SummaryPage.jsx";
-import ConfirmacionDatos from "./pages/users/ConfirmarDatos.jsx";
+import ConfirmacionDatos from "./pages/tutorial/ConfirmarDatos.jsx";
 import Procesando from "./pages/tutorial/Procesando.jsx";
 import TutorialEmpresa from "./pages/tutorial/Empresa.jsx"; 
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
