@@ -1,8 +1,13 @@
+/**
+ * @file main.jsx
+ * @author Andrea Doce, Alexei, Eduardo Rosas, Jennyfer Jasso, Sandra, ...
+ * @description Punto de entrada principal para la aplicación Trendify donde se configuran las rutas y se renderiza la aplicación.
+ */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; // Importación de react-router-dom
+import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
 import "./index.css";
-import PublicLayout from "./pages/layouts/PublicLayout.jsx"; // Importación de los layouts
+import PublicLayout from "./pages/layouts/PublicLayout.jsx"; 
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
 import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
@@ -21,15 +26,16 @@ import Login from "./pages/Login.jsx";
 import ProductsPage from "./pages/users/ProductsPage.jsx";
 import SummaryPage from "./pages/tutorial/SummaryPage.jsx";
 import ConfirmacionDatos from "./pages/users/ConfirmarDatos.jsx";
-import Procesando from "./pages/tutorial/Procesando.jsx"; 
-
+import Procesando from "./pages/tutorial/Procesando.jsx";
 import Producto from "./pages/tutorial/Producto.jsx";
 import Campana from "./pages/tutorial/Campana.jsx";
-import TutorialEmpresa from "./pages/tutorial/Empresa.jsx"; // Cambiar el nombre del archivo a Empresa.jsx
+import TutorialEmpresa from "./pages/tutorial/Empresa.jsx"; 
 import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
+import PrivateRoute from "./components/PrivateRoute.jsx"; 
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
 import Empresa from "./pages/users/Empresa.jsx";
+import ProveedorTutorial from "./context/ProveedorTutorial";
+import TutorialRoute from "./components/TutorialRoute.jsx"; 
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -37,10 +43,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <PublicLayout />,
     children: [
-      { index: true, element: <Landing /> }, // Ruta por defecto
-      { path: "planes", element: <Planes /> }, // Ruta para la página de planes
-      { path: "servicios", element: <Servicios /> }, // Ruta para la página de servicios
-      { path: "nosotros", element: <Nosotros /> }, // Ruta para la página de nosotros
+      { index: true, element: <Landing /> }, 
+      { path: "planes", element: <Planes /> }, 
+      { path: "servicios", element: <Servicios /> }, 
+      { path: "nosotros", element: <Nosotros /> }, 
     ],
   },
   {
@@ -51,9 +57,9 @@ const router = createBrowserRouter([
       </SubscribedRoute>
     ),
     children: [
-      { index: true, element: <Dashboard /> }, // Ruta por defecto
-      { path: "adminproductos", element: <ProductsPage /> }, // Ruta para la página de productos
-      { path: "empresa", element: <Empresa /> }
+      { index: true, element: <Dashboard /> }, 
+      { path: "adminproductos", element: <ProductsPage /> },
+      { path: "empresa", element: <Empresa /> },
     ],
   },
   {
@@ -74,17 +80,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/tutorial",
-    element: <TutorialLayout />,
+    element: (
+      <TutorialRoute>
+        <ProveedorTutorial>
+          <TutorialLayout />
+        </ProveedorTutorial>
+      </TutorialRoute>
+    ),
     children: [
       { index: true, element: <Bienvenida /> },
       { path: "producto", element: <Producto /> },
       { path: "campana", element: <Campana /> },
       { path: "empresa", element: <TutorialEmpresa /> },
-      { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
-      { path: "confirmacion", element: <ConfirmacionDatos />}, // Ruta para la página de confirmación de datos
-      { path: "procesando", element: <Procesando />}, // Ruta para la página de procesando
-    ]
-  }
+      { path: "resumen", element: <SummaryPage /> },
+      { path: "confirmacion", element: <ConfirmacionDatos /> },
+      { path: "procesando", element: <Procesando /> },
+    ],
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
