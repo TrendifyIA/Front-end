@@ -25,7 +25,7 @@ import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
 import ProductsPage from "./pages/users/ProductsPage.jsx";
 import SummaryPage from "./pages/tutorial/SummaryPage.jsx";
-import ConfirmacionDatos from "./pages/users/ConfirmarDatos.jsx";
+import ConfirmacionDatos from "./pages/tutorial/ConfirmarDatos.jsx";
 import Procesando from "./pages/tutorial/Procesando.jsx";
 import Producto from "./pages/tutorial/Producto.jsx";
 import Campana from "./pages/tutorial/Campana.jsx";
