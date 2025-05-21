@@ -95,7 +95,7 @@ const Campana = () => {
           <div className="flex justify-between px-10">
             <CustomButton
               texto={<BsArrowLeft className="text-2xl" />}
-              ruta="/users/Producto"
+              ruta="/tutorial/Producto"
               extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md"
             />
 

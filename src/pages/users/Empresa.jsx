@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CustomButton from '../../components/CustomButton';
+import React, { useState, useEffect } from 'react';
+import CustomButton from '../../components/CustomButton';
 
 const Empresa = () => {
   const [empresa, setEmpresa] = useState(null);
@@ -101,6 +103,8 @@ const Empresa = () => {
         </div>
       </div>
     </div>
+  );
+};
   );
 };
 
