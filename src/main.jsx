@@ -1,17 +1,8 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import {createBrowserRouter, RouterProvider} from 'react-router-dom' // Importación de react-router-dom
-import './index.css'
-import PublicLayout from './pages/layouts/PublicLayout.jsx' // Importación de los layouts
-import UsersLayout from './pages/layouts/UsersLayout.jsx'
-import App from './App.jsx'
-import ResumenTendencias9 from './pages/users/ResumenTendencias9.jsx'
-import DetalleTendencia10 from './pages/users/DetalleTendencia10.jsx'
 /**
  * @file main.jsx
  * @author Andrea Doce, Alexei, Eduardo Rosas, Jennyfer Jasso, Sandra, ...
  * @description Punto de entrada principal para la aplicación Trendify donde se configuran las rutas y se renderiza la aplicación.
- */
+*/
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
@@ -32,26 +23,21 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 //import Perfil from "./pages/users/Perfil.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
-import Producto from "./pages/users/Producto.jsx";
-import Campana from "./pages/users/Campana.jsx";
-import Empresa from "./pages/users/Empresa.jsx";
-import Bienvenida from "./pages/users/Bienvenida.jsx";
+import Producto from "./pages/tutorial/Producto.jsx";
+import Campana from "./pages/tutorial/Campana.jsx";
+import Empresa from "./pages/tutorial/Empresa.jsx";
+import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
 import ProductsPage from "./pages/users/ProductsPage.jsx";
 import SummaryPage from "./pages/tutorial/SummaryPage.jsx";
 import ConfirmacionDatos from "./pages/users/ConfirmarDatos.jsx";
 import Procesando from "./pages/tutorial/Procesando.jsx";
-import Producto from "./pages/tutorial/Producto.jsx";
-import Campana from "./pages/tutorial/Campana.jsx";
 import TutorialEmpresa from "./pages/tutorial/Empresa.jsx"; 
-import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx"; 
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
-import ProductsPage from "./pages/users/ProductsPage.jsx";
-import SummaryPage from "./pages/users/SummaryPage.jsx";
-import Empresa from "./pages/users/Empresa.jsx";
 import ProveedorTutorial from "./context/ProveedorTutorial";
 import TutorialRoute from "./components/TutorialRoute.jsx"; 
+import ResumenTendencias9 from './pages/users/ResumenTendencias9.jsx';
+import DetalleTendencia10 from './pages/users/DetalleTendencia10.jsx'
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -107,7 +93,6 @@ const router = createBrowserRouter([
         ),
       },
     ],
-  }
   },
   {
     path: "/tutorial",
