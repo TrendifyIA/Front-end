@@ -5,6 +5,7 @@ import "./index.css";
 import PublicLayout from "./pages/layouts/PublicLayout.jsx"; // Importación de los layouts
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
 import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
+import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
 import App from "./App.jsx";
 import Landing from "./pages/LandingPage.jsx";
 import Planes from "./pages/PlansPage.jsx";
@@ -18,10 +19,10 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
 
-import Producto from "./pages/users/Producto.jsx";
-import Campana from "./pages/users/Campana.jsx";
-import TutorialEmpresa from "./pages/users/Empresa.jsx";
-import Bienvenida from "./pages/users/Bienvenida.jsx";
+import Producto from "./pages/tutorial/Producto.jsx";
+import Campana from "./pages/tutorial/Campana.jsx";
+import TutorialEmpresa from "./pages/tutorial/Empresa.jsx";
+import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
 
@@ -46,10 +47,6 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Dashboard /> },
-      { path: "producto", element: <Producto /> },
-      { path: "campana", element: <Campana /> },
-      { path: "empresa", element: <TutorialEmpresa /> },
-      { path: "bienvenida", element: <Bienvenida /> },
     ],
   },
   {
@@ -68,6 +65,16 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/tutorial",
+    element: <TutorialLayout />,
+    children: [
+      { index: true, element: <Bienvenida /> },
+      { path: "producto", element: <Producto /> },
+      { path: "campana", element: <Campana /> },
+      { path: "empresa", element: <TutorialEmpresa /> },
+    ]
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(

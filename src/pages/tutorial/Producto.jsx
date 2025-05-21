@@ -116,13 +116,13 @@ const Producto = () => {
           <div className="flex justify-between px-10">
             <CustomButton
               texto={<BsArrowLeft className="text-2xl" />}
-              ruta="/users/Empresa"
+              ruta="/tutorial/Empresa"
               extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md"
             />
 
             <CustomButton
               texto={<BsArrowRight className="text-2xl" />}
-              ruta="/users/Campana"
+              ruta="/tutorial/Campana"
               extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md"
             />
             </div>

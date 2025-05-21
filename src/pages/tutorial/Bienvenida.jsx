@@ -56,7 +56,7 @@ const Bienvenida = () => {
         <div className="flex justify-center -mt-5">
           <CustomButton
             texto="Empezar"
-            ruta="/users/Empresa"
+            ruta="/tutorial/Empresa"
             tipo="terciario"
             extraClases="bg-[#0561F3] hover:bg-[#0c1f57] text-white font-bold py-2 px-4 rounded cursor-pointer hover:scale-105"
           />

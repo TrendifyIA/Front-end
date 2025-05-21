@@ -87,23 +87,13 @@ const TutorialEmpresa = () => {
               className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
             />
           </div>
-          <div className="flex flex-row gap-4 w-full">
-            <div className="flex flex-col gap-2 mb-4 w-1/2">
-              <label className="font-medium">Propuesta de valor:</label>
+          <div className="flex flex-col gap-2 mb-4 w-full">
+            <label className="font-medium">Propuesta de valor</label>
               <input
                 required
                 type="text"
                 className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
               />
-            </div>
-            <div className="flex flex-col gap-2 mb-4 w-1/2">
-              <label className="font-medium">Público objetivo:</label>
-              <input
-                required
-                type="text"
-                className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
-              />
-            </div>
           </div>
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">
@@ -127,12 +117,12 @@ const TutorialEmpresa = () => {
           <div className="flex justify-between px-10">
             <CustomButton
               texto={<BsArrowLeft className="text-2xl" />}
-              ruta="/users/Bienvenida"
+              ruta="/tutorial"
               extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md"
             />
             <CustomButton
               texto={<BsArrowRight className="text-2xl" />}
-              ruta="/users/Producto"
+              ruta="/tutorial/Producto"
               extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md"
             />
           </div>

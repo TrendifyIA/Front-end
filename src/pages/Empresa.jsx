@@ -26,15 +26,9 @@ const Empresa = () => {
                 <label htmlFor="location" class="font-medium">Dirección física:</label>
                 <input type="text" id='location' class="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"/>
             </div>
-            <div class="flex flex-row gap-4 w-full">
-                <div class="flex flex-col gap-2 mb-4 w-1/2">
-                    <label htmlFor="" class="font-medium">Propuesta de valor:</label>
-                    <input type="text" class="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"/>
-                </div>
-                <div class="flex flex-col gap-2 mb-4 w-1/2">
-                    <label htmlFor="" class="font-medium">Pùblico objetivo:</label>
-                    <input type="text" class="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400" />
-                </div>
+            <div class="flex flex-row gap-2 w-full">
+                <label htmlFor="" class="font-medium">Propuesta de valor:</label>
+                <input type="text" class="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"/>
             </div>
             <div class="flex flex-col gap-2 mb-4 w-full">
                 <label htmlFor="" class="font-medium">Descripciòn de servicios/productos</label>
