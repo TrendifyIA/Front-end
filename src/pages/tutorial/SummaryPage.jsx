@@ -61,7 +61,7 @@ const Confirmacion = () => {
               cols={2}
               multiline
             />
-            <Campo label="Público objetivo" valor={datosProducto.publicoObjetivo} />
+            {/* <Campo label="Público objetivo" valor={datosProducto.publicoObjetivo} /> */}
             <Campo label="Descripción de servicios" valor={datosEmpresa.descripcion} cols={2} multiline />
             <Campo label="Competidores" valor={datosEmpresa.competidores} />
           </div>
@@ -86,7 +86,7 @@ const Confirmacion = () => {
             <Campo label="Nombre" valor={datosCampana.nombre} />
             <Campo label="Objetivo" valor={datosCampana.objetivo} />
             <Campo label="Mensaje clave" valor={datosCampana.mensaje} cols={2} multiline />
-            <Campo label="Público objetivo" valor={datosCampana.publicoObjetivo} />
+            {/* <Campo label="Público objetivo" valor={datosCampana.publicoObjetivo} /> */}
             <Campo label="Canales de distribución" valor={datosCampana.canales} />
             <Campo label="Fecha de inicio" valor={datosCampana.fechaInicio} />
             <Campo label="Fecha final" valor={datosCampana.fechaFinal} />

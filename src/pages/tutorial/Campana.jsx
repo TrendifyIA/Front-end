@@ -105,7 +105,7 @@ const Campana = () => {
 
             <CustomButton
               texto={<BsArrowRight className="text-2xl" />}
-              ruta="/users/confirmacion"
+              ruta="/tutorial/confirmacion"
               extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md"
             />
             </div>

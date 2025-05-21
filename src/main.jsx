@@ -19,9 +19,9 @@ import Dashboard from "./pages/users/Dashboard.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
 import ProductsPage from "./pages/users/ProductsPage.jsx";
-import SummaryPage from "./pages/users/SummaryPage.jsx";
+import SummaryPage from "./pages/tutorial/SummaryPage.jsx";
 import ConfirmacionDatos from "./pages/users/ConfirmarDatos.jsx";
-import Procesando from "./pages/users/Procesando.jsx"; 
+import Procesando from "./pages/tutorial/Procesando.jsx"; 
 
 import Producto from "./pages/tutorial/Producto.jsx";
 import Campana from "./pages/tutorial/Campana.jsx";
@@ -51,6 +51,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Dashboard /> }, // Ruta por defecto
+      { path: "adminproductos", element: <ProductsPage /> }, // Ruta para la página de productos
     ],
   },
   {
@@ -77,7 +78,6 @@ const router = createBrowserRouter([
       { path: "producto", element: <Producto /> },
       { path: "campana", element: <Campana /> },
       { path: "empresa", element: <TutorialEmpresa /> },
-      { path: "adminproductos", element: <ProductsPage /> }, // Ruta para la página de productos
       { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
       { path: "confirmacion", element: <ConfirmacionDatos />}, // Ruta para la página de confirmación de datos
       { path: "procesando", element: <Procesando />}, // Ruta para la página de procesando
