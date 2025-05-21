@@ -4,8 +4,8 @@ import sabritaslimon from "../../assets/images/sabritaslimon.png";
 import sabritasadobadas from "../../assets/images/sabritasadobadas.png";
 import sabritashabanero from "../../assets/images/sabritashabanero.png";
 import ProductImage from "./ProductImage";
-import ProductoModal from "./ProductoModal";
-import CampanaModal from "./CampanaModal";
+import ProductoModal from "../../components/ProductoModal";
+import CampanaModal from "../../components/CampanaModal";
 
 const ProductsPage = () => {
   const [productos, setProductos] = useState([

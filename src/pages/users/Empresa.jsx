@@ -1,4 +1,3 @@
-import CustomButton from '../../components/CustomButton';
 import React, { useState, useEffect } from 'react';
 import CustomButton from '../../components/CustomButton';
 
