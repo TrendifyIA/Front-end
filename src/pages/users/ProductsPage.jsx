@@ -3,9 +3,11 @@ import sabritaslimon from '../../assets/images/sabritaslimon.png';
 import sabritasadobadas from '../../assets/images/sabritasadobadas.png';
 import sabritashabanero from '../../assets/images/sabritashabanero.png';
 import ProductImage from './ProductImage'; // Importa el nuevo componente
+import { useEffect, useState } from "react";
 
 const ProductsPage = () => {
-  const productos = [
+
+  const productosEjemplo = [
     {
       nombre: "Sabritas limón",
       imagen: sabritaslimon,
@@ -25,6 +27,20 @@ const ProductsPage = () => {
       campañas: [{ nombre: "Añadir", estatus: "Sin procesar" }],
     },
   ];
+
+ 
+  const [campanas, setCampanas] = useState([]);
+
+  useEffect(() => {
+    console.log("Descargando campañas...");
+    fetch("http://localhost:8080/campana/campanas")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Campañas recibidas:", data);
+        setCampanas(data);
+      })
+      .catch((error) => console.error("Error al obtener campañas:", error));
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -69,7 +85,7 @@ const ProductsPage = () => {
           </thead>
 
           <tbody className="divide-y divide-gray-200">
-            {productos.map((producto, productoIndex) =>
+            {productosEjemplo.map((producto, productoIndex) =>
               producto.campañas.map((campaña, campañaIndex) => (
                 <tr key={`${productoIndex}-${campañaIndex}`}>
                   {campañaIndex === 0 && (
