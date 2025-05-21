@@ -25,10 +25,11 @@ import Procesando from "./pages/tutorial/Procesando.jsx";
 
 import Producto from "./pages/tutorial/Producto.jsx";
 import Campana from "./pages/tutorial/Campana.jsx";
-import TutorialEmpresa from "./pages/tutorial/Empresa.jsx";
+import TutorialEmpresa from "./pages/tutorial/Empresa.jsx"; // Cambiar el nombre del archivo a Empresa.jsx
 import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
+import Empresa from "./pages/users/Empresa.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> }, // Ruta por defecto
       { path: "adminproductos", element: <ProductsPage /> }, // Ruta para la página de productos
+      { path: "empresa", element: <Empresa /> }
     ],
   },
   {

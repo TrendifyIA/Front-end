@@ -50,7 +50,7 @@ const TutorialEmpresa = () => {
           <div className="flex flex-row gap-4 w-full">
             <div className="flex flex-col gap-2 mb-4 w-1/2">
               <label htmlFor="nameCompany" className="font-medium">
-                Nombre de la empresa:
+                Nombre de la empresa
               </label>
               <input
                 required
@@ -61,24 +61,28 @@ const TutorialEmpresa = () => {
             </div>
             <div className="flex flex-col gap-2 mb-4 w-1/2">
               <label htmlFor="segment" className="font-medium">
-                Segmento de mercado:
+                Sector de mercado
               </label>
               <select
                 required
                 id="segment"
                 className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
               >
-                <option value="">Selecciona uno o varios</option>
-                <option value="1">Alimentos</option>
-                <option value="2">Finanzas</option>
-                <option value="3">Carros</option>
-                <option value="4">Bicis</option>
+                <option value="">Selecciona una opción</option>
+                <option value="1">Moda y belleza</option>
+                <option value="2">Alimentos y bebidas</option>
+                <option value="3">Salud y bienestar</option>
+                <option value="4">Tecnología</option>
+                <option value="5">Educación</option>
+                <option value="6">Transporte</option>
+                <option value="7">Hogar y decoración</option>
+                <option value="8">Entretenimiento</option>
               </select>
             </div>
           </div>
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label htmlFor="location" className="font-medium">
-              Dirección física:
+              Dirección física
             </label>
             <input
               required
@@ -89,11 +93,11 @@ const TutorialEmpresa = () => {
           </div>
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Propuesta de valor</label>
-              <input
-                required
-                type="text"
-                className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
-              />
+            <input
+              required
+              type="text"
+              className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
+            />
           </div>
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">
