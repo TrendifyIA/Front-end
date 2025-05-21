@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import CustomButton from '../components/CustomButton.jsx';
-
+/**
+ * @file Login.jsx
+ * @author Eduardo Rosas, Jennyfer Jasso, ...
+ * @description Página de inicio de sesión para acceder a Trendify.
+ */
+import React, { useState } from "react";
+import CustomButton from "../components/CustomButton.jsx";
 
 const Login = () => {
   const [credenciales, setCredenciales] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -13,38 +17,50 @@ const Login = () => {
     setCredenciales({ ...credenciales, [name]: value });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const response = await fetch("http://127.0.0.1:8080/usuario/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: credenciales.email,      // ← usa el nombre que espera el backend
-        password: credenciales.password
-      }),
-    });
+    try {
+      const response = await fetch("http://127.0.0.1:8080/usuario/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: credenciales.email,
+          password: credenciales.password,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      localStorage.setItem("token", data.access_token); // Guarda el token si es necesario
-      if (data.activa === true) {
-        window.location.href = "/tutorial/"; // Redirige a la página de bienvenida
-      } else {
-        window.location.href = "planes_protected";
+      if (response.ok) {
+        localStorage.removeItem("tutorial_empresa_form");
+        localStorage.removeItem("tutorial_producto_form");
+        localStorage.removeItem("tutorial_campana_form");
+
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("id_usuario", data.id_usuario);
+
+        const id_usuario = data.id_usuario;
+        localStorage.setItem("id_usuario", id_usuario);
+
+        if (
+          localStorage.getItem(`tutorial_completado_${id_usuario}`) === "true"
+        ) {
+          window.location.replace("/users/adminproductos");
+        } else if (data.activa === true) {
+          window.location.replace("/tutorial/");
+        } else {
+          window.location.replace("planes_protected");
+        }
+        alert(data.error || "Error en el inicio de sesión");
       }
-      alert(data.error || "Error en el inicio de sesión");
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      alert("No se pudo conectar con el servidor");
     }
-  } catch (error) {
-    console.error("Error al iniciar sesión:", error);
-    alert("No se pudo conectar con el servidor");
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-primary-500 font-sans">
@@ -52,12 +68,18 @@ const handleSubmit = async (e) => {
         {/* Panel izquierdo */}
         <div className="bg-primary-500 text-white p-8 md:w-1/2 flex flex-col justify-center">
           <h1 className="text-5xl font-bold mb-4">¡Hola!</h1>
-          <p className="mb-4">Bienvenido a KeySpotting.</p>
-          <p className="mb-4">Inicia sesión para poder acceder a la mejor herramienta de tendencias en el mercado.</p>
-          <p className="mb-6">¿Aún no tienes una cuenta? Regístrate dando clic en el siguiente botón.</p>
+          <p className="mb-4">Bienvenido a Trendify.</p>
+          <p className="mb-4">
+            Inicia sesión para poder acceder a la mejor herramienta de
+            tendencias en el mercado.
+          </p>
+          <p className="mb-6">
+            ¿Aún no tienes una cuenta? Regístrate dando clic en el siguiente
+            botón.
+          </p>
           <CustomButton
             texto="Registrarse"
-            tipo='terciario'
+            tipo="terciario"
             extraClases="text-center"
             ruta="/simple/registro"
           />
@@ -65,7 +87,9 @@ const handleSubmit = async (e) => {
 
         {/* Formulario */}
         <div className="p-8 md:w-1/2">
-          <h2 className="text-3xl font-bold text-center mb-6">Iniciar Sesión</h2>
+          <h2 className="text-3xl font-bold text-center mb-6">
+            Iniciar Sesión
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <input
@@ -90,12 +114,16 @@ const handleSubmit = async (e) => {
               />
             </div>
             <p className="text-sm">
-              ¿Has olvidado tu contraseña? Da clic <a href="#" className="text-blue-600 underline">aquí</a> para poder recuperarla.
+              ¿Has olvidado tu contraseña? Da clic{" "}
+              <a href="#" className="text-blue-600 underline">
+                aquí
+              </a>{" "}
+              para poder recuperarla.
             </p>
             <CustomButton
               texto="Iniciar Sesión"
-              onClick={() => console.log('Iniciando sesión...')}
-              tipo='primario'
+              onClick={() => console.log("Iniciando sesión...")}
+              tipo="primario"
               extraClases="text-center w-full"
               type="submit"
             />
