@@ -25,7 +25,7 @@ import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
 import Producto from "./pages/tutorial/Producto.jsx";
 import Campana from "./pages/tutorial/Campana.jsx";
-import Empresa from "./pages/tutorial/Empresa.jsx";
+import Empresa from "./pages/users/Empresa.jsx";
 import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
 import ProductsPage from "./pages/users/ProductsPage.jsx";
@@ -38,6 +38,7 @@ import ProveedorTutorial from "./context/ProveedorTutorial";
 import TutorialRoute from "./components/TutorialRoute.jsx"; 
 import ResumenTendencias9 from './pages/users/ResumenTendencias9.jsx';
 import DetalleTendencia10 from './pages/users/DetalleTendencia10.jsx'
+
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -72,7 +73,6 @@ const router = createBrowserRouter([
       { path: "bienvenida", element: <Bienvenida /> },
       { path: 'resumen-tendencias', element: <ResumenTendencias9 /> },
       {path: 'detalle-tendencia', element: <DetalleTendencia10 /> },
-      { path: "adminproductos", element: <ProductsPage /> }, // Ruta para la página de productos
       { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
       {},
     ],

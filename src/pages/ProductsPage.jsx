@@ -33,7 +33,7 @@ const ProductsPage = () => {
 
   useEffect(() => {
     console.log("Descargando campañas...");
-    fetch("http://localhost:5000/campana/campanas")
+    fetch("http://localhost:8080/campana/campanas")
       .then((response) => response.json())
       .then((data) => {
         console.log("Campañas recibidas:", data);
