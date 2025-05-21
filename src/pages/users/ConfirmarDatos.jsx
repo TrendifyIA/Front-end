@@ -50,20 +50,7 @@ const ConfirmacionDatos = () => {
           </h2>
           <div className="flex justify-center mb-10">
             <div className="w-32 h-32 bg-[#0c1f57] rounded-full flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
-                />
-              </svg>
+                <FaCheck size={80} color="white"/>
             </div>
           </div>
 
