@@ -24,6 +24,7 @@ const Empresa = () => {
 
   if (!empresa) return <p className="p-10">Cargando empresa...</p>;
 
+    
   return (
     <div className="flex flex-col gap-5 w-full p-10">
       <h1 className="text-4xl font-bold">Empresa</h1>
