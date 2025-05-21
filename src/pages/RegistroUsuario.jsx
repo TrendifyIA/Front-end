@@ -62,7 +62,7 @@ const handleSubmit = async (e) => {
         {/* Panel izquierdo */}
         <div className="bg-primary-500 text-white p-8 md:w-1/2 flex flex-col justify-center">
           <h1 className="text-8xl font-bold mb-14"><u>Hola!</u></h1>
-          <p className="mb-4">Bienvenido a KeySpotting.</p>
+          <p className="mb-4">Bienvenido a Trendify.</p>
           <p className="mb-4">Regístrate para poder disfrutar de los beneficios de la mejor herramienta de tendencias en el mercado.</p>
           <p className="mb-6">¿Ya tienes una cuenta? Inicia sesión dando clic en el siguiente botón.</p>
           <CustomButton
