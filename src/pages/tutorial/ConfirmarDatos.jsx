@@ -27,6 +27,7 @@ const ConfirmacionDatos = () => {
     try {
       // EMPRESA
       const id_usuario = Number(localStorage.getItem("id_usuario"));
+      console.log("ID de usuario:", id_usuario);
       const empresaPayload = { ...empresa, id_usuario };
       console.log("JSON enviado a /empresa/crear-empresa:", empresaPayload);
 
