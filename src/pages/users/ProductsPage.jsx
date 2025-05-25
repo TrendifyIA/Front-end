@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { FaEdit, FaTrashAlt, FaSyncAlt, FaCheck, FaPencilAlt, FaTimes } from "react-icons/fa";
+import {
+  FaEdit,
+  FaTrashAlt,
+  FaSyncAlt,
+  FaCheck,
+  FaPencilAlt,
+  FaTimes,
+} from "react-icons/fa";
 import sabritaslimon from "../../assets/images/sabritaslimon.png";
 import sabritasadobadas from "../../assets/images/sabritasadobadas.png";
 import sabritashabanero from "../../assets/images/sabritashabanero.png";
@@ -7,21 +14,63 @@ import ProductImage from "./ProductImage";
 import ProductoModal from "../../components/ProductoModal";
 import CampanaModal from "../../components/CampanaModal";
 
+const SacarPalabrasClave = (campaña) => {
+  ruta = "http://";
+  const palabrasClave = [];
+  if (!campaña || !campaña.detalles) {
+    console.error("No hay campaña o detalles disponibles");
+    return palabrasClave;
+  }
+  palabrasClave.push(campaña.nombre.toLowerCase());
+  palabrasClave.push(campaña.estatus.toLowerCase());
+  palabrasClave.push(campaña.detalles.toLowerCase());
+  fetch(ruta)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error al obtener palabras clave");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      data.forEach((item) => {
+        if (item.palabra_clave) {
+          palabrasClave.push(item.palabra_clave.toLowerCase());
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  return palabrasClave;
+};
+
 const ProductsPage = () => {
   const [productos, setProductos] = useState([
     {
       nombre: "Sabritas limón",
       imagen: sabritaslimon,
       campañas: [
-        { nombre: "Menos sodio", estatus: "Procesado", detalles: "Campaña enfocada en salud." },
-        { nombre: "Más producto", estatus: "Procesado", detalles: "Promoción de cantidad." },
+        {
+          nombre: "Menos sodio",
+          estatus: "Procesado",
+          detalles: "Campaña enfocada en salud.",
+        },
+        {
+          nombre: "Más producto",
+          estatus: "Procesado",
+          detalles: "Promoción de cantidad.",
+        },
       ],
     },
     {
       nombre: "Sabritas adobadas",
       imagen: sabritasadobadas,
       campañas: [
-        { nombre: "Salsa secreta", estatus: "Procesado", detalles: "Campaña gourmet secreta." },
+        {
+          nombre: "Salsa secreta",
+          estatus: "Procesado",
+          detalles: "Campaña gourmet secreta.",
+        },
       ],
     },
     {
@@ -72,7 +121,6 @@ const ProductsPage = () => {
     );
   };
 
-
   const handleGuardarCampana = (campanaActualizada) => {
     setProductos((prev) =>
       prev.map((p) =>
@@ -106,7 +154,6 @@ const ProductsPage = () => {
     });
   };
 
-
   const handleNuevaCampana = (productoIndex, nuevaCampana) => {
     if (!productos[productoIndex]) return;
 
@@ -128,7 +175,9 @@ const ProductsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 relative">
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">Empresa: Sabritas</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-4">
+        Empresa: Sabritas
+      </h1>
 
       <button
         onClick={agregarProducto}
@@ -141,10 +190,18 @@ const ProductsPage = () => {
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/4">Nombre del producto</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/4">Campaña</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/6">Estatus</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/3">Acciones</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/4">
+                Nombre del producto
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/4">
+                Campaña
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/6">
+                Estatus
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/3">
+                Acciones
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">

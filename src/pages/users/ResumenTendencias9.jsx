@@ -29,8 +29,12 @@ const ResumenTendencias9 = () => {
     const fetchData = async () => {
       try {
         const [resReddit, resRandom] = await Promise.all([
-          fetch("http://localhost:8080/social/reddit/trends?topic=Fitness&days=30"),
-          fetch("http://localhost:8080/social/random/trends?topic=Fitness&days=30"),
+          fetch(
+            "http://localhost:8080/social/reddit/trends?topic=Fitness&days=30"
+          ),
+          fetch(
+            "http://localhost:8080/social/random/trends?topic=Fitness&days=30"
+          ),
         ]);
 
         const dataReddit = await resReddit.json();
@@ -110,6 +114,14 @@ const ResumenTendencias9 = () => {
             </Link>
           </label>
         </div>
+      </div>
+
+      <div>
+        <Link to="/users/adminproductos">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+            Volver a la página de campañas
+          </button>
+        </Link>
       </div>
 
       {/* Análisis */}
