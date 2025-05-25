@@ -17,7 +17,7 @@ const Confirmacion = () => {
 
   useEffect(() => {
     if (idEmpresa) {
-      fetch(`http://127.0.0.1:8080/empresa/empresa/${idEmpresa}`)
+      fetch(`http://127.0.0.1:8080/empresa/${idEmpresa}`)
         .then((res) => res.json())
         .then((data) => {
           console.log("Datos de empresa:", data);
