@@ -16,16 +16,6 @@ const ProductsPage = () => {
         { nombre: "Más producto", estatus: "Procesado" },
       ],
     },
-    {
-      nombre: "Sabritas adobadas",
-      imagen: sabritasadobadas,
-      campañas: [{ nombre: "Salsa secreta", estatus: "Procesado" }],
-    },
-    {
-      nombre: "Sabritas habanero",
-      imagen: sabritashabanero,
-      campañas: [{ nombre: "Añadir", estatus: "Sin procesar" }],
-    },
   ];
 
  
