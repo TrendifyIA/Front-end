@@ -17,6 +17,7 @@ const Campana = () => {
   const { campana, setCampana } = useContext(ContextoTutorial);
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
+    console.log("Saved form data:", saved);
     return saved
       ? JSON.parse(saved)
       : campana || {

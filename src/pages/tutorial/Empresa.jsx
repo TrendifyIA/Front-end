@@ -25,18 +25,15 @@ const TutorialEmpresa = () => {
     return saved
       ? JSON.parse(saved)
       : empresa || {
-          nombre: "",
-          nicho: "",
-          direccion: "",
-          propuesta_valor: "",
-          descripcion_servicio: "",
-          competidores: "",
-        };
+        nombre: "",
+        nicho: "",
+        direccion: "",
+        propuesta_valor: "",
+        descripcion_servicio: "",
+        competidores: "",
+      };
   });
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
-  }, [form]);
 
   const handleChange = (e) => {
     setForm({
@@ -45,17 +42,20 @@ const TutorialEmpresa = () => {
     });
   };
 
-  const handleNext = (e) => {
-    e.preventDefault();
-    setEmpresa(form);
-    navegar("/tutorial/Producto");
-  };
+const handleNext = (e) => {
+  e.preventDefault();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); // Guardar solo aquí
+  setEmpresa(form);
+  navegar("/tutorial/Producto");
+};
 
-  const handleBack = (e) => {
-    e.preventDefault();
-    setEmpresa(form);
-    navegar("/tutorial");
-  };
+const handleBack = (e) => {
+  e.preventDefault();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); // Guardar solo aquí
+  setEmpresa(form);
+  navegar("/tutorial");
+};
+
 
   return (
     <div className="bg-gray-100 min-h-screen font-sans">
