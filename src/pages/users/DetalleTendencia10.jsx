@@ -36,7 +36,7 @@ const GraficaRedes = ({ seleccionadas, datosReddit, datosRandom }) => {
       .filter((r) => seleccionadas.includes(r.id))
       .map((r) => {
         let dataPoints = [];
-        
+
         if (r.id === "reddit" && datosReddit.length > 0) {
           dataPoints = datosReddit.map((d) => d.avg_buzzscore);
         } else if (r.id === "web" && datosRandom.length > 0) {
@@ -44,9 +44,12 @@ const GraficaRedes = ({ seleccionadas, datosReddit, datosRandom }) => {
           dataPoints = datosRandom.map((d) => d.avg_buzzscore);
         } else if (r.id === "youtube") {
           // Datos simulados para YouTube
-          dataPoints = datosRandom.length > 0 
-            ? datosRandom.map((d) => d.avg_buzzscore * 1.2) // 20% más alto que web
-            : Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
+          dataPoints =
+            datosRandom.length > 0
+              ? datosRandom.map((d) => d.avg_buzzscore * 1.2) // 20% más alto que web
+              : Array.from({ length: 10 }, () =>
+                  Math.floor(Math.random() * 100)
+                );
         }
 
         return {
@@ -83,7 +86,6 @@ const ResumenTendencias10 = () => {
   const [seleccionadas, setSeleccionadas] = useState(["web", "reddit"]);
   const [datosReddit, setDatosReddit] = useState([]);
   const [datosRandom, setDatosRandom] = useState([]);
-
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -140,6 +142,14 @@ const ResumenTendencias10 = () => {
             </label>
           ))}
         </div>
+      </div>
+
+      <div>
+        <Link to="/users/resumen-tendencias">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+            Volver al resumen de tendencias
+          </button>
+        </Link>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
