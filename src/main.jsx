@@ -1,18 +1,44 @@
+/**
+ * @file main.jsx
+ * @author Andrea Doce, Alexei, Eduardo Rosas, Jennyfer Jasso, Sandra, ...
+ * @description Punto de entrada principal para la aplicación Trendify donde se configuran las rutas y se renderiza la aplicación.
+*/
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; // Importación de react-router-dom
+import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
 import "./index.css";
-import PublicLayout from "./pages/layouts/PublicLayout.jsx"; // Importación de los layouts
+import PublicLayout from "./pages/layouts/PublicLayout.jsx"; 
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
+import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
+import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
 import App from "./App.jsx";
-import Home from "./pages/Home.jsx";
-import Planes from "./pages/Planes.jsx";
+import Landing from "./pages/LandingPage.jsx";
+import Planes from "./pages/PlansPage.jsx";
+import PlanesProtected from "./pages/PlansPageProtected.jsx";
 import Servicios from "./pages/Servicios.jsx";
-import Nosotros from "./pages/Nosotros.jsx";
+import Nosotros from "./pages/AboutUsPage.jsx";
 import Dashboard from "./pages/users/Dashboard.jsx";
-import RecuperarPassword from "./pages/RecuperarPassword.jsx";
-import RestablecerPassword from "./pages/RestablecerPassword.jsx";
-import Perfil from "./pages/users/Perfil.jsx";
+//import RecuperarPassword from "./pages/RecuperarPassword.jsx";
+//import RestablecerPassword from "./pages/RestablecerPassword.jsx";
+//import Perfil from "./pages/users/Perfil.jsx";
+import Registro from "./pages/RegistroUsuario.jsx";
+import Login from "./pages/Login.jsx";
+import Producto from "./pages/tutorial/Producto.jsx";
+import Campana from "./pages/tutorial/Campana.jsx";
+import Empresa from "./pages/users/Empresa.jsx";
+import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx"; // Importación del componente de ruta privada
+import ProductsPage from "./pages/users/ProductsPage.jsx";
+import SummaryPage from "./pages/tutorial/SummaryPage.jsx";
+import ConfirmacionDatos from "./pages/tutorial/ConfirmarDatos.jsx";
+import Procesando from "./pages/tutorial/Procesando.jsx";
+import TutorialEmpresa from "./pages/tutorial/Empresa.jsx"; 
+import SubscribedRoute from "./components/SubscribedRoute.jsx";
+import ProveedorTutorial from "./context/ProveedorTutorial";
+import TutorialRoute from "./components/TutorialRoute.jsx"; 
+import ResumenTendencias9 from './pages/users/ResumenTendencias9.jsx';
+import DetalleTendencia10 from './pages/users/DetalleTendencia10.jsx'
+
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -20,31 +46,73 @@ const router = createBrowserRouter([
     path: "/",
     element: <PublicLayout />,
     children: [
-      { index: true, element: <Home /> }, // Ruta por defecto
+      { index: true, element: <Landing /> }, // Ruta por defecto
       { path: "planes", element: <Planes /> }, // Ruta para la página de planes
       { path: "servicios", element: <Servicios /> }, // Ruta para la página de servicios
       { path: "nosotros", element: <Nosotros /> }, // Ruta para la página de nosotros
+      { index: true, element: <Landing /> }, 
+      { path: "planes", element: <Planes /> }, 
+      { path: "servicios", element: <Servicios /> }, 
+      { path: "nosotros", element: <Nosotros /> }, 
     ],
   },
   {
     path: "/users",
-    element: <UsersLayout />,
+    element: (
+      <SubscribedRoute>
+        <UsersLayout />
+      </SubscribedRoute>
+    ),
     children: [
-      { index: true, element: <Dashboard /> }, // Ruta por defecto
+      { index: true, element: <Dashboard /> },
+      { path: "producto", element: <Producto /> },
+      { path: "campana", element: <Campana /> },
+      { index: true, element: <Dashboard /> }, 
+      { path: "adminproductos", element: <ProductsPage /> },
+      { path: "empresa", element: <Empresa /> },
+      { path: "bienvenida", element: <Bienvenida /> },
+      { path: 'resumen-tendencias', element: <ResumenTendencias9 /> },
+      {path: 'detalle-tendencia', element: <DetalleTendencia10 /> },
+      { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
       {},
     ],
   },
   {
-    path: "/recuperar-password",
-    element: <RestablecerPassword />, // Ruta para la página de recuperar contraseña
+    path: "/simple",
+    element: <SimpleLayout />,
+    children: [
+      { path: "registro", element: <Registro /> },
+      { path: "registro", element: <Registro /> },
+      { path: "login", element: <Login /> },
+      {
+        path: "planes_protected",
+        element: (
+          <PrivateRoute>
+            <PlanesProtected />
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
   {
-    path: "/reset-password",
-    element: <RecuperarPassword />, // Ruta para la página de restablecer contraseña
-  },{
-    path: "/perfil",
-    element: <Perfil />
-  }
+    path: "/tutorial",
+    element: (
+      <TutorialRoute>
+        <ProveedorTutorial>
+          <TutorialLayout />
+        </ProveedorTutorial>
+      </TutorialRoute>
+    ),
+    children: [
+      { index: true, element: <Bienvenida /> },
+      { path: "producto", element: <Producto /> },
+      { path: "campana", element: <Campana /> },
+      { path: "empresa", element: <TutorialEmpresa /> },
+      { path: "resumen", element: <SummaryPage /> },
+      { path: "confirmacion", element: <ConfirmacionDatos /> },
+      { path: "procesando", element: <Procesando /> },
+    ],
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(

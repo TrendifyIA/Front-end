@@ -1,35 +1,40 @@
 import React from 'react'
 import Logo from '../assets/images/Trendify.png'
-import PrimaryButton from './PrimaryButton.jsx'
+import CustomButton from './CustomButton.jsx'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const NavBar = () => {
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate("/");
+    }
   return (
-    <div class="w-full fixed">
-      <header class="bg-primary-500 flex w-full justify-center">
-        <nav class="bg-primary-500 flex justify-between items-center w-[95%] font-family p-4">
-            <div class="cursor-pointer">
+    <div className="w-full fixed">
+      <header className="bg-primary-500 flex w-full justify-center">
+        <nav className="bg-primary-500 flex justify-between items-center w-[95%] font-family p-4">
+            <div className="cursor-pointer" onClick={handleClick}>
                 <img src={Logo} alt="logo" />
             </div>
-            <div class="">
-                <ul class="flex items-center gap-[4vw] [&>li:hover]:scale-105">
+            <div className="">
+                <ul className="flex items-center gap-[4vw] [&>li:hover]:scale-105">
                     <li>
-                        <Link to="/" class="text-white">Home</Link>
+                        <Link to="/" className="text-white">Home</Link>
                     </li>
                     <li>
-                        <Link to="/planes" class="text-white">Planes</Link>
+                        <Link to="/planes" className="text-white">Planes</Link>
                     </li>
                     <li>
-                        <Link to="/servicios" class="text-white">Servicios</Link>
+                        <Link to="/servicios" className="text-white">Servicios</Link>
                     </li>
                     <li>
-                        <Link to="/nosotros" class="text-white">Nosotros</Link>
+                        <Link to="/nosotros" className="text-white">Nosotros</Link>
                     </li>
                 </ul>
             </div>
-            <div class="flex gap-[1vw]">
-                <PrimaryButton texto="Inicia Sesión" ></PrimaryButton>
-                <PrimaryButton texto="Regístrate" ></PrimaryButton> 
+            <div className="flex gap-[1vw]">
+                <CustomButton texto="Inicia Sesión" tipo='secundario' ruta="/simple/login" ></CustomButton>
+                <CustomButton texto="Regístrate" tipo='secundario' ruta="/simple/registro"></CustomButton> 
             </div>
         </nav>
       </header>

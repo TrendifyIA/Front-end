@@ -3,9 +3,9 @@ import { Outlet } from "react-router-dom" //Permite renderizar páginas
 
 const PublicLayout = () => {
   return (
-    <div class="flex flex-col h-screen">
+    <div className="flex flex-col h-screen">
       <NavBar></NavBar>
-      <main class="pt-18 h-full overflow-y-auto">
+      <main className="pt-16 h-full overflow-y-auto">
         <Outlet />
       </main>
     </div>
