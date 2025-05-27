@@ -1,5 +1,5 @@
 import { FaEdit, FaTrashAlt, FaSyncAlt, FaCheck } from "react-icons/fa";
-import ProductImage from './ProductImage'; // Importa el nuevo componente
+import ProductImage from './users/ProductImage';
 import { useEffect, useState } from "react";
 
 const ProductsPage = () => {
@@ -75,6 +75,7 @@ const ProductsPage = () => {
 
           <tbody className="divide-y divide-gray-200">
             {productos.map((producto, productoIndex) => (
+              console.log("Producto:", producto),
               <tr key={productoIndex}>
                 <td className="px-4 py-3 text-sm text-gray-900 font-medium align-middle w-1/4">
                   <div className="flex items-center">

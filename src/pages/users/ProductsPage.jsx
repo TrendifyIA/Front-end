@@ -1,36 +1,18 @@
-import React, { useState } from "react";
-import { FaEdit, FaTrashAlt, FaSyncAlt, FaCheck, FaPencilAlt, FaTimes } from "react-icons/fa";
-import sabritaslimon from "../../assets/images/sabritaslimon.png";
-import sabritasadobadas from "../../assets/images/sabritasadobadas.png";
-import sabritashabanero from "../../assets/images/sabritashabanero.png";
+import React, { useState, useEffect } from "react";
+import {
+  FaEdit,
+  FaTrashAlt,
+  FaSyncAlt,
+  FaCheck,
+  FaPencilAlt,
+  FaTimes,
+} from "react-icons/fa";
 import ProductImage from "./ProductImage";
 import ProductoModal from "../../components/ProductoModal";
 import CampanaModal from "../../components/CampanaModal";
 
 const ProductsPage = () => {
-  const [productos, setProductos] = useState([
-    {
-      nombre: "Sabritas limón",
-      imagen: sabritaslimon,
-      campañas: [
-        { nombre: "Menos sodio", estatus: "Procesado", detalles: "Campaña enfocada en salud." },
-        { nombre: "Más producto", estatus: "Procesado", detalles: "Promoción de cantidad." },
-      ],
-    },
-    {
-      nombre: "Sabritas adobadas",
-      imagen: sabritasadobadas,
-      campañas: [
-        { nombre: "Salsa secreta", estatus: "Procesado", detalles: "Campaña gourmet secreta." },
-      ],
-    },
-    {
-      nombre: "Sabritas habanero",
-      imagen: sabritashabanero,
-      campañas: [{ nombre: "Añadir", estatus: "Sin procesar" }],
-    },
-  ]);
-
+  const [productos, setProductos] = useState([]);
   const [selectedProductoIndex, setSelectedProductoIndex] = useState(null);
   const [selectedImagen, setSelectedImagen] = useState(null);
   const [selectedCampana, setSelectedCampana] = useState(null);
@@ -39,13 +21,40 @@ const ProductsPage = () => {
   const [editingNombreIndex, setEditingNombreIndex] = useState(null);
   const [nombreTemporal, setNombreTemporal] = useState("");
 
+  // 🟡 Cargar productos desde backend
+  useEffect(() => {
+    const idEmpresa = 4; // Cambia esto por el ID dinámico si es necesario
+    fetch(`http://localhost:8080/producto/productos/${idEmpresa}`)
+      .then((res) => res.json())
+      .then((data) => {
+        // Inicializa campañas vacías
+        const productosConCampanas = data.map((p) => ({
+          ...p,
+          campañas: [{ nombre: "Añadir", estatus: "Sin procesar" }],
+        }));
+        setProductos(productosConCampanas);
+      })
+      .catch((error) => console.error("Error al obtener productos:", error));
+  }, []);
+
   const handleNombreChange = (e) => setNombreTemporal(e.target.value);
 
   const guardarNuevoNombre = (index) => {
-    const nuevosProductos = [...productos];
-    nuevosProductos[index].nombre = nombreTemporal;
-    setProductos(nuevosProductos);
+    const nuevos = [...productos];
+    nuevos[index].nombre = nombreTemporal;
+    setProductos(nuevos);
     setEditingNombreIndex(null);
+  };
+
+  const agregarProducto = () => {
+    const nuevo = {
+      nombre: "Nuevo producto",
+      ruta_img: "", // podrías usar imagen por defecto
+      campañas: [{ nombre: "Añadir", estatus: "Sin procesar" }],
+    };
+    setProductos([...productos, nuevo]);
+    setSelectedProductoIndex(productos.length);
+    setShowProductoModal(true);
   };
 
   const abrirProductoModal = (index) => {
@@ -53,77 +62,29 @@ const ProductsPage = () => {
     setShowProductoModal(true);
   };
 
-  const agregarProducto = () => {
-    const nuevoProducto = {
-      nombre: "Nuevo producto",
-      imagen: sabritaslimon,
-      campañas: [{ nombre: "Añadir", estatus: "Sin procesar" }],
-    };
-    setProductos([...productos, nuevoProducto]);
-    setSelectedProductoIndex(productos.length);
-    setShowProductoModal(true);
+  const handleUpdateProducto = (actualizado) => {
+    setProductos(productos.map((p, i) => (i === selectedProductoIndex ? actualizado : p)));
   };
 
-  const handleUpdateProducto = (productoActualizado) => {
-    setProductos((prevProductos) =>
-      prevProductos.map((p, i) =>
-        i === selectedProductoIndex ? productoActualizado : p
-      )
+  const handleUpdateCampana = (prodIndex, campanaActualizada) => {
+    const actualizados = [...productos];
+    const nuevasCampanas = actualizados[prodIndex].campañas.map((c) =>
+      c.nombre === campanaActualizada.nombre ? campanaActualizada : c
     );
+    actualizados[prodIndex].campañas = nuevasCampanas;
+    setProductos(actualizados);
   };
 
-
-  const handleGuardarCampana = (campanaActualizada) => {
-    setProductos((prev) =>
-      prev.map((p) =>
-        p.id === productoSeleccionado.id
-          ? {
-              ...p,
-              campanas: p.campanas.map((c) =>
-                c.id === campanaActualizada.id ? campanaActualizada : c
-              ),
-            }
-          : p
-      )
-    );
-  };
-
-  const handleUpdateCampana = (productoIndex, campanaActualizada) => {
-    setProductos((prevProductos) => {
-      const productosActualizados = [...prevProductos];
-      const producto = productosActualizados[productoIndex];
-
-      const nuevasCampanas = producto.campañas.map((c) =>
-        c.nombre === campanaActualizada.nombre ? campanaActualizada : c
-      );
-
-      productosActualizados[productoIndex] = {
-        ...producto,
-        campañas: nuevasCampanas,
-      };
-
-      return productosActualizados;
-    });
-  };
-
-
-  const handleNuevaCampana = (productoIndex, nuevaCampana) => {
-    if (!productos[productoIndex]) return;
-
-    setProductos((prevProductos) => {
-      const productosActualizados = [...prevProductos];
-      const producto = productosActualizados[productoIndex];
-      const nuevasCampanas = [
-        ...producto.campañas.filter((c) => c.nombre !== "Añadir"),
-        nuevaCampana,
-        { nombre: "Añadir", estatus: "Sin procesar" }, // mantener opción de añadir
-      ];
-      productosActualizados[productoIndex] = {
-        ...producto,
-        campañas: nuevasCampanas,
-      };
-      return productosActualizados;
-    });
+  const handleNuevaCampana = (prodIndex, nuevaCampana) => {
+    const actualizados = [...productos];
+    const producto = actualizados[prodIndex];
+    const nuevas = [
+      ...producto.campañas.filter((c) => c.nombre !== "Añadir"),
+      nuevaCampana,
+      { nombre: "Añadir", estatus: "Sin procesar" },
+    ];
+    producto.campañas = nuevas;
+    setProductos(actualizados);
   };
 
   return (
@@ -137,7 +98,7 @@ const ProductsPage = () => {
         + Agregar producto
       </button>
 
-      <div className="rounded-lg bg-white shadow mt-6">
+      <div className="rounded-lg bg-white shadow">
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
@@ -152,20 +113,16 @@ const ProductsPage = () => {
               producto.campañas?.map((campaña, j) => (
                 <tr key={`${i}-${j}`}>
                   {j === 0 && (
-                    <td
-                      rowSpan={producto.campañas.length}
-                      className="px-4 py-3 font-medium text-sm text-gray-900"
-                    >
+                    <td rowSpan={producto.campañas.length} className="px-4 py-3 text-sm font-medium text-gray-900">
                       <div className="flex items-center gap-2">
-                        <img
-                          src={producto.imagen}
+                        <ProductImage
+                          src={producto.ruta_img}
                           alt={producto.nombre}
                           className="w-16 h-16 cursor-pointer rounded"
-                          onClick={() => setSelectedImagen(producto.imagen)}
+                          onClick={() => setSelectedImagen(producto.ruta_img)}
                         />
                         {editingNombreIndex === i ? (
                           <input
-                            type="text"
                             value={nombreTemporal}
                             onChange={handleNombreChange}
                             onBlur={() => guardarNuevoNombre(i)}
@@ -257,11 +214,7 @@ const ProductsPage = () => {
             >
               <FaTimes />
             </button>
-            <img
-              src={selectedImagen}
-              alt="Ampliada"
-              className="max-w-lg max-h-screen rounded-lg"
-            />
+            <img src={selectedImagen} alt="Ampliada" className="max-w-lg max-h-screen rounded-lg" />
           </div>
         </div>
       )}
@@ -269,12 +222,8 @@ const ProductsPage = () => {
       {selectedCampana && (
         <div className="fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md">
-            <h2 className="text-lg font-bold mb-2">
-              Campaña: {selectedCampana.nombre}
-            </h2>
-            <p className="text-sm text-gray-700 mb-4">
-              {selectedCampana.detalles}
-            </p>
+            <h2 className="text-lg font-bold mb-2">Campaña: {selectedCampana.nombre}</h2>
+            <p className="text-sm text-gray-700 mb-4">{selectedCampana.detalles}</p>
             <button
               onClick={() => setSelectedCampana(null)}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
