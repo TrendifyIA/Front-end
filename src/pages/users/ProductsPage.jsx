@@ -87,6 +87,27 @@ const ProductsPage = () => {
     setProductos(actualizados);
   };
 
+  function procesarCampaña() {
+    const idCampana = 28; // ID hardcodeado temporalmente
+
+    fetch("http://127.0.0.1:8080/proceso/iniciar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({ id_campana: idCampana })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Respuesta del servidor:", data);
+        alert(data.msg || "Proceso completado");
+      })
+      .catch(error => {
+        console.error("Error al procesar:", error);
+      });
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 p-6 relative">
       <h1 className="text-2xl font-bold text-gray-900 mb-4">Empresa: Sabritas</h1>
@@ -188,7 +209,7 @@ const ProductsPage = () => {
                         <FaTrashAlt /> Eliminar
                       </button>
                       {campaña.estatus === "Sin procesar" ? (
-                        <button className="flex items-center gap-1 bg-gray-400 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-500">
+                        <button className="flex items-center gap-1 bg-gray-400 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-500" onClick={() => {procesarCampaña()}}>
                           <FaSyncAlt /> Procesar
                         </button>
                       ) : (
