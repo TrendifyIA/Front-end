@@ -72,11 +72,45 @@ const Producto = () => {
     }
   };
 
-  const handleNext = (e) => {
-    e.preventDefault();
-    setProducto(form);
-    navegar("/tutorial/Campana");
-  };
+const handleNext = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append("nombre", form.nombre);
+  formData.append("categoria", form.categoria);
+  formData.append("descripcion", form.descripcion);
+  formData.append("publico_objetivo", form.publico_objetivo);
+  formData.append("estado", form.estado);
+  formData.append("id_empresa", localStorage.getItem("empresa_id")); // O ajusta según tu lógica
+
+  // Aquí usas la imagen real, no solo el nombre
+  const inputFile = document.getElementById("imagen");
+  if (inputFile && inputFile.files[0]) {
+    formData.append("ruta_img", inputFile.files[0]);
+  }
+
+  try {
+    const response = await fetch("http://localhost:8080/producto/crear", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("Producto creado con éxito");
+      setProducto(form);
+      navegar("/tutorial/Campana");
+    } else {
+      console.error(result.error);
+      alert("Error al crear producto: " + result.error);
+    }
+  } catch (error) {
+    console.error("Error de red:", error);
+    alert("Ocurrió un error de red");
+  }
+};
+
 
   const handleBack = (e) => {
     e.preventDefault();

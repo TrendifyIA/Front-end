@@ -1,22 +1,21 @@
 import { FaEdit, FaTrashAlt, FaSyncAlt, FaCheck } from "react-icons/fa";
-import sabritaslimon from '../../assets/images/sabritaslimon.png';
-import sabritasadobadas from '../../assets/images/sabritasadobadas.png';
-import sabritashabanero from '../../assets/images/sabritashabanero.png';
 import ProductImage from './ProductImage'; // Importa el nuevo componente
 import { useEffect, useState } from "react";
 
 const ProductsPage = () => {
 
-  const productosEjemplo = [
-    {
-      nombre: "Sabritas limón",
-      imagen: sabritaslimon,
-      campañas: [
-        { nombre: "Menos sodio", estatus: "Procesado" },
-        { nombre: "Más producto", estatus: "Procesado" },
-      ],
-    },
-  ];
+  const [productos, setProductos] = useState([]);
+  useEffect(() => {
+  const idEmpresa = 4;
+  fetch(`http://localhost:8080/producto/productos/${idEmpresa}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log("Productos:", data);
+      setProductos(data);
+    })
+    .catch(error => console.error("Error al obtener productos:", error));
+}, []);
+
 
  
   const [campanas, setCampanas] = useState([]);
@@ -75,75 +74,44 @@ const ProductsPage = () => {
           </thead>
 
           <tbody className="divide-y divide-gray-200">
-            {productosEjemplo.map((producto, productoIndex) =>
-              producto.campañas.map((campaña, campañaIndex) => (
-                <tr key={`${productoIndex}-${campañaIndex}`}>
-                  {campañaIndex === 0 && (
-                    <td
-                      rowSpan={producto.campañas.length}
-                      className="px-4 py-3 text-sm text-gray-900 font-medium align-middle w-1/4"
-                    >
-                      <div className="flex items-center">
-                        <ProductImage 
-                          src={producto.imagen}
-                          alt={producto.nombre}
-                          className="w-16 h-16 mr-2"
-                        />
-                        <span>{producto.nombre}</span>
-                      </div>
-                    </td>
-                  )}
+            {productos.map((producto, productoIndex) => (
+              <tr key={productoIndex}>
+                <td className="px-4 py-3 text-sm text-gray-900 font-medium align-middle w-1/4">
+                  <div className="flex items-center">
+                    <ProductImage 
+                      src={producto.ruta_img} // URL Cloudinary
+                      alt={producto.nombre}
+                      className="w-16 h-16 mr-2"
+                    />
+                    <span>{producto.nombre}</span>
+                  </div>
+                </td>
 
-                  <td className="px-4 py-3 text-sm text-blue-600 font-medium w-1/4">
-                    {campaña.nombre === "Añadir" ? (
-                      <button className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700">
-                        + Añadir
-                      </button>
-                    ) : (
-                      <span className="hover:underline cursor-pointer">
-                        {campaña.nombre} <span className="ml-1">›</span>
-                      </span>
-                    )}
-                  </td>
+                <td className="px-4 py-3 text-sm text-blue-600 font-medium w-1/4">
+                  <span className="text-gray-600">Sin campañas</span>
+                </td>
 
-                  <td className="px-4 py-3 w-1/6">
-                    <span
-                      className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                        campaña.estatus === "Procesado"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {campaña.estatus}
-                    </span>
-                  </td>
+                <td className="px-4 py-3 w-1/6">
+                  <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${producto.estado === "1" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>
+                    {producto.estado === "1" ? "Activo" : "Inactivo"}
+                  </span>
+                </td>
 
-                  <td className="px-4 py-3 w-1/3">
-                    <div className="flex gap-2">
-                      <button className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700">
-                        <FaEdit className="text-white" />
-                        Editar
-                      </button>
-                      <button className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700">
-                        <FaTrashAlt className="text-white" />
-                        Eliminar
-                      </button>
-                      {campaña.estatus === "Sin procesar" ? (
-                        <button className="flex items-center gap-1 bg-gray-400 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-500">
-                          <FaSyncAlt className="text-white" />
-                          Procesar
-                        </button>
-                      ) : (
-                        <button className="flex items-center gap-1 bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700">
-                          <FaCheck className="text-white" />
-                          Visualizar
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
+                <td className="px-4 py-3 w-1/3">
+                  <div className="flex gap-2">
+                    <button className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700">
+                      <FaEdit className="text-white" />
+                      Editar
+                    </button>
+                    <button className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700">
+                      <FaTrashAlt className="text-white" />
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+
           </tbody>
         </table>
       </div>
