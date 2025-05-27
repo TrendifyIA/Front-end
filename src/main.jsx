@@ -70,7 +70,6 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> }, 
       { path: "adminproductos", element: <ProductsPage /> },
       { path: "empresa", element: <Empresa /> },
-      { path: "bienvenida", element: <Bienvenida /> },
       { path: 'resumen-tendencias', element: <ResumenTendencias9 /> },
       {path: 'detalle-tendencia', element: <DetalleTendencia10 /> },
       { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
