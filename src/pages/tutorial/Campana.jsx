@@ -1,6 +1,6 @@
 /**
  * @file Campana.jsx
- * @author Jennyfer Jasso, ...
+ * @author Jennyfer Jasso, Eduardo Rosas, ...
  * @description Página de formulario para registrar información de una campaña en el tutorial.
  */
 import { BsBoxSeam, BsArrowLeft, BsArrowRight } from "react-icons/bs";
@@ -12,12 +12,13 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
 const STORAGE_KEY = "tutorial_campana_form";
+
 const Campana = () => {
   const navegar = useNavigate();
   const { campana, setCampana } = useContext(ContextoTutorial);
+
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    console.log("Saved form data:", saved);
     return saved
       ? JSON.parse(saved)
       : campana || {
@@ -30,6 +31,8 @@ const Campana = () => {
           canales_distribucion: "",
         };
   });
+
+  const [error, setError] = useState("");
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
@@ -45,6 +48,27 @@ const Campana = () => {
 
   const handleNext = (e) => {
     e.preventDefault();
+
+    const camposRequeridos = [
+      "nombre",
+      "objetivo",
+      "mensaje_clave",
+      "f_inicio",
+      "f_fin",
+      "presupuesto",
+      "canales_distribucion",
+    ];
+
+    const camposIncompletos = camposRequeridos.some(
+      (campo) => !form[campo]?.toString().trim()
+    );
+
+    if (camposIncompletos || Number(form.presupuesto) <= 0) {
+      setError("Por favor, complete todos los campos y asegúrese de que el presupuesto sea mayor a 0.");
+      return;
+    }
+
+    setError("");
     setCampana(form);
     navegar("/tutorial/confirmacion");
   };
@@ -59,16 +83,13 @@ const Campana = () => {
     <div className="bg-gray-100 min-h-screen font-sans">
       <div className="bg-[#0B2C63] text-white p-6">
         <h1 className="text-lg font-semibold">
-          Por favor, complete los siguientes campos para registrar la campaña
-          que se desea analizar.
+          Por favor, complete los siguientes campos para registrar la campaña que se desea analizar.
         </h1>
         <p className="text-sm">
-          La información ingresada permitirá identificar aspectos clave de la
-          campaña y facilitará la detección de tendencias relevantes.
+          La información ingresada permitirá identificar aspectos clave de la campaña y facilitará la detección de tendencias relevantes.
         </p>
         <p className="text-sm">
-          Asegúrese de completar todos los campos para obtener resultados más
-          precisos y útiles en el análisis.
+          Asegúrese de completar todos los campos para obtener resultados más precisos y útiles en el análisis.
         </p>
       </div>
 
@@ -99,6 +120,12 @@ const Campana = () => {
 
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Campaña</h2>
+
+        {error && (
+          <div className="mb-6 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
 
         <form>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -139,9 +166,7 @@ const Campana = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium">
-              Canales de distribución
-            </label>
+            <label className="block mb-1 font-medium">Canales de distribución</label>
             <input
               required
               type="text"
@@ -175,13 +200,10 @@ const Campana = () => {
                 className="w-full border rounded px-3 py-2"
               />
             </div>
-
-            <div className="mb-6">
+            <div>
               <label className="block mb-1 font-medium">Presupuesto</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">
-                  $
-                </span>
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">$</span>
                 <input
                   required
                   type="number"
