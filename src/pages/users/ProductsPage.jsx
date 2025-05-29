@@ -6,6 +6,7 @@ import sabritashabanero from "../../assets/images/sabritashabanero.png";
 import ProductImage from "./ProductImage";
 import ProductoModal from "../../components/ProductoModal";
 import CampanaModal from "../../components/CampanaModal";
+import ListaProductos from "../../components/ListaProductos"; // Asegúrate de que este componente esté correctamente implementado
 
 const ProductsPage = () => {
   const [productos, setProductos] = useState([
@@ -147,7 +148,10 @@ const ProductsPage = () => {
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/3">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody>
+            <ListaProductos />
+          </tbody>
+          {/* <tbody className="divide-y divide-gray-200">
             {productos.map((producto, i) =>
               producto.campañas?.map((campaña, j) => (
                 <tr key={`${i}-${j}`}>
@@ -244,7 +248,7 @@ const ProductsPage = () => {
                 </tr>
               ))
             )}
-          </tbody>
+          </tbody> */}
         </table>
       </div>
 
