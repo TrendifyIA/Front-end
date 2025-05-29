@@ -2,12 +2,12 @@
  * @file main.jsx
  * @author Andrea Doce, Alexei, Eduardo Rosas, Jennyfer Jasso, Sandra, ...
  * @description Punto de entrada principal para la aplicación Trendify donde se configuran las rutas y se renderiza la aplicación.
-*/
+ */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import PublicLayout from "./pages/layouts/PublicLayout.jsx"; 
+import PublicLayout from "./pages/layouts/PublicLayout.jsx";
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
 import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
@@ -32,13 +32,14 @@ import ProductsPage from "./pages/users/ProductsPage.jsx";
 import SummaryPage from "./pages/tutorial/SummaryPage.jsx";
 import ConfirmacionDatos from "./pages/tutorial/ConfirmarDatos.jsx";
 import Procesando from "./pages/tutorial/Procesando.jsx";
-import TutorialEmpresa from "./pages/tutorial/Empresa.jsx"; 
+import TutorialEmpresa from "./pages/tutorial/Empresa.jsx";
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
 import ProveedorTutorial from "./context/ProveedorTutorial";
-import TutorialRoute from "./components/TutorialRoute.jsx"; 
-import ResumenTendencias9 from './pages/users/ResumenTendencias9.jsx';
-import DetalleTendencia10 from './pages/users/DetalleTendencia10.jsx'
-
+import TutorialRoute from "./components/TutorialRoute.jsx";
+import ResumenTendencias9 from "./pages/users/ResumenTendencias9.jsx";
+import DetalleTendencia10 from "./pages/users/DetalleTendencia10.jsx";
+import ProveedorCampana from "./context/ProveedorCampana.jsx";
+import ProveedorProducto from "./context/ProveedorProducto.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -50,10 +51,10 @@ const router = createBrowserRouter([
       { path: "planes", element: <Planes /> }, // Ruta para la página de planes
       { path: "servicios", element: <Servicios /> }, // Ruta para la página de servicios
       { path: "nosotros", element: <Nosotros /> }, // Ruta para la página de nosotros
-      { index: true, element: <Landing /> }, 
-      { path: "planes", element: <Planes /> }, 
-      { path: "servicios", element: <Servicios /> }, 
-      { path: "nosotros", element: <Nosotros /> }, 
+      { index: true, element: <Landing /> },
+      { path: "planes", element: <Planes /> },
+      { path: "servicios", element: <Servicios /> },
+      { path: "nosotros", element: <Nosotros /> },
     ],
   },
   {
@@ -67,12 +68,21 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "producto", element: <Producto /> },
       { path: "campana", element: <Campana /> },
-      { index: true, element: <Dashboard /> }, 
-      { path: "adminproductos", element: <ProductsPage /> },
+      { index: true, element: <Dashboard /> },
+      {
+        path: "adminproductos",
+        element: (
+          <ProveedorProducto>
+            <ProveedorCampana>
+              <ProductsPage />
+            </ProveedorCampana>
+          </ProveedorProducto>
+        ),
+      },
       { path: "empresa", element: <Empresa /> },
       { path: "bienvenida", element: <Bienvenida /> },
-      { path: 'resumen-tendencias', element: <ResumenTendencias9 /> },
-      {path: 'detalle-tendencia', element: <DetalleTendencia10 /> },
+      { path: "resumen-tendencias", element: <ResumenTendencias9 /> },
+      { path: "detalle-tendencia", element: <DetalleTendencia10 /> },
       { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
       {},
     ],
