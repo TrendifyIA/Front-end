@@ -24,9 +24,30 @@ const ResumenTendencias9 = () => {
   const [mostrar, setMostrar] = useState(true);
   const [datosPromedio, setDatosPromedio] = useState([]);
   const [labels, setLabels] = useState([]);
+  const [palabrasClave, setPalabrasClave] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
+      const campanaId = 12;
+      try {
+        fetch("http://localhost:8080/keyword/" + campanaId)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Error al obtener las palabras clave");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data) {
+              console.log("Datos de la campaña:", data);
+            }
+            setPalabrasClave(data.keywords);
+            console.log("Palabras clave obtenidas:", data);
+          });
+      } catch (error) {
+        console.error("Error al obtener las palabras clave:", error);
+      }
+
       try {
         const [resReddit, resRandom] = await Promise.all([
           fetch(
@@ -58,20 +79,16 @@ const ResumenTendencias9 = () => {
 
   const data = {
     labels,
-    datasets: mostrar
-      ? [
-          {
-            label: "Fitness",
-            data: datosPromedio,
-            borderColor: "#3b82f6",
-            backgroundColor: "#3b82f6",
-            fill: false,
-            tension: 0.4,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-          },
-        ]
-      : [],
+    datasets: palabrasClave.map((palabra, idx) => ({
+      label: palabra,
+      data: mostrar ? datosPromedio : [],
+      borderColor: "#3b82f6",
+      backgroundColor: "#3b82f6",
+      fill: false,
+      tension: 0.4,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+    })),
   };
 
   const options = {
@@ -100,19 +117,21 @@ const ResumenTendencias9 = () => {
         </div>
 
         <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={mostrar}
-              onChange={() => setMostrar((prev) => !prev)}
-            />
-            <Link
-              to="/users/detalle-tendencia"
-              className="font-medium text-sm text-black hover:underline"
+          {palabrasClave.map((palabra, index) => (
+            <label
+              key={index}
+              className="flex items-center gap-2 cursor-pointer"
             >
-              Fitness
-            </Link>
-          </label>
+              <input
+                type="checkbox"
+                checked={mostrar}
+                onChange={() => setMostrar((prev) => !prev)}
+              />
+              <span className="font-medium text-sm text-black hover:underline">
+                {palabra}
+              </span>
+            </label>
+          ))}
         </div>
       </div>
 
