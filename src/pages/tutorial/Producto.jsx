@@ -1,9 +1,3 @@
-/**
- * @file Producto.jsx
- * @author Jennyfer Jasso, ...
- * @description Página de formulario para registrar información de un producto en el tutorial.
- */
-
 import { BsBoxSeam, BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { BsImage } from "react-icons/bs";
@@ -62,15 +56,17 @@ const Producto = () => {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setForm((prev) => ({
-        ...prev,
-        ruta_img: file.name, // Solo el nombre para la base de datos
-        imagenPreview: URL.createObjectURL(file), // Preview temporal
-      }));
-    }
-  };
+  const file = e.target.files?.[0];
+  if (file) {
+    setForm((prev) => ({
+      ...prev,
+      ruta_img: file.name,
+      imagenPreview: URL.createObjectURL(file),
+      imagenFile: file, // NUEVO: guarda el archivo
+    }));
+  }
+};
+
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -284,7 +280,7 @@ const Producto = () => {
                 //     }));
                 //     document.getElementById(
                 //       "nombre-imagen"
-                //     ).textContent = `Imagen seleccionada: ${file.name}`;
+                //     ).textContent = Imagen seleccionada: ${file.name};
                 //   }
                 // }}
               />

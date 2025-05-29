@@ -49,24 +49,36 @@ const ConfirmacionDatos = () => {
       const id_empresa = Number(dataEmpresa.empresa.id_empresa);
       setIdEmpresa(id_empresa);
 
-      // PRODUCTO
-      const productoPayload = { ...producto, id_empresa: id_empresa };
-      console.log("JSON enviado a /producto/crear:", productoPayload);
+      // PRODUCTO CON IMAGEN 
+
+
+      const formData = new FormData();
+      formData.append("nombre", producto.nombre);
+      formData.append("categoria", producto.categoria);
+      formData.append("descripcion", producto.descripcion);
+      formData.append("publico_objetivo", producto.publico_objetivo);
+      formData.append("estado", producto.estado);
+      formData.append("id_empresa", id_empresa); // ya lo tienes arriba
+
+      // Adjuntar el archivo si está disponible
+      if (producto.imagenFile) {
+        formData.append("ruta_img", producto.imagenFile);
+      }
+
+      console.log("Form data/producto/crear:", formData);
 
       const resProducto = await fetch("http://127.0.0.1:8080/producto/crear", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productoPayload),
+        body: formData,
       });
 
       const dataProducto = await resProducto.json();
       if (!resProducto.ok)
         throw new Error(dataProducto.mensaje || "Error al crear producto");
 
-      const id_producto = Number(dataProducto.id_producto);
+      const id_producto = Number(dataProducto.producto.id_producto); // ✅ correcto
       setIdProducto(id_producto);
+      console.log("ID del producto:", id_producto);
 
       // CAMPAÑA
       const campanaPayload = { ...campana, id_producto: id_producto };
