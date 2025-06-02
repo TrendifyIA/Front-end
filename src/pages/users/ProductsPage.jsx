@@ -127,7 +127,7 @@ const ProductsPage = () => {
   };
 
   function procesarCampaña() {
-    const idCampana = 28; // ID hardcodeado temporalmente
+    const idCampana = 13; // ID hardcodeado temporalmente
 
     fetch("http://127.0.0.1:8080/proceso/iniciar", {
       method: "POST",
@@ -140,7 +140,7 @@ const ProductsPage = () => {
       .then(response => response.json())
       .then(data => {
         console.log("Respuesta del servidor:", data);
-        alert(data.msg || "Proceso completado");
+        //alert(data.msg || "Proceso completado");
       })
       .catch(error => {
         console.error("Error al procesar:", error);
