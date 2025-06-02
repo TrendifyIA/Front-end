@@ -5,9 +5,9 @@
  */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import PublicLayout from "./pages/layouts/PublicLayout.jsx"; 
+import PublicLayout from "./pages/layouts/PublicLayout.jsx";
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
 import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
@@ -29,13 +29,16 @@ import ConfirmacionDatos from "./pages/tutorial/ConfirmarDatos.jsx";
 import Procesando from "./pages/tutorial/Procesando.jsx";
 import Producto from "./pages/tutorial/Producto.jsx";
 import Campana from "./pages/tutorial/Campana.jsx";
-import TutorialEmpresa from "./pages/tutorial/Empresa.jsx"; 
+import TutorialEmpresa from "./pages/tutorial/Empresa.jsx";
 import Bienvenida from "./pages/tutorial/Bienvenida.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx"; 
+import PrivateRoute from "./components/PrivateRoute.jsx";
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
 import Empresa from "./pages/users/Empresa.jsx";
 import ProveedorTutorial from "./context/ProveedorTutorial";
-import TutorialRoute from "./components/TutorialRoute.jsx"; 
+import TutorialRoute from "./components/TutorialRoute.jsx";
+import ProveedorEmpresa from "./context/ProveedorEmpresa";
+import ProveedorProducto from "./context/ProveedorProducto";
+import ProveedorCampana from "./context/ProveedorCampana";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -43,10 +46,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <PublicLayout />,
     children: [
-      { index: true, element: <Landing /> }, 
-      { path: "planes", element: <Planes /> }, 
-      { path: "servicios", element: <Servicios /> }, 
-      { path: "nosotros", element: <Nosotros /> }, 
+      { index: true, element: <Landing /> },
+      { path: "planes", element: <Planes /> },
+      { path: "servicios", element: <Servicios /> },
+      { path: "nosotros", element: <Nosotros /> },
     ],
   },
   {
@@ -57,7 +60,7 @@ const router = createBrowserRouter([
       </SubscribedRoute>
     ),
     children: [
-      { index: true, element: <Dashboard /> }, 
+      { index: true, element: <Dashboard /> },
       { path: "adminproductos", element: <ProductsPage /> },
       { path: "empresa", element: <Empresa /> },
     ],
@@ -67,7 +70,14 @@ const router = createBrowserRouter([
     element: <SimpleLayout />,
     children: [
       { path: "registro", element: <Registro /> },
-      { path: "login", element: <Login /> },
+      {
+        path: "login",
+        element: (
+          <ProveedorTutorial>
+            <Login />
+          </ProveedorTutorial>
+        ),
+      },
       {
         path: "planes_protected",
         element: (
@@ -81,11 +91,17 @@ const router = createBrowserRouter([
   {
     path: "/tutorial",
     element: (
-      <TutorialRoute>
-        <ProveedorTutorial>
-          <TutorialLayout />
-        </ProveedorTutorial>
-      </TutorialRoute>
+      <ProveedorTutorial>
+        <TutorialRoute>
+          <ProveedorEmpresa>
+            <ProveedorProducto>
+              <ProveedorCampana>
+                <TutorialLayout />
+              </ProveedorCampana>
+            </ProveedorProducto>
+          </ProveedorEmpresa>
+        </TutorialRoute>
+      </ProveedorTutorial>
     ),
     children: [
       { index: true, element: <Bienvenida /> },

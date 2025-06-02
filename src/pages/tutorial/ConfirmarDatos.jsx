@@ -10,83 +10,91 @@ import { BsArrowLeft } from "react-icons/bs";
 import { ContextoTutorial } from "../../context/ProveedorTutorial";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Componente de confirmación donde el usuario confirma que los datos
+ * capturados durante el tutorial son correctos.
+ *
+ * @returns {JSX.Element} Página de confirmación del tutorial.
+ */
 const ConfirmacionDatos = () => {
-  const {
-    empresa,
-    producto,
-    campana,
-    setEmpresa,
-    setProducto,
-    setCampana,
-    setIdEmpresa,
-    setIdProducto,
-  } = useContext(ContextoTutorial);
+  const { registrarDatos } = useContext(ContextoTutorial);
   const navegar = useNavigate();
 
+  // Maneja la confirmación de los datos y redirige al resumen del tutorial
   const handleConfirm = async () => {
     try {
-      // EMPRESA
       const id_usuario = Number(localStorage.getItem("id_usuario"));
-      const empresaPayload = { ...empresa, id_usuario };
-      console.log("JSON enviado a /empresa/crear-empresa:", empresaPayload);
-
-      const resEmpresa = await fetch(
-        "http://127.0.0.1:8080/empresa/crear-empresa",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(empresaPayload),
-        }
-      );
-
-      const dataEmpresa = await resEmpresa.json();
-      if (!resEmpresa.ok)
-        throw new Error(dataEmpresa.mensaje || "Error al crear empresa");
-
-      const id_empresa = Number(dataEmpresa.empresa.id_empresa);
-      setIdEmpresa(id_empresa);
-
-      // PRODUCTO
-      const productoPayload = { ...producto, id_empresa: id_empresa };
-      console.log("JSON enviado a /producto/crear:", productoPayload);
-
-      const resProducto = await fetch("http://127.0.0.1:8080/producto/crear", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productoPayload),
-      });
-
-      const dataProducto = await resProducto.json();
-      if (!resProducto.ok)
-        throw new Error(dataProducto.mensaje || "Error al crear producto");
-
-      const id_producto = Number(dataProducto.id_producto);
-      setIdProducto(id_producto);
-
-      // CAMPAÑA
-      const campanaPayload = { ...campana, id_producto: id_producto };
-      console.log("JSON enviado a /campana/crear:", campanaPayload);
-      const resCampana = await fetch("http://127.0.0.1:8080/campana/crear", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(campanaPayload),
-      });
-
-      const dataCampana = await resCampana.json();
-      if (!resCampana.ok)
-        throw new Error(dataCampana.mensaje || "Error al crear campaña");
-
+      await registrarDatos(id_usuario);
       navegar("/tutorial/resumen");
     } catch (err) {
       alert(err.message);
     }
   };
+
+  // const handleConfirm = async () => {
+  //   try {
+  //     // EMPRESA
+  //     const id_usuario = Number(localStorage.getItem("id_usuario"));
+  //     const empresaPayload = { ...empresa, id_usuario };
+  //     console.log("JSON enviado a /empresa/crear-empresa:", empresaPayload);
+
+  //     const resEmpresa = await fetch(
+  //       "http://127.0.0.1:8080/empresa/crear-empresa",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(empresaPayload),
+  //       }
+  //     );
+
+  //     const dataEmpresa = await resEmpresa.json();
+  //     if (!resEmpresa.ok)
+  //       throw new Error(dataEmpresa.mensaje || "Error al crear empresa");
+
+  //     const id_empresa = Number(dataEmpresa.empresa.id_empresa);
+  //     setIdEmpresa(id_empresa);
+
+  //     // PRODUCTO
+  //     const productoPayload = { ...producto, id_empresa: id_empresa };
+  //     console.log("JSON enviado a /producto/crear:", productoPayload);
+
+  //     const resProducto = await fetch("http://127.0.0.1:8080/producto/crear", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(productoPayload),
+  //     });
+
+  //     const dataProducto = await resProducto.json();
+  //     if (!resProducto.ok)
+  //       throw new Error(dataProducto.mensaje || "Error al crear producto");
+
+  //     const id_producto = Number(dataProducto.id_producto);
+  //     setIdProducto(id_producto);
+
+  //     // CAMPAÑA
+  //     const campanaPayload = { ...campana, id_producto: id_producto };
+  //     console.log("JSON enviado a /campana/crear:", campanaPayload);
+  //     const resCampana = await fetch("http://127.0.0.1:8080/campana/crear", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(campanaPayload),
+  //     });
+
+  //     const dataCampana = await resCampana.json();
+  //     if (!resCampana.ok)
+  //       throw new Error(dataCampana.mensaje || "Error al crear campaña");
+
+  //     navegar("/tutorial/resumen");
+  //   } catch (err) {
+  //     alert(err.message);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-100 font-poppins flex flex-col">
@@ -99,7 +107,8 @@ const ConfirmacionDatos = () => {
           campaña.
         </p>
       </div>
-
+      
+      {/* Línea de progreso */}
       <div className="flex justify-center items-center mt-12 space-x-10">
         <div className="flex flex-col items-center">
           <div className="bg-green-600 text-white rounded-full p-3 text-xl">
@@ -138,6 +147,7 @@ const ConfirmacionDatos = () => {
             </div>
           </div>
 
+          {/* Botones de navegación */}
           <div className="flex justify-between px-10">
             <CustomButton
               texto={<BsArrowLeft className="text-2xl" />}

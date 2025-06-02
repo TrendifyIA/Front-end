@@ -3,20 +3,42 @@
  * @author Eduardo Rosas, Jennyfer Jasso, ...
  * @description Página de inicio de sesión para acceder a Trendify.
  */
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import CustomButton from "../components/CustomButton.jsx";
+import { ContextoTutorial } from "../context/ProveedorTutorial.jsx";
 
+/**
+ * Componente que representa la página de login de la aplicación Trendify.
+ * Permite al usuario ingresar sus credenciales y redirige con base en el estado
+ * de su cuenta y progreso del tutorial.
+ *
+ * @component
+ * @returns {JSX.Element} Página de inicio de sesión.
+ */
 const Login = () => {
   const [credenciales, setCredenciales] = useState({
     email: "",
     password: "",
-  });
+  }); // Estado para manejar las credenciales del usuario
 
+  const { obtenerTutorialCompletado } = useContext(ContextoTutorial); // Contexto para manejar el estado del tutorial
+
+  /**
+   * Maneja los cambios en los campos del formulario de login.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento del input.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredenciales({ ...credenciales, [name]: value });
   };
 
+  /**
+   * Envía las credenciales al backend, guarda información en localStorage
+   * y redirige al usuario según su estado en el sistema.
+   *
+   * @param {React.FormEvent} e - Evento de envío del formulario.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -35,26 +57,27 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
+        // Limpia formularios anteriores
         localStorage.removeItem("tutorial_empresa_form");
         localStorage.removeItem("tutorial_producto_form");
         localStorage.removeItem("tutorial_campana_form");
 
+        // Guarda el token y datos del usuario
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("id_usuario", data.id_usuario);
 
         const id_usuario = data.id_usuario;
-        localStorage.setItem("id_usuario", id_usuario);
+        const tutorialCompletado = await obtenerTutorialCompletado(id_usuario);
+        console.log("Tutorial completado:", tutorialCompletado);
 
-        if (
-          localStorage.getItem(`tutorial_completado_${id_usuario}`) === "true"
-        ) {
+        // Redirigir según el estado de tutorial_completo
+        if (tutorialCompletado) {
           window.location.replace("/users/adminproductos");
         } else if (data.activa === true) {
           window.location.replace("/tutorial/");
         } else {
-          window.location.replace("planes_protected");
+          window.location.replace("/simple/planes_protected");
         }
-        alert(data.error || "Error en el inicio de sesión");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
