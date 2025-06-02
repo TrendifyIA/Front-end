@@ -30,7 +30,7 @@ const PlansPageProtected = () => {
 
         if (res.ok && data.activa === true) {
             console.log("Usuario tiene suscripción activa");
-          navigate("/users/bienvenida"); // Usuario ya tiene suscripción, redirige al dashboard
+          navigate("/users/adminproductos"); // Usuario ya tiene suscripción, redirige al dashboard
         }
         else{
             console.log("No tienes suscripción activa");
