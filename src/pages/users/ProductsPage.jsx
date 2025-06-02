@@ -23,7 +23,7 @@ const ProductsPage = () => {
 
   // 🟡 Cargar productos desde backend
   useEffect(() => {
-    const idEmpresa = 9; // Cambia esto por el ID dinámico si es necesario
+    const idEmpresa = 21; // Cambia esto por el ID dinámico si es necesario
     fetch(`http://localhost:8080/producto/productos/${idEmpresa}`)
       .then((res) => res.json())
       .then((data) => {
@@ -88,7 +88,7 @@ const ProductsPage = () => {
   };
 
   function procesarCampaña() {
-    const idCampana = 12; // ID hardcodeado temporalmente
+    const idCampana = 13; // ID hardcodeado temporalmente
 
     fetch("http://127.0.0.1:8080/proceso/iniciar", {
       method: "POST",
