@@ -101,7 +101,7 @@ const ProductsPage = () => {
       .then(response => response.json())
       .then(data => {
         console.log("Respuesta del servidor:", data);
-        alert(data.msg || "Proceso completado");
+        //alert(data.msg || "Proceso completado");
       })
       .catch(error => {
         console.error("Error al procesar:", error);
