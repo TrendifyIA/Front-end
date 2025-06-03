@@ -38,23 +38,16 @@ const ProductoModal = ({ producto, onClose, onSave }) => {
       nombre,
       categoria,
       descripcion,
-      publico,
+      publico_objetivo: publico,
       estado,
-      imagen,
-      campanas: producto?.campanas || [],
+      ruta_img: imagen, // archivo tipo File
+      campañas: producto?.campañas || [],
     };
 
-    setMensaje({
-      tipo: 'success',
-      texto: 'La información se ha guardado correctamente.',
-    });
-
-    setTimeout(() => {
-      setMensaje(null);
-      onSave(productoActualizado);
-      onClose();
-    }, 1000);
+    onSave(productoActualizado);
+    onClose();
   };
+
 
   return (
     <div className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center">
