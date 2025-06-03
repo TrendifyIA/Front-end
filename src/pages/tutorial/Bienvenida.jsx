@@ -1,10 +1,22 @@
+/**
+ * @file Bienvenida.jsx
+ * @author Sandra Herrera
+ * @description Pantalla de bienvenida para el tutorial de Trendify.
+ * Solicita información clave sobre la empresa, producto y campaña.
+ */
+
 import React from "react";
 import { BsBuildings, BsBoxSeam } from "react-icons/bs";
 import { RiMegaphoneLine } from "react-icons/ri";
 import CustomButton from "../../components/CustomButton";
 
+/** 
+ * @component muestra la bienvenida y los pasos iniciales.
+ * @returns {JSX.Element} Elemento JSX con la pantalla de bienvenida.
+ */
 const Bienvenida = () => {
   return (
+    // Contenedor principal de la pantalla
     <div className="min-h-screen w-full font-family flex flex-col">
       <div className="bg-[#02245A] w-full flex flex-col pb-16 min-h-[380px] md:min-h-[420px] pt-12">
         <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-4">
@@ -15,10 +27,12 @@ const Bienvenida = () => {
         </p>
       </div>
       
+      {/* Sección de pasos para completar: Empresa, Producto, Campaña */}
       <div className="bg-[#e1ecfd] flex-1 w-full relative pb-12">
         <div className="max-w-4xl mx-auto -mt-32">
           <div className="bg-[#99BFFD] rounded-xl shadow-lg px-8 py-18">
             <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+              {/* Paso 1: Empresa */}
               <div className="flex flex-col items-center flex-1">
                 <h3 className="font-bold text-xl mb-2 text-[#02245A]">Empresa</h3>
                 <div className="w-24 h-24 mb-2 bg-[#02245A] rounded-full flex items-center justify-center">
@@ -30,6 +44,8 @@ const Bienvenida = () => {
               </div>
 
               <div className="hidden md:block h-1 w-24 bg-[#7ea6e6] mx-2"></div>
+              
+              {/* Paso 2: Producto */}
               <div className="flex flex-col items-center flex-1">
                 <h3 className="font-bold text-xl mb-2 text-[#02245A]">Producto</h3>
                 <div className="w-24 h-24 mb-2 bg-[#02245A] rounded-full flex items-center justify-center">
@@ -41,6 +57,8 @@ const Bienvenida = () => {
               </div>
   
               <div className="hidden md:block h-1 w-24 bg-[#7ea6e6] mx-2"></div>
+              
+              {/* Paso 3: Campaña */}
               <div className="flex flex-col items-center flex-1">
                 <h3 className="font-bold text-xl mb-2 text-[#02245A]">Campaña</h3>
                 <div className="w-24 h-24 mb-2 bg-[#02245A] rounded-full flex items-center justify-center">
@@ -53,6 +71,7 @@ const Bienvenida = () => {
             </div>
           </div>
         </div>
+        {/* Botón para iniciar el tutorial */}
         <div className="flex justify-center -mt-5">
           <CustomButton
             texto="Empezar"
