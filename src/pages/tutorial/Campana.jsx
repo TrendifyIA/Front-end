@@ -1,8 +1,9 @@
 /**
  * @file Campana.jsx
- * @author Jennyfer Jasso, ...
+ * @author Andrea Doce, Jennyfer Jasso
  * @description Página de formulario para registrar información de una campaña en el tutorial.
  */
+
 import { BsBoxSeam, BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { RiMegaphoneLine } from "react-icons/ri";
 import { FaCheck } from "react-icons/fa";
@@ -11,10 +12,21 @@ import { ContextoTutorial } from "../../context/ProveedorTutorial";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
+// Almacena el estado del formulario en el localStorage 
 const STORAGE_KEY = "tutorial_campana_form";
+
+/**
+ * componente que representa la página de Campaña en el tutorial.
+ * Permite al usuario ingresar información sobre una campaña de marketing.
+ * Se guarda la información localmente y permite navegar entre pasos del tutorial.
+ * 
+ * @returns {JSX.Element} Componente de la página de Campaña.
+ */
 const Campana = () => {
   const navegar = useNavigate();
+  // Obtiene el estado de la campaña del contexto del tutorial
   const { campana, setCampana } = useContext(ContextoTutorial);
+  //Estado del formulario, recupera datos del localStorage 
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved
@@ -30,10 +42,17 @@ const Campana = () => {
         };
   });
 
+  /**
+   * UseEffect para guardar el estado del formulario en el localStorage al modificarlo.
+   */
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
 
+  /**
+   * manejador de cambio de los campos del formulario.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio del input.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({
@@ -42,12 +61,20 @@ const Campana = () => {
     });
   };
 
+  /**
+   * Navega a la página de confirmación del tutorial y guarda el estado de la campaña.
+   * @param {React.FormEvent<HTMLFormElement>} e - Evento de envío del formulario.
+   */
   const handleNext = (e) => {
     e.preventDefault();
     setCampana(form);
     navegar("/tutorial/confirmacion");
   };
 
+  /**
+   * Navega al paso anterior del tutorial (Producto) y guarda el estado de la campaña.
+   * @param {React.FormEvent<HTMLFormElement>} e - Evento de envío del formulario.
+   */
   const handleBack = (e) => {
     e.preventDefault();
     setCampana(form);
@@ -56,6 +83,7 @@ const Campana = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen font-sans">
+      {/* Encabezado de la página */}
       <div className="bg-[#0B2C63] text-white p-6">
         <h1 className="text-lg font-semibold">
           Por favor, complete los siguientes campos para registrar la campaña
@@ -71,6 +99,7 @@ const Campana = () => {
         </p>
       </div>
 
+      {/* Barra de progreso del tutorial */} 
       <div className="flex justify-center items-center my-12 space-x-8">
         <div className="flex flex-col items-center">
           <div className="bg-green-600 text-white rounded-full p-3 text-xl">
@@ -96,10 +125,12 @@ const Campana = () => {
         </div>
       </div>
 
+      {/* Formulario de campaña */}
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Campaña</h2>
 
         <form>
+          {/*Nombre y objetivo de la campaña */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block mb-1 font-medium">Nombre</label>
@@ -125,6 +156,7 @@ const Campana = () => {
             </div>
           </div>
 
+          {/* Mensaje clave y canales de distribución */}
           <div className="mb-4">
             <label className="block mb-1 font-medium">Mensaje clave</label>
             <input
@@ -151,6 +183,7 @@ const Campana = () => {
             />
           </div>
 
+          {/* Fechas y presupuesto */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
               <label className="block mb-1 font-medium">Fecha de inicio</label>
@@ -175,6 +208,7 @@ const Campana = () => {
               />
             </div>
 
+            {/* Presupuesto */}
             <div className="mb-6">
               <label className="block mb-1 font-medium">Presupuesto</label>
               <div className="relative">
@@ -196,6 +230,7 @@ const Campana = () => {
             </div>
           </div>
 
+          {/* Botones de navegación */}
           <div className="flex justify-between px-10">
             <CustomButton
               texto={<BsArrowLeft className="text-2xl" />}
