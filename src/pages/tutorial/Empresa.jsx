@@ -1,8 +1,9 @@
 /**
  * @file Empresa.jsx
- * @author Jennyfer Jasso, ...
+ * @author Sandra Herrera, Jennyfer Jasso
  * @description Página de formulario para registrar información de una empresa en el tutorial.
  */
+
 import {
   BsBuildings,
   BsBoxSeam,
@@ -15,11 +16,18 @@ import { ContextoTutorial } from "../../context/ProveedorTutorial";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+// Clave para almacenar el formulario en localStorage
 const STORAGE_KEY = "tutorial_empresa_form";
 
+/**
+ * @component Permite guardar y recuperar datos del formulario usando localStorage y contexto.
+ * @returns {JSX.Element} Elemento JSX con el formulario de empresa.
+ */
 const TutorialEmpresa = () => {
   const navegar = useNavigate();
   const { empresa, setEmpresa } = useContext(ContextoTutorial);
+
+  // Estado local del formulario, inicializado desde localStorage o contexto
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved
@@ -34,10 +42,15 @@ const TutorialEmpresa = () => {
         };
   });
 
+  // Guarda el formulario en localStorage cada vez que cambia
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
 
+  /**
+   * Maneja los cambios en los campos del formulario.
+   * @param {Object} e Evento de cambio del input.
+   */
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -45,12 +58,20 @@ const TutorialEmpresa = () => {
     });
   };
 
+  /**
+   * Guarda los datos y navega a la siguiente pantalla.
+   * @param {Object} e Evento de submit.
+   */
   const handleNext = (e) => {
     e.preventDefault();
     setEmpresa(form);
     navegar("/tutorial/Producto");
   };
 
+  /**
+   * Guarda los datos y navega a la pantalla anterior.
+   * @param {Object} e Evento de submit.
+   */
   const handleBack = (e) => {
     e.preventDefault();
     setEmpresa(form);
@@ -58,6 +79,7 @@ const TutorialEmpresa = () => {
   };
 
   return (
+    // Contenedor principal de la página
     <div className="bg-gray-100 min-h-screen font-sans">
       <div className="bg-[#0B2C63] text-white p-6">
         <h1 className="text-lg font-semibold">
@@ -70,6 +92,7 @@ const TutorialEmpresa = () => {
       </div>
 
       <div className="flex justify-center items-center my-12 space-x-8">
+        {/* Paso Empresa */}
         <div className="flex flex-col items-center">
           <div className="border-4 border-[#0B2C63] text-[#0B2C63] rounded-full p-3 text-xl bg-white">
             <BsBuildings />
@@ -77,6 +100,7 @@ const TutorialEmpresa = () => {
           <p className="mt-2 text-sm font-medium text-[#0B2C63]">Empresa</p>
         </div>
         <div className="h-1 w-50 bg-gray-300"></div>
+        {/* Paso Producto */}
         <div className="flex flex-col items-center">
           <div className="border-4 border-gray-400 text-gray-400 rounded-full p-3 text-xl bg-white">
             <BsBoxSeam />
@@ -84,6 +108,7 @@ const TutorialEmpresa = () => {
           <p className="mt-2 text-sm font-medium text-gray-400">Producto</p>
         </div>
         <div className="h-1 w-50 bg-gray-300"></div>
+        {/* Paso Campaña */}
         <div className="flex flex-col items-center opacity-50">
           <div className="border-4 border-gray-400 text-gray-400 rounded-full p-3 text-xl bg-white">
             <RiMegaphoneLine />
@@ -92,6 +117,7 @@ const TutorialEmpresa = () => {
         </div>
       </div>
 
+      {/* Formulario de empresa */}
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Empresa</h2>
         <form>
@@ -184,6 +210,7 @@ const TutorialEmpresa = () => {
             />
           </div>
 
+          {/* Botones de navegación */}
           <div className="flex justify-between px-10">
             <CustomButton
               texto={<BsArrowLeft className="text-2xl" />}
