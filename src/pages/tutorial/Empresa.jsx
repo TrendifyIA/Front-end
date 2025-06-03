@@ -1,6 +1,6 @@
 /**
  * @file Empresa.jsx
- * @author Jennyfer Jasso, ...
+ * @author Jennyfer Jasso, Eduardo Rosas ...
  * @description Página de formulario para registrar información de una empresa en el tutorial.
  */
 import {
@@ -12,7 +12,7 @@ import {
 import { RiMegaphoneLine } from "react-icons/ri";
 import CustomButton from "../../components/CustomButton";
 import { ContextoTutorial } from "../../context/ProveedorTutorial";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const STORAGE_KEY = "tutorial_empresa_form";
@@ -20,20 +20,22 @@ const STORAGE_KEY = "tutorial_empresa_form";
 const TutorialEmpresa = () => {
   const navegar = useNavigate();
   const { empresa, setEmpresa } = useContext(ContextoTutorial);
+
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved
       ? JSON.parse(saved)
       : empresa || {
-        nombre: "",
-        nicho: "",
-        direccion: "",
-        propuesta_valor: "",
-        descripcion_servicio: "",
-        competidores: "",
-      };
+          nombre: "",
+          nicho: "",
+          direccion: "",
+          propuesta_valor: "",
+          descripcion_servicio: "",
+          competidores: "",
+        };
   });
 
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setForm({
@@ -42,20 +44,29 @@ const TutorialEmpresa = () => {
     });
   };
 
-const handleNext = (e) => {
-  e.preventDefault();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); // Guardar solo aquí
-  setEmpresa(form);
-  navegar("/tutorial/Producto");
-};
+  const handleNext = (e) => {
+    e.preventDefault();
+    const camposIncompletos = Object.entries(form).some(
+      ([_, valor]) => !valor.trim()
+    );
 
-const handleBack = (e) => {
-  e.preventDefault();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); // Guardar solo aquí
-  setEmpresa(form);
-  navegar("/tutorial");
-};
+    if (camposIncompletos) {
+      setError("Por favor, complete todos los campos antes de continuar.");
+      return;
+    }
 
+    setError("");
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+    setEmpresa(form);
+    navegar("/tutorial/Producto");
+  };
+
+  const handleBack = (e) => {
+    e.preventDefault();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+    setEmpresa(form);
+    navegar("/tutorial");
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen font-sans">
@@ -94,6 +105,13 @@ const handleBack = (e) => {
 
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Empresa</h2>
+
+        {error && (
+          <div className="mb-6 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
+
         <form>
           <div className="flex flex-row gap-4 w-full">
             <div className="flex flex-col gap-2 mb-4 w-1/2">
@@ -111,7 +129,7 @@ const handleBack = (e) => {
               />
             </div>
             <div className="flex flex-col gap-2 mb-4 w-1/2">
-              <label htmlFor="segment" className="font-medium">
+              <label htmlFor="nicho" className="font-medium">
                 Sector de mercado
               </label>
               <select
@@ -134,6 +152,7 @@ const handleBack = (e) => {
               </select>
             </div>
           </div>
+
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label htmlFor="location" className="font-medium">
               Dirección física
@@ -148,6 +167,7 @@ const handleBack = (e) => {
               className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
             />
           </div>
+
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Propuesta de valor</label>
             <input
@@ -159,6 +179,7 @@ const handleBack = (e) => {
               className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
             />
           </div>
+
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">
               Descripción de servicios/productos
@@ -172,6 +193,7 @@ const handleBack = (e) => {
               className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
             />
           </div>
+
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Competidores</label>
             <input
