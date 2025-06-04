@@ -5,9 +5,9 @@
 */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import PublicLayout from "./pages/layouts/PublicLayout.jsx"; 
+import PublicLayout from "./pages/layouts/PublicLayout.jsx";
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
 import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
@@ -96,11 +96,17 @@ const router = createBrowserRouter([
   {
     path: "/tutorial",
     element: (
-      <TutorialRoute>
-        <ProveedorTutorial>
-          <TutorialLayout />
-        </ProveedorTutorial>
-      </TutorialRoute>
+      <ProveedorTutorial>
+        <TutorialRoute>
+          <ProveedorEmpresa>
+            <ProveedorProducto>
+              <ProveedorCampana>
+                <TutorialLayout />
+              </ProveedorCampana>
+            </ProveedorProducto>
+          </ProveedorEmpresa>
+        </TutorialRoute>
+      </ProveedorTutorial>
     ),
     children: [
       { index: true, element: <Bienvenida /> },
