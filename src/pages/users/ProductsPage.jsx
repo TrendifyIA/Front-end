@@ -127,7 +127,7 @@ const ProductsPage = () => {
   };
 
   function procesarCampaña() {
-    const idCampana = 28; // ID hardcodeado temporalmente
+    const idCampana = 31; // ID hardcodeado temporalmente
 
     fetch("http://127.0.0.1:8080/proceso/iniciar", {
       method: "POST",
