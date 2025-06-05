@@ -5,7 +5,7 @@
  */
 import { useContext, useState } from "react";
 import Campana from "./Campana";
-import { CampanaContext } from "../context/ProveedorCampana";
+import { ContextoCampana } from "../context/ProveedorCampana";
 import BotonIcon from "./BotonIcon";
 import { IoAddOutline } from "react-icons/io5";
 import { ModalContext } from "../context/ProveedorModal";
@@ -20,7 +20,7 @@ import { ModalContext } from "../context/ProveedorModal";
  * @returns {JSX.Element} Conjunto de filas de tabla con las campañas del producto
  */
 const ListaCampanas = ({ id_producto }) => {
-  const { getCampanasPorProducto } = useContext(CampanaContext);
+  const { getCampanasPorProducto } = useContext(ContextoCampana);
   const campanas = getCampanasPorProducto(id_producto);
 
   const { abrirCampanaModal } = useContext(ModalContext);

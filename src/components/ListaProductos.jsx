@@ -4,7 +4,7 @@
  * @description Componente que representa una lista de productos junto con sus respectivas campañas.
  */
 import { useContext } from "react";
-import { ProductoContext } from "../context/ProveedorProducto";
+import { ContextoProducto } from "../context/ProveedorProducto";
 import Producto from "./Producto";
 
 /**
@@ -14,7 +14,7 @@ import Producto from "./Producto";
  * @returns {JSX.Element[]} Array de componentes Producto renderizados
  */
 const ListaProductos = () => {
-  const { productos } = useContext(ProductoContext);
+  const { productos } = useContext(ContextoProducto);
 
   return productos.map((producto) => {
     return (

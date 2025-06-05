@@ -6,8 +6,7 @@
 
 import ProductImage from "../pages/users/ProductImage";
 import { useContext, useState } from "react";
-import { CampanaContext } from "../context/ProveedorCampana";
-
+import { ContextoCampana } from "../context/ProveedorCampana";
 import { FaPencilAlt } from "react-icons/fa";
 import ListaCampanas from "./ListaCampanas";
 import { ModalContext } from "../context/ProveedorModal";
@@ -26,8 +25,7 @@ import { ModalContext } from "../context/ProveedorModal";
  */
 const Producto = (props) => {
   const [nombreTemporal, setNombreTemporal] = useState("");
-
-  const { getCampanasPorProducto } = useContext(CampanaContext);
+  const { getCampanasPorProducto } = useContext(ContextoCampana);
   const campanas = getCampanasPorProducto(props.id_producto);
 
   const { abrirProductoModal } = useContext(ModalContext);

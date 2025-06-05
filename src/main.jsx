@@ -44,8 +44,7 @@ import ProveedorProducto from "./context/ProveedorProducto";
 import ProveedorCampana from "./context/ProveedorCampana";
 import ProveedorModal from "./context/ProveedorModal.jsx";
 import ProveedorUsuario from "./context/ProveedorUsuario.jsx";
-import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
-
+// import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -85,11 +84,18 @@ const router = createBrowserRouter([
           </ProveedorUsuario>
         ),
       },
-      { path: "empresa", element: <Empresa /> },
+      {
+        path: "empresa",
+        element: (
+          <ProveedorEmpresa>
+            <Empresa />
+          </ProveedorEmpresa>
+        ),
+      },
       { path: "bienvenida", element: <Bienvenida /> },
       { path: "resumen-tendencias", element: <ResumenTendencias9 /> },
       { path: "detalle-tendencia", element: <DetalleTendencia10 /> },
-      { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
+      { path: "resumen", element: <SummaryPage /> },
       {},
     ],
   },
@@ -122,15 +128,15 @@ const router = createBrowserRouter([
     path: "/tutorial",
     element: (
       <ProveedorTutorial>
-          <ProveedorEmpresa>
-            <ProveedorProducto>
-              <ProveedorCampana>
-                <TutorialRoute>
-                  <TutorialLayout />
-                </TutorialRoute>
-              </ProveedorCampana>
-            </ProveedorProducto>
-          </ProveedorEmpresa>
+        <ProveedorEmpresa>
+          <ProveedorProducto>
+            <ProveedorCampana>
+              <TutorialRoute>
+                <TutorialLayout />
+              </TutorialRoute>
+            </ProveedorCampana>
+          </ProveedorProducto>
+        </ProveedorEmpresa>
       </ProveedorTutorial>
     ),
     children: [

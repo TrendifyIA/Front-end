@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { BsImage } from "react-icons/bs";
-import { ProductoContext } from "../context/ProveedorProducto";
+import { ContextoProducto } from "../context/ProveedorProducto";
 import { UsuarioContext } from "../context/ProveedorUsuario";
 import { LuMousePointerClick } from "react-icons/lu";
 
@@ -37,7 +37,7 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
 
   const [cargando, setCargando] = useState(false);
 
-  const { crearProducto, actualizarProducto } = useContext(ProductoContext);
+  const { crearProducto, actualizarProducto } = useContext(ContextoProducto);
   const { idEmpresa } = useContext(UsuarioContext);
 
   const [imagePreview, setImagePreview] = useState("");

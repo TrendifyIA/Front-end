@@ -6,7 +6,7 @@
  */
 import { useContext, useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import { CampanaContext } from "../context/ProveedorCampana";
+import { ContextoCampana } from "../context/ProveedorCampana";
 
 /**
  * Modal para crear o editar campañas
@@ -36,7 +36,7 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
   const [mostrarCampos, setMostrarCampos] = useState(true);
   const [cargando, setCargando] = useState(false);
 
-  const { crearCampana, actualizarCampana } = useContext(CampanaContext);
+  const { crearCampana, actualizarCampana } = useContext(ContextoCampana);
 
   // Función para convertir formato de fecha
   const formatDateForInput = (dateString) => {

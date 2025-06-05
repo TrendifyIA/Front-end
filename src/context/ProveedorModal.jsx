@@ -14,7 +14,7 @@ export const ModalContext = createContext();
 
 /**
  * Proveedor de contexto que gestiona los estados y comportamientos de los modales
- * 
+ *
  * @component
  * @param {Object} props - Propiedades del componente
  * @param {React.ReactNode} props.children - Componentes hijos que consumirán el contexto
@@ -29,7 +29,7 @@ const ProveedorModal = ({ children }) => {
 
   /**
    * Abre el modal de campañas para edición o creación
-   * 
+   *
    * @function
    * @param {number|null} id - ID de la campaña a editar (null para crear nueva)
    * @param {number|null} idProducto - ID del producto asociado a la campaña
@@ -42,7 +42,7 @@ const ProveedorModal = ({ children }) => {
 
   /**
    * Cierra el modal de campañas y restablece los estados
-   * 
+   *
    * @function
    */
   const cerrarCampanaModal = () => {
@@ -50,14 +50,13 @@ const ProveedorModal = ({ children }) => {
     setCampanaSeleccionada(null);
   };
 
-  
   // Para manejar el modal de productos
   const [editarProducto, setEditarProducto] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
   /**
    * Abre el modal de productos para edición o creación
-   * 
+   *
    * @function
    * @param {number|null} id - ID del producto a editar (null para crear nuevo)
    */
@@ -68,14 +67,13 @@ const ProveedorModal = ({ children }) => {
 
   /**
    * Cierra el modal de productos y restablece los estados
-   * 
+   *
    * @function
    */
   const cerrarProductoModal = () => {
     setEditarProducto(false);
     setProductoSeleccionado(null);
   };
-
 
   const value = {
     idProducto,
@@ -84,28 +82,27 @@ const ProveedorModal = ({ children }) => {
     campanaSeleccionada,
     abrirCampanaModal,
     cerrarCampanaModal,
-    abrirProductoModal
+    abrirProductoModal,
   };
-  
 
   return (
     <ModalContext.Provider value={value}>
-        {children}
+      {children}
 
-        {editarCampana && (
-            <CampanaModal
-                id_campana={campanaSeleccionada}
-                idProducto={idProducto}
-                onClose={cerrarCampanaModal}
-            />
-        )}
+      {editarCampana && (
+        <CampanaModal
+          id_campana={campanaSeleccionada}
+          idProducto={idProducto}
+          onClose={cerrarCampanaModal}
+        />
+      )}
 
-        {editarProducto && (
-              <ProductoModal 
-                id_producto={productoSeleccionado}
-                onClose={cerrarProductoModal}
-              />
-        )}
+      {editarProducto && (
+        <ProductoModal
+          id_producto={productoSeleccionado}
+          onClose={cerrarProductoModal}
+        />
+      )}
     </ModalContext.Provider>
   );
 };
