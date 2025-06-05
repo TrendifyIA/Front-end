@@ -23,7 +23,6 @@ const ProductsPage = () => {
   const [nombreEmpresa, setNombreEmpresa] = useState("Cargando...");
   const [nuevoProductoTemporal, setNuevoProductoTemporal] = useState(null);
 
-  // 🟡 Cargar productos desde backend
 useEffect(() => {
   const obtenerDatos = async () => {
     try {

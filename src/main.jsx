@@ -1,6 +1,6 @@
 /**
  * @file main.jsx
- * @author Andrea Doce, Alexei, Eduardo Rosas, Jennyfer Jasso, Sandra, ...
+ * @author Andrea Doce, Alexei Martínez, Eduardo Rosas, Jennyfer Jasso, Sandra Hernández, Min Che Kim, ...
  * @description Punto de entrada principal para la aplicación Trendify donde se configuran las rutas y se renderiza la aplicación.
  */
 import { StrictMode } from "react";
@@ -62,7 +62,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: "adminproductos", element: <ProductsPage /> },
-      { path: "empresa", element: <Empresa /> },
+      { path: "empresa", element: <ProveedorEmpresa><Empresa /></ProveedorEmpresa> },
     ],
   },
   {

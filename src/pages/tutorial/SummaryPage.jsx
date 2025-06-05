@@ -10,6 +10,7 @@ import { ContextoTutorial } from "../../context/ProveedorTutorial";
 import { ContextoEmpresa } from "../../context/ProveedorEmpresa";
 import { ContextoProducto } from "../../context/ProveedorProducto";
 import { ContextoCampana } from "../../context/ProveedorCampana";
+import CampoTutorial from "../../components/CampoTutorial";
 
 /**
  * Componente principal que muestra el resumen de empresa, producto y campaña
@@ -25,80 +26,37 @@ const Confirmacion = () => {
   const { producto, obtenerDatosProducto } = useContext(ContextoProducto);
   const { campana, obtenerDatosCampana } = useContext(ContextoCampana);
 
-  // Cargar datos de empresa
+  // Cargar datos de la empresa
   useEffect(() => {
     if (idEmpresa) {
-      console.log("Obteniendo datos de empresa con ID:", idEmpresa);
+      console.log("Obteniendo datos de la empresa con ID:", idEmpresa);
       obtenerDatosEmpresa(idEmpresa);
     }
   }, [idEmpresa, obtenerDatosEmpresa]);
 
-  // Cargar datos de producto
+  // Cargar datos del producto
   useEffect(() => {
     if (idProducto) {
-      console.log("Obteniendo datos de producto con ID:", idProducto);
+      console.log("Obteniendo datos del producto con ID:", idProducto);
       obtenerDatosProducto(idProducto);
     }
   }, [idProducto, obtenerDatosProducto]);
 
-  // Cargar datos de campaña
+  // Cargar datos de la campaña
   useEffect(() => {
     if (idProducto) {
       console.log(
-        "Obteniendo datos de campaña para el producto con ID:",
+        "Obteniendo datos de la campaña para el producto con ID:",
         idProducto
       );
       obtenerDatosCampana(idProducto);
     }
   }, [idProducto, obtenerDatosCampana]);
 
+  // Verificar que los datos estén cargados
   if (!empresa || !producto || !campana) {
     return <div className="text-center mt-10">Cargando resumen...</div>;
   }
-
-  // const { idEmpresa, idProducto } = useContext(ContextoTutorial);
-  // const [empresa, setempresa] = useState(null);
-  // const [datosProducto, setDatosProducto] = useState(null);
-  // const [campana, setcampana] = useState(null);
-
-  // useEffect(() => {
-  //   if (idEmpresa) {
-  //     fetch(`http://127.0.0.1:8080/empresa/${idEmpresa}`)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log("Datos de empresa:", data);
-  //         setempresa(data);
-  //       });
-  //   }
-  // }, [idEmpresa]);
-
-  // useEffect(() => {
-  //   if (idProducto) {
-  //     fetch(`http://127.0.0.1:8080/producto/${idProducto}`)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log("Datos de producto:", data);
-  //         setDatosProducto(data);
-  //       });
-  //   }
-  // }, [idProducto]);
-
-  // useEffect(() => {
-  //   if (idProducto) {
-  //     fetch(`http://127.0.0.1:8080/campana/campanas/${idProducto}`)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log("Datos de campaña:", data);
-  //         if (Array.isArray(data) && data.length > 0) {
-  //           setcampana(data[data.length - 1]);
-  //         }
-  //       });
-  //   }
-  // }, [idProducto]);
-
-  // if (!empresa || !datosProducto || !campana) {
-  //   return <div className="text-center mt-10">Cargando resumen...</div>;
-  // }
 
   /**
    * Formatea una fecha en string (formato local).
@@ -129,22 +87,22 @@ const Confirmacion = () => {
         <section className="mb-8">
           <h3 className="text-4xl font-bold mb-6">Empresa</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Campo label="Nombre" valor={empresa.nombre} />
-            <Campo label="Sector" valor={empresa.nicho} />
-            <Campo label="Dirección" valor={empresa.direccion} />
-            <Campo
+            <CampoTutorial label="Nombre" valor={empresa.nombre} />
+            <CampoTutorial label="Sector de mercado" valor={empresa.nicho} />
+            <CampoTutorial label="Dirección" valor={empresa.direccion} />
+            <CampoTutorial
               label="Propuesta de valor"
               valor={empresa.propuesta_valor}
               cols={2}
               multiline
             />
-            <Campo
+            <CampoTutorial
               label="Descripción de servicios"
               valor={empresa.descripcion_servicio}
               cols={2}
               multiline
             />
-            <Campo label="Competidores" valor={empresa.competidores} />
+            <CampoTutorial label="Competidores" valor={empresa.competidores} />
           </div>
         </section>
 
@@ -152,20 +110,20 @@ const Confirmacion = () => {
         <section className="mb-8">
           <h3 className="text-4xl font-bold mb-6">Producto</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Campo label="Nombre" valor={producto.nombre} />
-            <Campo label="Categoría" valor={producto.categoria} />
-            <Campo
+            <CampoTutorial label="Nombre" valor={producto.nombre} />
+            <CampoTutorial label="Categoría" valor={producto.categoria} />
+            <CampoTutorial
               label="Descripción"
               valor={producto.descripcion}
               cols={2}
               multiline
             />
-            <Campo
+            <CampoTutorial
               label="Público objetivo"
               valor={producto.publico_objetivo}
               multiline
             />
-            <Campo
+            <CampoTutorial
               label="Estado"
               valor={producto.estado === 1 ? "Continuado" : "Descontinuado"}
             />
@@ -176,27 +134,31 @@ const Confirmacion = () => {
         <section className="mb-8">
           <h3 className="text-4xl font-bold mb-6">Campaña</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Campo label="Nombre" valor={campana.nombre} />
-            <Campo label="Objetivo" valor={campana.objetivo} />
-            <Campo
+            <CampoTutorial label="Nombre" valor={campana.nombre} />
+            <CampoTutorial label="Objetivo" valor={campana.objetivo} />
+            <CampoTutorial
               label="Mensaje clave"
               valor={campana.mensaje_clave}
               cols={2}
               multiline
             />
-            <Campo
+            <CampoTutorial
               label="Canales de distribución"
               valor={campana.canales_distribucion}
             />
-            <Campo
+            <CampoTutorial
               label="Fecha de inicio"
               valor={formatearFecha(campana.f_inicio)}
             />
-            <Campo label="Fecha final" valor={formatearFecha(campana.f_fin)} />
-            <Campo label="Presupuesto" valor={campana.presupuesto} />
+            <CampoTutorial
+              label="Fecha final"
+              valor={formatearFecha(campana.f_fin)}
+            />
+            <CampoTutorial label="Presupuesto" valor={campana.presupuesto} />
           </div>
         </section>
 
+        {/* Botón de confirmación */}
         <div className="flex justify-center mt-10">
           <CustomButton
             texto="OK"
@@ -209,36 +171,6 @@ const Confirmacion = () => {
           />
         </div>
       </div>
-    </div>
-  );
-};
-
-/**
- * Componente auxiliar para renderizar una fila de información con etiqueta y valor.
- *
- * @param {Object} props
- * @param {string} props.label - Etiqueta descriptiva del campo.
- * @param {string|number} props.valor - Valor asociado al campo.
- * @param {boolean} [props.multiline=false] - Si es true, se muestra en bloque multilinea.
- * @param {number} [props.cols=1] - Número de columnas a ocupar (1 o 2).
- * @returns {JSX.Element} Campo formateado visualmente.
- */
-const Campo = ({ label, valor, multiline = false, cols = 1 }) => {
-  return (
-    <div className={`col-span-${cols}`}>
-      <label className="block text-sm font-medium mb-1">{label}:</label>
-      {multiline ? (
-        <div className="w-full border rounded px-3 py-2 text-sm bg-gray-50 whitespace-pre-wrap overflow-auto max-h-60">
-          {valor}
-        </div>
-      ) : (
-        <div
-          className="w-full border rounded px-3 py-2 text-sm bg-gray-50 truncate"
-          title={valor}
-        >
-          {valor}
-        </div>
-      )}
     </div>
   );
 };
