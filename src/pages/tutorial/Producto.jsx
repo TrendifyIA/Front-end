@@ -36,8 +36,8 @@ const Producto = () => {
           publico_objetivo: "",
           estado: "",
           ruta_img: "",
-          // imagenPreview: "",
-          // imagenFile: null,
+          imagenPreview: "",
+          imagenFile: null,
         };
   });
 
@@ -46,21 +46,21 @@ const Producto = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
 
-  // useEffect(() => {
-  //   if (form.ruta_img && form.imagenPreview) {
-  //     return;
-  //   }
-  //   if (form.ruta_img) {
-  //     const img = new Image();
-  //     img.src = form.ruta_img;
-  //     img.onload = () => {
-  //       setForm((prev) => ({
-  //         ...prev,
-  //         imagenPreview: img.src,
-  //       }));
-  //     };
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (form.ruta_img && form.imagenPreview) {
+      return;
+    }
+    if (form.ruta_img) {
+      const img = new Image();
+      img.src = form.ruta_img;
+      img.onload = () => {
+        setForm((prev) => ({
+          ...prev,
+          imagenPreview: img.src,
+        }));
+      };
+    }
+  }, []);
 
   /**
    * Maneja el cambio de cualquier input del formulario
@@ -86,8 +86,8 @@ const Producto = () => {
       setForm((prev) => ({
         ...prev,
         ruta_img: URL.createObjectURL(file),
-        // imagenPreview: URL.createObjectURL(file),
-        // imagenFile: file,
+        imagenPreview: URL.createObjectURL(file),
+        imagenFile: file,
       }));
     }
   };
