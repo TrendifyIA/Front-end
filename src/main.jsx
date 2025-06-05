@@ -35,10 +35,17 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
 import Empresa from "./pages/users/Empresa.jsx";
 import ProveedorTutorial from "./context/ProveedorTutorial";
+import ResumenTendencias9 from "./pages/users/ResumenTendencias9.jsx";
+import DetalleTendencia10 from "./pages/users/DetalleTendencia10.jsx";
+
 import TutorialRoute from "./components/TutorialRoute.jsx";
 import ProveedorEmpresa from "./context/ProveedorEmpresa";
 import ProveedorProducto from "./context/ProveedorProducto";
 import ProveedorCampana from "./context/ProveedorCampana";
+import ProveedorModal from "./context/ProveedorModal.jsx";
+import ProveedorUsuario from "./context/ProveedorUsuario.jsx";
+import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
+
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -61,8 +68,29 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Dashboard /> },
-      { path: "adminproductos", element: <ProductsPage /> },
-      { path: "empresa", element: <ProveedorEmpresa><Empresa /></ProveedorEmpresa> },
+      { path: "producto", element: <Producto /> },
+      { path: "campana", element: <Campana /> },
+      { index: true, element: <Dashboard /> },
+      {
+        path: "adminproductos",
+        element: (
+          <ProveedorUsuario>
+            <ProveedorProducto>
+              <ProveedorCampana>
+                <ProveedorModal>
+                  <ProductsPage />
+                </ProveedorModal>
+              </ProveedorCampana>
+            </ProveedorProducto>
+          </ProveedorUsuario>
+        ),
+      },
+      { path: "empresa", element: <Empresa /> },
+      { path: "bienvenida", element: <Bienvenida /> },
+      { path: "resumen-tendencias", element: <ResumenTendencias9 /> },
+      { path: "detalle-tendencia", element: <DetalleTendencia10 /> },
+      { path: "resumen", element: <SummaryPage /> }, // Ruta para la página de resumen
+      {},
     ],
   },
   {
