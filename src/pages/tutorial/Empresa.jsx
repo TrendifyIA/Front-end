@@ -12,7 +12,7 @@ import {
 import { RiMegaphoneLine } from "react-icons/ri";
 import CustomButton from "../../components/CustomButton";
 import { ContextoTutorial } from "../../context/ProveedorTutorial";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const STORAGE_KEY = "tutorial_empresa_form";
@@ -27,6 +27,7 @@ const STORAGE_KEY = "tutorial_empresa_form";
 const TutorialEmpresa = () => {
   const navegar = useNavigate();
   const { empresa, setEmpresa } = useContext(ContextoTutorial); // Contexto para manejar el estado de la empresa
+  const [error, setError] = useState(""); // Estado para manejar errores de validación
 
   // Estado local para manejar el formulario de empresa
   const [form, setForm] = useState(() => {

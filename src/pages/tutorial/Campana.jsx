@@ -23,7 +23,7 @@ const STORAGE_KEY = "tutorial_campana_form";
 const Campana = () => {
   const navegar = useNavigate();
   const { campana, setCampana } = useContext(ContextoTutorial); // Contexto para manejar el estado de la campaña
-
+  const [error, setError] = useState(""); // Estado para manejar errores de validación
   // Estado local para manejar el formulario de campaña
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -143,6 +143,11 @@ const Campana = () => {
       {/* Formulario de campaña */}
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Campaña</h2>
+        {error && (
+          <div className="mb-6 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
         <form>
           {/* Campos de texto */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

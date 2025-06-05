@@ -23,7 +23,7 @@ const STORAGE_KEY = "tutorial_producto_form";
 const Producto = () => {
   const navegar = useNavigate();
   const { producto, setProducto } = useContext(ContextoTutorial); // Contexto para manejar el estado del producto
-
+  const [error, setError] = useState(""); // Estado para manejar errores de validación
   // Estado local para manejar el formulario de producto
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
