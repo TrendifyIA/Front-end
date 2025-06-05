@@ -7,6 +7,7 @@ import {
   FaPencilAlt,
   FaTimes,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import ProductImage from "./ProductImage";
 import ProductoModal from "../../components/ProductoModal";
 import CampanaModal from "../../components/CampanaModal";
@@ -158,7 +159,7 @@ useEffect(() => {
     producto.campañas = nuevas;
     setProductos(actualizados);
   };
-
+  const navigate = useNavigate();
   function procesarCampaña() {
     const idCampana = 13; // ID hardcodeado temporalmente
 
@@ -173,6 +174,8 @@ useEffect(() => {
       .then(response => response.json())
       .then(data => {
         console.log("Respuesta del servidor:", data);
+        navigate("/procesando"); // ruta para llegar a procesando 
+
         //alert(data.msg || "Proceso completado");
       })
       .catch(error => {
