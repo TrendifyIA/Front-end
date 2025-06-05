@@ -6,7 +6,7 @@
 import React, { useContext, useState } from "react";
 import CustomButton from "../components/CustomButton.jsx";
 import { ContextoTutorial } from "../context/ProveedorTutorial.jsx";
-
+import ReCAPTCHA from "react-google-recaptcha";
 /**
  * Componente que representa la página de login de la aplicación Trendify.
  * Permite al usuario ingresar sus credenciales y redirige con base en el estado
@@ -41,9 +41,17 @@ const Login = () => {
    * @param {React.FormEvent} e - Evento de envío del formulario.
    */
 
+  //Constante para el reCAPTCHA
+  const [captchaToken, setCaptchaToken] = useState("null");
+
   const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
+
+  if (!captchaToken) {
+    setError("Por favor verifica el captcha.");
+    return;
+  }
 
   try {
     const response = await fetch("http://127.0.0.1:8080/usuario/login", {
@@ -54,8 +62,10 @@ const Login = () => {
       body: JSON.stringify({
         email: credenciales.email,
         password: credenciales.password,
+        captcha: captchaToken,
       }),
     });
+
 
     const data = await response.json();
 
@@ -160,6 +170,11 @@ const Login = () => {
               tipo="primario"
               extraClases="text-center w-full"
               type="submit"
+            />
+            <ReCAPTCHA
+              sitekey = {import.meta.env.VITE_GOOGLE_RECAPTCHA}
+              onChange={(token) => setCaptchaToken(token)}
+              className="flex justify-center"
             />
           </form>
         </div>

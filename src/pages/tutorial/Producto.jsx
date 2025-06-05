@@ -207,7 +207,7 @@ const Producto = () => {
                 <option value="Prendas de vestir">Prendas de vestir</option>
                 <option value="Productos artesanales">Productos artesanales</option>
                 <option value="Vehículos">Vehículos</option>
-                {/* ...otros omitidos por brevedad */}
+                
               </select>
             </div>
           </div>
