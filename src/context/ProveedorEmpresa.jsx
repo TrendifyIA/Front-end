@@ -19,6 +19,7 @@ export const ContextoEmpresa = createContext();
 const ProveedorEmpresa = ({ children }) => {
   // Estado para almacenar la empresa actual
   const [empresa, setEmpresa] = useState(null);
+  const [empresaRegistrada, setEmpresaRegistrada] = useState(false);
 
   /**
    * Función para obtener los datos de una empresa específica.
@@ -34,8 +35,24 @@ const ProveedorEmpresa = ({ children }) => {
     return data;
   }, []);
 
+  const isEmpresaRegistrada = useCallback(async (id_usuario) => {
+    try {
+      const res = await fetch(`http://127.0.0.1:8080/empresa/empresa/${id_usuario}`);
+      if (!res.ok) {
+        return false;
+      }
+      const data = await res.json();
+      const existe = !!data && !!data.nombre;
+      setEmpresaRegistrada(existe);
+      return existe;
+    } catch (error) {
+      setEmpresaRegistrada(false);
+      return false;
+    }
+  }, []);
+
   return (
-    <ContextoEmpresa.Provider value={{ empresa, obtenerDatosEmpresa }}>
+    <ContextoEmpresa.Provider value={{ empresa, obtenerDatosEmpresa, empresaRegistrada, isEmpresaRegistrada }}>
       {children}
     </ContextoEmpresa.Provider>
   );

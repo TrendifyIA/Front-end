@@ -74,7 +74,9 @@ const router = createBrowserRouter([
         path: "login",
         element: (
           <ProveedorTutorial>
-            <Login />
+            <ProveedorEmpresa>
+              <Login />
+            </ProveedorEmpresa>
           </ProveedorTutorial>
         ),
       },
@@ -92,15 +94,15 @@ const router = createBrowserRouter([
     path: "/tutorial",
     element: (
       <ProveedorTutorial>
-        <TutorialRoute>
           <ProveedorEmpresa>
             <ProveedorProducto>
               <ProveedorCampana>
-                <TutorialLayout />
+                <TutorialRoute>
+                  <TutorialLayout />
+                </TutorialRoute>
               </ProveedorCampana>
             </ProveedorProducto>
           </ProveedorEmpresa>
-        </TutorialRoute>
       </ProveedorTutorial>
     ),
     children: [
