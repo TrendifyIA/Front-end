@@ -328,16 +328,16 @@ const Producto = () => {
                 onChange={handleImageChange}
               />
             </label>
-            {/* {form.imagenPreview && (
+            {form.imagenPreview && (
               <img
                 src={form.imagenPreview}
                 alt="Imagen de producto"
                 className="mt-2 max-h-50 rounded shadow"
               />
-            )} */}
+            )}
 
             <p id="nombre-imagen" className="text-sm text-gray-600 mt-2 italic">
-              {form.ruta_img ? `Imagen seleccionada: ${form.ruta_img}` : ""}
+              {form.imageFile ? `Imagen seleccionada: ${form.imageFile}` : ""}
             </p>
           </div>
 
