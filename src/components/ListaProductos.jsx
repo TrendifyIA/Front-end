@@ -6,9 +6,13 @@
 import { useContext } from "react";
 import { ProductoContext } from "../context/ProveedorProducto";
 import Producto from "./Producto";
-import { CampanaContext } from "../context/ProveedorCampana";
-import ListaCampanas from "./ListaCampanas";
 
+/**
+ * Componente que renderiza la lista completa de productos de la empresa
+ * 
+ * @component
+ * @returns {JSX.Element[]} Array de componentes Producto renderizados
+ */
 const ListaProductos = () => {
   const { productos } = useContext(ProductoContext);
 

@@ -4,20 +4,35 @@
  * @description Componente que representa una campaña en la tabla de campañas. Contiene información como el nombre, estatus y acciones disponibles (editar, eliminar, procesar/revisar).
  */
 import { useContext } from "react";
-import { CampanaContext } from "../context/ProveedorCampana";
 import {
   FaEdit,
   FaTrashAlt,
   FaSyncAlt,
-  FaCheck,
-  FaPencilAlt,
-  FaTimes,
+  FaCheck
 } from "react-icons/fa";
-import { GoSync } from "react-icons/go";
 import BotonIcon from "./BotonIcon";
+import { ModalContext } from "../context/ProveedorModal";
 
-
+/**
+ * Componente que representa una campaña en la tabla de campañas
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {number} props.id_campana - ID único de la campaña
+ * @param {number} props.id_producto - ID del producto asociado a la campaña
+ * @param {string} props.nombre - Nombre de la campaña
+ * @param {number} props.estatus - Estado de la campaña (1: Procesado, 0: Sin procesar)
+ * @returns {JSX.Element} Fila de tabla con información de la campaña y botones de acción
+ *
+ */
 const Campana = (props) => {
+  //console.log("estatus",props.estatus)
+
+  // console.log(props.key);
+
+  const { abrirCampanaModal } = useContext(ModalContext);
+
+  // console.log("abrirCampanaModal:", abrirCampanaModal);
   return (
     <tr>
       <td className="px-4 py-3 text-sm text-blue-600 font-medium">
@@ -37,43 +52,34 @@ const Campana = (props) => {
       <td className="px-4 py-3">
         <div className="flex gap-2">
           <BotonIcon
-            className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700"
+            className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 min-w-[80px] justify-center"
             nombre="Editar"
             icon={FaEdit}
-            onClick={() => {}}
+            onClick={() => {abrirCampanaModal(props.id_campana, props.id_producto)}}
           />
 
           <BotonIcon
-            className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
+            className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 min-w-[80px] justify-center"
             nombre="Eliminar"
             icon={FaTrashAlt}
             onClick={() => {}}
           />
 
-          {props.estatus === "Sin procesar" ? (
-            <BotonIcon
-              className="flex items-center gap-1 bg-gray-400 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-500"
-              nombre="Procesar"
-              icon={FaSyncAlt}
-              onClick={() => {}}
-            />
-          ) : (
-            <BotonIcon
-              className={`flex items-center gap-1  text-white px-3 py-1 rounded-md text-sm ${
-                props.estatus === 1
+          <BotonIcon
+              className={`flex items-center gap-1 text-white px-3 py-1 rounded-md text-sm min-w-[100px] justify-center ${
+                props.estatus
                 ? "bg-green-600 hover:bg-green-700"
                 : "bg-gray-400 hover:bg-gray-500"
               } `}
               nombre={
-                props.estatus === 1
+                props.estatus
                 ? "Revisar"
                 : "Procesar"
+              
               }
-              icon={props.estatus == 1 ? FaCheck : GoSync}
-              iconStyle="stroke-1 stroke-current"
+              icon={props.estatus ? FaCheck : FaSyncAlt}
               onClick={() => {}}
             />
-          )}
         </div>
       </td>
     </tr>

@@ -40,6 +40,10 @@ import ResumenTendencias9 from "./pages/users/ResumenTendencias9.jsx";
 import DetalleTendencia10 from "./pages/users/DetalleTendencia10.jsx";
 import ProveedorCampana from "./context/ProveedorCampana.jsx";
 import ProveedorProducto from "./context/ProveedorProducto.jsx";
+import ProveedorModal from "./context/ProveedorModal.jsx";
+import ProveedorUsuario from "./context/ProveedorUsuario.jsx";
+import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
+
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -72,11 +76,15 @@ const router = createBrowserRouter([
       {
         path: "adminproductos",
         element: (
-          <ProveedorProducto>
-            <ProveedorCampana>
-              <ProductsPage />
-            </ProveedorCampana>
-          </ProveedorProducto>
+          <ProveedorUsuario>
+            <ProveedorProducto>
+              <ProveedorCampana>
+                <ProveedorModal>
+                  <ProductsPage />
+                </ProveedorModal>
+              </ProveedorCampana>
+            </ProveedorProducto>
+          </ProveedorUsuario>
         ),
       },
       { path: "empresa", element: <Empresa /> },

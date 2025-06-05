@@ -7,27 +7,36 @@
 import ProductImage from "../pages/users/ProductImage";
 import { useContext, useState } from "react";
 import { CampanaContext } from "../context/ProveedorCampana";
-import { ProductoContext } from "../context/ProveedorProducto";
 
-import sabritaslimon from "../assets/images/sabritaslimon.png";
-import sabritasadobadas from "../assets/images/sabritasadobadas.png";
-import sabritashabanero from "../assets/images/sabritashabanero.png";
-import {
-  FaEdit,
-  FaTrashAlt,
-  FaSyncAlt,
-  FaCheck,
-  FaPencilAlt,
-  FaTimes,
-} from "react-icons/fa";
+import { FaPencilAlt } from "react-icons/fa";
 import ListaCampanas from "./ListaCampanas";
+import { ModalContext } from "../context/ProveedorModal";
 
+/**
+ * Componente que renderiza un producto con sus campañas asociadas
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {number} props.id_producto - ID único del producto
+ * @param {string} props.nombre - Nombre del producto
+ * @param {string} [props.src] - URL de la imagen del producto
+ * @param {string} props.alt - Texto alternativo para la imagen
+ * @param {boolean} [props.editingNombre] - Indica si el nombre está en modo edición
+ * @returns {JSX.Element} Conjunto de filas de tabla que representan al producto y sus campañas
+ */
 const Producto = (props) => {
   const [nombreTemporal, setNombreTemporal] = useState("");
-  const handleNombreChange = (e) => setNombreTemporal(e.target.value);
 
   const { getCampanasPorProducto } = useContext(CampanaContext);
   const campanas = getCampanasPorProducto(props.id_producto);
+
+  const { abrirProductoModal } = useContext(ModalContext);
+
+  /**
+   * Maneja los cambios en el input de nombre durante la edición
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio
+   */
+  const handleNombreChange = (e) => setNombreTemporal(e.target.value);
 
   //console.log(props.src);
   return (
@@ -39,9 +48,9 @@ const Producto = (props) => {
         >
           <div className="flex items-center gap-2">
             <ProductImage
-              src={`${props.src}`}
+              src={`${props.src || ""}`}
               alt={props.alt}
-              className="w-16 h-16 cursor-pointer rounded border border-gray-400"
+              className="w-16 h-16 cursor-pointer object-contain rounded" // border border-gray-400
             />
             {props.editingNombre ? (
               <input
@@ -57,7 +66,9 @@ const Producto = (props) => {
                 {props.nombre}
                 <FaPencilAlt
                   className="text-blue-500 hover:text-blue-700 cursor-pointer"
-                  onClick={() => {}}
+                  onClick={() => {
+                    abrirProductoModal(props.id_producto);
+                  }}
                 />
               </span>
             )}
