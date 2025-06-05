@@ -6,6 +6,8 @@
 import React, { useContext, useState } from "react";
 import CustomButton from "../components/CustomButton.jsx";
 import { ContextoTutorial } from "../context/ProveedorTutorial.jsx";
+import { ContextoEmpresa } from "../context/ProveedorEmpresa.jsx";
+
 import ReCAPTCHA from "react-google-recaptcha";
 /**
  * Componente que representa la página de login de la aplicación Trendify.
@@ -21,8 +23,9 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const { obtenerTutorialCompletado } = useContext(ContextoTutorial);
+  const { isEmpresaRegistrada } = useContext(ContextoEmpresa);
   /**
    * Maneja los cambios en los campos del formulario de login.
    *
@@ -47,6 +50,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
+  setLoading(true);
 
   if (!captchaToken) {
     setError("Por favor verifica el captcha.");
@@ -81,10 +85,11 @@ const Login = () => {
 
       const id_usuario = data.id_usuario;
       const tutorialCompletado = await obtenerTutorialCompletado(id_usuario);
-      console.log("Tutorial completado:", tutorialCompletado);
+      const empresaRegistrada = await isEmpresaRegistrada(id_usuario);
+      //console.log("Tutorial completado:", tutorialCompletado);
 
       // Redirigir según el estado de tutorial_completo
-        if (tutorialCompletado) {
+        if (tutorialCompletado || empresaRegistrada) {
           window.location.replace("/users/adminproductos");
         } else if (data.activa === true) {
           window.location.replace("/tutorial/");
@@ -98,6 +103,8 @@ const Login = () => {
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
     setError("No se pudo conectar con el servidor");
+  } finally {
+    setLoading(false);
   }
 };
 
