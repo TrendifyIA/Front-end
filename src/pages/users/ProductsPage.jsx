@@ -127,24 +127,32 @@ const ProductsPage = () => {
   };
 
   function procesarCampaña() {
-    const idCampana = 31; // ID hardcodeado temporalmente
+  const idCampana = 13; // ID hardcodeado temporalmente
+  const topic = "biogás"; // Asegúrate de que coincida con el topic usado en el backend
 
-    fetch("http://127.0.0.1:8080/proceso/iniciar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify({ id_campana: idCampana })
+  fetch("http://127.0.0.1:8080/proceso/iniciar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "include",
+    body: JSON.stringify({ id_campana: idCampana })
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Respuesta del servidor (proceso/iniciar):", data);
+      
+      return fetch(`http://127.0.0.1:8080/api/data/normalized?topic=${topic}&id_campana=${idCampana}&days=30`);
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Respuesta del servidor:", data);
-        alert(data.msg || "Proceso completado");
-      })
-      .catch(error => {
-        console.error("Error al procesar:", error);
-      });
+    .then(response => response.json())
+    .then(normalizedData => {
+      console.log("Datos normalizados:", normalizedData);
+      alert("Proceso completado y datos normalizados guardados");
+    })
+    .catch(error => {
+      console.error("Error al procesar:", error);
+      alert("Error al procesar la campaña");
+    });
   }
 
   return (
