@@ -69,7 +69,6 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "producto", element: <Producto /> },
       { path: "campana", element: <Campana /> },
-      { index: true, element: <Dashboard /> },
       {
         path: "adminproductos",
         element: (
@@ -92,11 +91,9 @@ const router = createBrowserRouter([
           </ProveedorEmpresa>
         ),
       },
-      { path: "bienvenida", element: <Bienvenida /> },
       { path: "resumen-tendencias", element: <ResumenTendencias9 /> },
       { path: "detalle-tendencia", element: <DetalleTendencia10 /> },
       { path: "resumen", element: <SummaryPage /> },
-      {},
     ],
   },
   {
@@ -153,6 +150,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+    <ProveedorUsuario>
+      <RouterProvider router={router}></RouterProvider>
+    </ProveedorUsuario>
   </StrictMode>
 );

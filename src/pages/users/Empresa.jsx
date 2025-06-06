@@ -1,6 +1,6 @@
 /**
  * @file Empresa.jsx
- * @author Jennyfer Jasso, ...
+ * @author Jennyfer Jasso, Yael Pérez
  * @description Página de información de la empresa y permite editar la información registrada de la empresa asociada al usuario.
  */
 import { useState, useEffect, useContext } from "react";
