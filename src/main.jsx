@@ -78,7 +78,9 @@ const router = createBrowserRouter([
               <ProveedorCampana>
                 <ProveedorModal>
                   <ProveedorProcesado>
-                    <ProductsPage />
+                    <ProveedorEmpresa>
+                      <ProductsPage />
+                    </ProveedorEmpresa>
                   </ProveedorProcesado>
                 </ProveedorModal>
               </ProveedorCampana>
