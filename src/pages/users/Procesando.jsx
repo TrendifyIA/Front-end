@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Procesando = () => {
-  const [estado, setEstado] = useState("procesando");
+  const location = useLocation();
   const navigate = useNavigate();
+  const idCampana = location.state?.id_campana;
+
+  const [estado, setEstado] = useState("procesando");
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
@@ -12,14 +16,16 @@ const Procesando = () => {
     }, 6000);
 
     const timer2 = setTimeout(() => {
-      navigate("/users/resumen-tendencias");
+      navigate("/users/resumen-tendencias", {
+        state: { id_campana: idCampana }
+      });
     }, 8000);
 
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, [navigate]);
+  }, [navigate, idCampana]);
 
   return (
     <div className="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">

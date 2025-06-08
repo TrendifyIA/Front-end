@@ -16,7 +16,6 @@ import { useNavigate } from "react-router-dom"
 import Procesando from "../pages/tutorial/Procesando";
 import { ProcesamientoContext } from "../context/ProveedorProcesado";
 
-
 /**
  * Componente que representa una campaña en la tabla de campañas
  * 
@@ -30,9 +29,6 @@ import { ProcesamientoContext } from "../context/ProveedorProcesado";
  *
  */
 const Campana = (props) => {
-  //console.log("estatus",props.estatus)
-
-  // console.log(props.key);
 
   const { abrirCampanaModal } = useContext(ModalContext);
 
@@ -41,17 +37,22 @@ const Campana = (props) => {
   const navigate = useNavigate();
 
   const procesarCampana = async () => {
-    if (estatusLocal === false){
+    if (estatusLocal === false) {
       setProcesando(true);
 
-      try{
+      // Navega a pantalla de "procesando"
+      navigate("/procesando", {
+        state: { id_campana: props.id_campana },
+      });
+
+      try {
         const respuesta = await fetch("http://127.0.0.1:8080/proceso/iniciar", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           credentials: "include",
-          body: JSON.stringify({id_campana: props.id_campana})
+          body: JSON.stringify({ id_campana: props.id_campana })
         });
 
         const data = await respuesta.json();
@@ -59,20 +60,26 @@ const Campana = (props) => {
 
         setEstatusLocal(1);
 
-      }catch (error){
+        // Guardar en localStorage
+        localStorage.setItem("campana_activa", JSON.stringify({
+          id: props.id_campana,
+          activo: true,
+          tiempo: Date.now()
+        }));
+
+      } catch (error) {
         console.error("Error al procesar:", error);
         alert("Error al procesar la campaña.");
       } finally {
-        setProcesando(false); // Asegurar que se apaga
+        setProcesando(false); // Apaga el flag
       }
     } else {
-      console.log(props.estatus)
-      alert("Esta procesado")
-      navigate("/users/resumen-tendencias")
+      navigate("/users/resumen-tendencias", {
+        state: { id_campana: props.id_campana },
+      });
     }
   };
 
-  // console.log("abrirCampanaModal:", abrirCampanaModal);
   return (
     <tr>
       <td className="px-4 py-3 text-sm text-blue-600 font-medium">

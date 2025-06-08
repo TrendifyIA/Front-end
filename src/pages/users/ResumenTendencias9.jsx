@@ -1,4 +1,5 @@
- import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -26,9 +27,11 @@ const ResumenTendencias9 = () => {
   const [labels, setLabels] = useState([]);
   const [palabrasClave, setPalabrasClave] = useState([]);
 
+  const location = useLocation();
+  const campanaId = location.state?.id_campana
+
   useEffect(() => {
     const fetchData = async () => {
-      const campanaId = 13;
       try {
         const res = await fetch(`http://localhost:8080/keyword/${campanaId}`);
         if (!res.ok) throw new Error("Error al obtener las palabras clave");
@@ -94,8 +97,6 @@ const colores = [
     pointHoverRadius: 6,
   })),
 };
-
-
 
   const options = {
     responsive: true,
