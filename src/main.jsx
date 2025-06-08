@@ -44,6 +44,7 @@ import ProveedorProducto from "./context/ProveedorProducto";
 import ProveedorCampana from "./context/ProveedorCampana";
 import ProveedorModal from "./context/ProveedorModal.jsx";
 import ProveedorUsuario from "./context/ProveedorUsuario.jsx";
+import { ProveedorProcesado } from "./context/ProveedorProcesado.jsx";
 // import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
 
 const router = createBrowserRouter([
@@ -76,7 +77,9 @@ const router = createBrowserRouter([
             <ProveedorProducto>
               <ProveedorCampana>
                 <ProveedorModal>
-                  <ProductsPage />
+                  <ProveedorProcesado>
+                    <ProductsPage />
+                  </ProveedorProcesado>
                 </ProveedorModal>
               </ProveedorCampana>
             </ProveedorProducto>
@@ -143,9 +146,14 @@ const router = createBrowserRouter([
       { path: "empresa", element: <TutorialEmpresa /> },
       { path: "resumen", element: <SummaryPage /> },
       { path: "confirmacion", element: <ConfirmacionDatos /> },
-      { path: "procesando", element: <Procesando /> },
     ],
   },
+  {
+    path: "/procesando",
+    element: (
+      <Procesando></Procesando>
+    )
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(

@@ -14,6 +14,8 @@ import BotonIcon from "./BotonIcon";
 import { ModalContext } from "../context/ProveedorModal";
 import { useNavigate } from "react-router-dom"
 import Procesando from "../pages/tutorial/Procesando";
+import { ProcesamientoContext } from "../context/ProveedorProcesado";
+
 
 /**
  * Componente que representa una campaña en la tabla de campañas
@@ -35,14 +37,12 @@ const Campana = (props) => {
   const { abrirCampanaModal } = useContext(ModalContext);
 
   const [estatusLocal, setEstatusLocal] = useState(props.estatus) // Controla el estatus
-  const [cargando, setCargando] = useState(false) // Controla la pantalla de carga
+  const {procesando, setProcesando} = useContext(ProcesamientoContext)
   const navigate = useNavigate();
 
   const procesarCampana = async () => {
     if (estatusLocal === false){
-
-      alert("No esta procesado, para alla vamos")
-      setCargando(true); // Muestra la pantalla de carga
+      setProcesando(true);
 
       try{
         const respuesta = await fetch("http://127.0.0.1:8080/proceso/iniciar", {
@@ -63,18 +63,14 @@ const Campana = (props) => {
         console.error("Error al procesar:", error);
         alert("Error al procesar la campaña.");
       } finally {
-        setCargando(false); // Asegurar que se apaga
+        setProcesando(false); // Asegurar que se apaga
       }
     } else {
       console.log(props.estatus)
       alert("Esta procesado")
-      navigate("/users/empresa")
+      navigate("/users/resumen-tendencias")
     }
   };
-
-  if (cargando){
-    return <Procesando></Procesando>
-  }
 
   // console.log("abrirCampanaModal:", abrirCampanaModal);
   return (
