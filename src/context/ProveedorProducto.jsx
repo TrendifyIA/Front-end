@@ -175,6 +175,7 @@ const ProveedorProducto = ({ children }) => {
       );
     } catch (err) {
       console.error("Error actualizando producto:", err.message);
+      throw err;
     }
   };
 

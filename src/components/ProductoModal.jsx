@@ -11,6 +11,7 @@ import { BsImage } from "react-icons/bs";
 import { ContextoProducto } from "../context/ProveedorProducto";
 import { UsuarioContext } from "../context/ProveedorUsuario";
 import { LuMousePointerClick } from "react-icons/lu";
+import Campo from "./Campo";
 
 /**
  * Modal para crear o editar productos
@@ -23,13 +24,22 @@ import { LuMousePointerClick } from "react-icons/lu";
  * @param {Function} [props.onSave] - Función a ejecutar después de guardar (opcional)
  * @returns {JSX.Element} Modal con formulario para editar/crear producto
  */
-const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
-  const [nombre, setNombre] = useState("");
-  const [categoria, setCategoria] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [publico, setPublico] = useState("");
-  const [estado, setEstado] = useState("");
-  const [imagen, setImagen] = useState(null);
+const ProductoModal = ({ id_producto, onClose }) => {
+  const [form, setForm] = useState({
+    nombre: "",
+    categoria: "",
+    descripcion: "",
+    publico: "",
+    estado: "",
+    imagen: null,
+  });
+
+  // Estado para guardar los datos originales del producto
+  const [productoOriginal, setProductoOriginal] = useState(null);
+
+  // Estado para rastrear qué campos específicos han cambiado
+  const [cambios, setCambios] = useState({});
+
   const [mensaje, setMensaje] = useState(null);
 
   const [guardar, setGuardar] = useState(true);
@@ -50,12 +60,24 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
       fetch(`http://127.0.0.1:8080/producto/${id_producto}`)
         .then((res) => res.json())
         .then((data) => {
-          setNombre(data.nombre || "");
-          setCategoria(data.categoria || "");
-          setDescripcion(data.descripcion || "");
-          setPublico(data.publico_objetivo || "");
-          setEstado(data.estado ? "Procesado" : "Sin Procesar");
-          setImagen(data.ruta_img || null);
+          // Formatear datos
+          const productoData = {
+            nombre: data.nombre || "",
+            categoria: data.categoria || "",
+            descripcion: data.descripcion || "",
+            publico: data.publico_objetivo || "",
+            estado: data.estado ? "Procesado" : "Sin Procesar",
+            imagen: data.ruta_img || null,
+          };
+
+          // Guardar en form para edición
+          setForm(productoData);
+
+          // Guardar copia original para detectar cambios
+          setProductoOriginal(productoData);
+
+          // Resetear cambios
+          setCambios({});
         })
         .catch((err) => {
           console.error("Error al cargar los datos del producto:", err);
@@ -94,7 +116,8 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
       if (id_producto) {
         setGuardar(true);
       }
-      setImagen(file);
+      setForm((prev) => ({ ...prev, imagen: file }));
+      setCambios((prev) => ({ ...prev, imagen: true }));
       setImagePreview(file ? URL.createObjectURL(file) : undefined);
       setMensaje(null);
     }
@@ -106,8 +129,21 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
    * @param {Function} setter - Función setState para actualizar el valor
    * @returns {Function} Manejador de eventos para el input
    */
-  const handleInputChange = (setter) => (e) => {
-    setter(e.target.value);
+  const handleInputChange = /*(setter) =>*/ (e) => {
+    const { name, value } = e.target;
+
+    // Actualizar el valor en el formulario
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Si se esta editando un producto, comparar con los datos originales
+    if (id_producto && productoOriginal) {
+      setCambios((prev) => ({
+        ...prev,
+        [name]: value !== productoOriginal[name],
+      }));
+    }
+
+    // setter(e.target.value);
     setMensaje(null);
     if (id_producto) {
       setGuardar(true);
@@ -124,12 +160,12 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
 
     // Validación de campos requeridos
     if (
-      !nombre ||
-      !categoria ||
-      !descripcion ||
-      !publico ||
-      !estado ||
-      !imagen
+      !form.nombre ||
+      !form.categoria ||
+      !form.descripcion ||
+      !form.publico ||
+      !form.estado ||
+      !form.imagen
     ) {
       setMensaje({
         tipo: "error",
@@ -141,13 +177,13 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
     // Preparar objeto con datos del producto
     const productoActualizado = {
       // ...producto,
-      nombre,
-      categoria,
-      descripcion,
-      publico_objetivo: publico,
-      estado: estado === "Procesado" ? 1 : 0,
+      nombre: form.nombre,
+      categoria: form.categoria,
+      descripcion: form.descripcion,
+      publico_objetivo: form.publico,
+      estado: form.estado === "Procesado" ? 1 : 0,
       id_empresa: idEmpresa,
-      imagenFile: imagen instanceof File ? imagen : null,
+      imagenFile: form.imagen instanceof File ? form.imagen : null,
     };
 
     //console.log(imagen)
@@ -159,6 +195,7 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
         // Crear nuevo producto
         await crearProducto(productoActualizado);
         setMostrarCampos(false);
+        setMensaje(null);
       } else {
         // Actualizar producto existente
         await actualizarProducto(id_producto, productoActualizado);
@@ -166,12 +203,16 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
           tipo: "success",
           texto: "La información se ha guardado correctamente.",
         });
+
+        // Actualizar original y resetear cambios
+        setProductoOriginal(form);
+        setCambios({});
       }
 
       setGuardar(false);
     } catch (error) {
       setMostrarCampos(true);
-      console.log("mostrarCampos", mostrarCampos);
+      // console.log("mostrarCampos", mostrarCampos);
       setMensaje({
         tipo: "error",
         texto:
@@ -181,7 +222,6 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
       setCargando(false);
     }
   };
-
 
   return (
     <div className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center">
@@ -229,22 +269,32 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
             {/* Campos de nombre y categoría */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block mb-1 font-medium">Nombre:</label>
-                <input
-                  // required
-                  value={nombre}
-                  onChange={handleInputChange(setNombre)}
-                  className="w-full border rounded px-3 py-2"
-                  type="text"
+                <Campo
+                  label="Nombre"
+                  name="nombre"
+                  valor={form.nombre}
+                  editable={true}
+                  cambio={cambios.nombre}
+                  onChange={handleInputChange}
                 />
               </div>
               <div>
-                <label className="block mb-1 font-medium">Categoría(s):</label>
+                <label htmlFor="categoria" className="block mb-2 font-medium">
+                  Categoría(s):
+                </label>
                 <select
                   // required
-                  value={categoria}
-                  onChange={handleInputChange(setCategoria)}
-                  className="w-full border rounded px-3 py-2 cursor-pointer"
+                  id="categoria"
+                  name="categoria"
+                  value={form.categoria}
+                  onChange={handleInputChange}
+                  className={`border-2 p-2 rounded-[5px] w-full focus:outline-none transition-colors duration-200
+    ${
+      cambios.categoria
+        ? "[border-color:#02245a] bg-blue-50"
+        : "border-neutral-400 bg-white"
+    }
+  `}
                 >
                   {/* Lista de opciones de categorías */}
                   <option value="" disabled>
@@ -320,37 +370,43 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
 
             {/* Campo de descripción */}
             <div className="mb-4">
-              <label className="block mb-1 font-medium">Descripción:</label>
-              <input
-                // required
-                value={descripcion}
-                onChange={handleInputChange(setDescripcion)}
-                className="w-full border rounded px-3 py-2"
-                type="text"
+              <Campo
+                label="Descripcion"
+                name="descripcion"
+                valor={form.descripcion}
+                editable={true}
+                cambio={cambios.descripcion}
+                onChange={handleInputChange}
               />
             </div>
 
             {/* Campos de público objetivo y estado */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block mb-1 font-medium">
-                  Público objetivo:
-                </label>
-                <input
-                  // required
-                  value={publico}
-                  onChange={handleInputChange(setPublico)}
-                  className="w-full border rounded px-3 py-2"
-                  type="text"
+                <Campo
+                  label="Público objetivo"
+                  name="publico"
+                  valor={form.publico}
+                  editable={true}
+                  cambio={cambios.publico}
+                  onChange={handleInputChange}
                 />
               </div>
               <div>
-                <label className="block mb-1 font-medium">Estado:</label>
+                <label className="block mb-2 font-medium">Estado:</label>
                 <select
                   // required
-                  value={estado}
-                  onChange={handleInputChange(setEstado)}
-                  className="w-full border rounded px-3 py-2"
+                  id="estado"
+                  name="estado"
+                  value={form.estado}
+                  onChange={handleInputChange}
+                  className={`border-2 p-2 rounded-[5px] w-full focus:outline-none transition-colors duration-200
+    ${
+      cambios.estado
+        ? "[border-color:#02245a] bg-blue-50"
+        : "border-neutral-400 bg-white"
+    }
+  `}
                 >
                   <option value="" disabled>
                     Seleccione
@@ -366,11 +422,16 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
               <label className="block mb-2 font-medium">
                 Imagen de producto:
               </label>
-              {imagen ? (
+              {form.imagen ? (
                 <div>
                   <label
                     htmlFor="imagen"
-                    className="border-2 border-dashed border-gray-400 rounded p-6 text-center cursor-pointer flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 transition"
+                    className={`border-2 border-dashed rounded p-6 text-center cursor-pointer flex flex-col items-center justify-center text-gray-500 transition
+                      ${
+                        cambios.imagen && id_producto
+                          ? "[border-color:#02245a] bg-blue-50 hover:bg-blue-100"
+                          : "border-neutral-400 bg-white hover:bg-gray-50"
+                      }`}
                   >
                     <input
                       type="file"
@@ -382,8 +443,8 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
                     />
 
                     <img
-                      src={imagePreview || imagen}
-                      alt={`Imagen del producto ${nombre}`}
+                      src={imagePreview || form.imagen}
+                      alt={`Imagen del producto ${form.nombre}`}
                       className="w-30 h-30 object-contain mb-2 rounded"
                     />
                     <span className="flex items-center gap-1 justify-center">
@@ -409,10 +470,12 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
                 </label>
               )}
 
-              {imagen && (
+              {form.imagen && (
                 <p className="text-sm text-gray-600 mt-2 italic">
                   Imagen seleccionada:{" "}
-                  {typeof imagen === "string" ? imagen : imagen.name}
+                  {typeof form.imagen === "string"
+                    ? form.imagen
+                    : form.imagen.name}
                 </p>
               )}
             </div>
@@ -422,9 +485,15 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
               {guardar ? (
                 <button
                   type="submit"
-                  disabled={cargando}
+                  disabled={
+                    cargando ||
+                    (!Object.values(cambios).some(Boolean) && id_producto)
+                  }
                   className={`bg-blue-800 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-md text-sm transition ${
-                    cargando ? "opacity-70 cursor-not-allowed" : ""
+                    cargando ||
+                    (!Object.values(cambios).some(Boolean) && id_producto)
+                      ? "opacity-70 cursor-not-allowed"
+                      : ""
                   }`}
                 >
                   {cargando ? (
@@ -449,7 +518,7 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Creando producto...
+                      {id_producto ? "Guardando..." : "Creando producto..."}
                     </span>
                   ) : (
                     "Guardar"
