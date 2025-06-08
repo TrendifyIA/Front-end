@@ -25,7 +25,7 @@ import { ModalContext } from "../context/ProveedorModal";
  */
 const Producto = (props) => {
   const [nombreTemporal, setNombreTemporal] = useState("");
-  const { getCampanasPorProducto } = useContext(ContextoCampana);
+  const { getCampanasPorProducto, cargandoCampanas } = useContext(ContextoCampana);
   const campanas = getCampanasPorProducto(props.id_producto);
 
   const { abrirProductoModal } = useContext(ModalContext);
@@ -41,7 +41,7 @@ const Producto = (props) => {
     <>
       <tr>
         <td
-          rowSpan={campanas.length + 2} //????
+          rowSpan={cargandoCampanas ? 2 : campanas.length + 2} //????
           className="px-4 py-3 font-medium text-sm text-gray-900 align-top"
         >
           <div className="flex items-center gap-2">
