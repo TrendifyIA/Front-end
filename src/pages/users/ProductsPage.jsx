@@ -8,6 +8,8 @@
 import { useContext  } from "react";
 import ListaProductos from "../../components/ListaProductos";
 import { ModalContext } from "../../context/ProveedorModal";
+import Procesando from "./Procesando"
+import { ProcesamientoContext } from "../../context/ProveedorProcesado";
 
 /**
  * Página que muestra los productos de la empresa y sus campañas asociadas
@@ -18,9 +20,11 @@ import { ModalContext } from "../../context/ProveedorModal";
 const ProductsPage = () => {
 
   const { abrirProductoModal } = useContext(ModalContext);
+  const { procesando } = useContext(ProcesamientoContext)
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 relative">
+      {procesando && <Procesando />}
       <h1 className="text-2xl font-bold text-gray-900 mb-4">Empresa: Sabritas</h1>
 
       <button

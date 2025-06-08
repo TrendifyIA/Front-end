@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -24,55 +25,78 @@ const ResumenTendencias9 = () => {
   const [mostrar, setMostrar] = useState(true);
   const [datosPromedio, setDatosPromedio] = useState([]);
   const [labels, setLabels] = useState([]);
+  const [palabrasClave, setPalabrasClave] = useState([]);
+
+  const location = useLocation();
+  const campanaId = location.state?.id_campana
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [resReddit, resRandom] = await Promise.all([
-          fetch(
-            "http://localhost:8080/social/reddit/trends?topic=Fitness&days=30"
-          ),
-          fetch(
-            "http://localhost:8080/social/random/trends?topic=Fitness&days=30"
-          ),
-        ]);
+        const res = await fetch(`http://localhost:8080/keyword/${campanaId}`);
+        if (!res.ok) throw new Error("Error al obtener las palabras clave");
+        const data = await res.json();
+        const palabras = data.keywords;
+        setPalabrasClave(palabras);
 
-        const dataReddit = await resReddit.json();
-        const dataRandom = await resRandom.json();
+        const nuevosPromedios = [];
+        let labelsTemporales = [];
 
-        const promedio = dataReddit.map((item, idx) => {
-          const rBuzz = item.avg_buzzscore || 0;
-          const randBuzz = dataRandom[idx]?.avg_buzzscore || 0;
-          return (rBuzz + randBuzz) / 2;
-        });
+        for (const palabra of palabras) {
+          try {
+            const resPalabra = await fetch(`http://localhost:8080/api/data/normalized?topic=${palabra}`);
+if (!resPalabra.ok) throw new Error("Error al obtener datos de " + palabra);
+const dataPalabra = await resPalabra.json();
 
-        setDatosPromedio(promedio);
-        setLabels(dataReddit.map((d) => d._id));
+const buzzcores = dataPalabra.resultados.map((r) => r.buzzcore_promedio);
+const fechas = dataPalabra.resultados.map((r) => r.fecha);
+
+nuevosPromedios.push(buzzcores);
+
+if (labelsTemporales.length === 0) {
+  labelsTemporales = fechas;
+}
+
+          } catch (err) {
+            console.error("Error al obtener datos de la palabra:", err);
+          }
+        }
+
+        setDatosPromedio(nuevosPromedios);
+setLabels(labelsTemporales);
+        console.log("Datos promedio:", nuevosPromedios);
       } catch (error) {
-        console.error("Error al obtener datos:", error);
+        console.error("Error general:", error);
       }
     };
 
     fetchData();
   }, []);
 
+const colores = [
+  "#7B3F99", // morado
+  "#D32F2F", // rojo
+  "#F57C00", // naranja
+  "#1976D2", // azul
+  "#388E3C", // verde
+  "#F06292", // rosa
+  "#0097A7", // turquesa
+  "#AFB42B", // lima
+];
+
   const data = {
-    labels,
-    datasets: mostrar
-      ? [
-          {
-            label: "Fitness",
-            data: datosPromedio,
-            borderColor: "#3b82f6",
-            backgroundColor: "#3b82f6",
-            fill: false,
-            tension: 0.4,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-          },
-        ]
-      : [],
-  };
+  labels,
+  datasets: datosPromedio.map((dataArray, idx) => ({
+    label: palabrasClave[idx],
+    data: mostrar ? dataArray : [],
+    borderColor: colores[idx % colores.length],
+    backgroundColor: colores[idx % colores.length],
+    fill: false,
+    tension: 0.4,
+    pointRadius: 4,
+    pointHoverRadius: 6,
+  })),
+};
 
   const options = {
     responsive: true,
@@ -100,19 +124,21 @@ const ResumenTendencias9 = () => {
         </div>
 
         <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={mostrar}
-              onChange={() => setMostrar((prev) => !prev)}
-            />
-            <Link
-              to="/users/detalle-tendencia"
-              className="font-medium text-sm text-black hover:underline"
+          {palabrasClave.map((palabra, index) => (
+            <label
+              key={index}
+              className="flex items-center gap-2 cursor-pointer"
             >
-              Fitness
-            </Link>
-          </label>
+              <input
+                type="checkbox"
+                checked={mostrar}
+                onChange={() => setMostrar((prev) => !prev)}
+              />
+              <span className="font-medium text-sm text-black hover:underline">
+                {palabra}
+              </span>
+            </label>
+          ))}
         </div>
       </div>
 

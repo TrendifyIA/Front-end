@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Procesando = () => {
-  const [estado, setEstado] = useState("procesando"); 
+  const location = useLocation();
   const navigate = useNavigate();
+  const idCampana = location.state?.id_campana;
+
+  const [estado, setEstado] = useState("procesando");
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
@@ -12,17 +16,19 @@ const Procesando = () => {
     }, 6000);
 
     const timer2 = setTimeout(() => {
-      navigate("/users/resumen-tendencias"); 
+      navigate("/users/resumen-tendencias", {
+        state: { id_campana: idCampana }
+      });
     }, 8000);
 
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, [navigate]);
+  }, [navigate, idCampana]);
 
   return (
-    <div className="min-h-screen bg-gray-100 font-family flex flex-col items-center justify-center relative">
+    <div className="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">
       {estado === "procesando" ? (
         <>
           <h2 className="text-3xl font-bold mb-10">
@@ -54,7 +60,7 @@ const Procesando = () => {
       )}
 
       {estado === "procesando" && (
-        <div className="fixed bottom-0 w-full bg-yellow-300 text-black text-center py-3 font-medium shadow-md">
+        <div className="absolute bottom-0 w-full bg-yellow-300 text-black text-center py-3 font-medium shadow-md">
           ⚠️ No recargues la página o el proceso se reiniciará
         </div>
       )}

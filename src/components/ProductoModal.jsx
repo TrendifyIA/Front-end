@@ -54,7 +54,7 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
           setCategoria(data.categoria || "");
           setDescripcion(data.descripcion || "");
           setPublico(data.publico_objetivo || "");
-          setEstado(data.estado ? "Procesado" : "Sin Procesar");
+          setEstado(data.estado ? "Continuado" : "Sin Descontinuado");
           setImagen(data.ruta_img || null);
         })
         .catch((err) => {
@@ -145,7 +145,7 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
       categoria,
       descripcion,
       publico_objetivo: publico,
-      estado: estado === "Procesado" ? 1 : 0,
+      estado: estado === "Continuado" ? 1 : 0,
       id_empresa: idEmpresa,
       imagenFile: imagen instanceof File ? imagen : null,
     };
@@ -355,8 +355,8 @@ const ProductoModal = ({ id_producto, producto, onClose, onSave }) => {
                   <option value="" disabled>
                     Seleccione
                   </option>
-                  <option>Procesado</option>
-                  <option>Sin Procesar</option>
+                  <option>Continuado</option>
+                  <option>Descontinuado</option>
                 </select>
               </div>
             </div>
