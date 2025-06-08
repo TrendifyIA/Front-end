@@ -14,7 +14,7 @@ export const ContextoProducto = createContext();
 
 /**
  * Proveedor de contexto que gestiona el estado y operaciones CRUD para los productos
- * 
+ *
  * @component
  * @param {Object} props - Propiedades del componente
  * @param {React.ReactNode} props.children - Componentes hijos que consumirán el contexto
@@ -24,9 +24,11 @@ const ProveedorProducto = ({ children }) => {
   const [productos, setProductos] = useState([]);
   const [producto, setProducto] = useState(null);
 
+  const [cargandoProductos, setCargandoProductos] = useState(true);
   const { idEmpresa } = useContext(UsuarioContext);
   // console.log("idempresa", idEmpresa);
 
+  
   /**
    * Función para obtener los datos de un producto por su ID.
    *
@@ -46,20 +48,25 @@ const ProveedorProducto = ({ children }) => {
    */
   useEffect(() => {
     if (idEmpresa) {
+      setCargandoProductos(true);
       fetch(`http://127.0.0.1:8080/producto/productos/${idEmpresa}`)
         .then((response) => response.json())
         .then((data) => {
           setProductos(data);
           // console.log("Productos fetched:", data);
+          setCargandoProductos(false);
         })
 
-        .catch((error) => console.error("Error fetching productos:", error));
+        .catch((error) => {
+          console.error("Error fetching productos:", error);
+          setCargandoProductos(false);
+        });
     }
   }, [idEmpresa]);
 
   /**
    * Crea un nuevo producto en el sistema y actualiza el estado local
-   * 
+   *
    * @async
    * @param {Object} data - Datos del producto a crear
    * @param {string} data.nombre - Nombre del producto
@@ -105,22 +112,23 @@ const ProveedorProducto = ({ children }) => {
         const productosData = await productosResponse.json();
         setProductos(productosData);
       }
-
     } catch (error) {
-      console.error(error.message, "Evite utilizar caracteres especiales. (<  >  \'  \"  ;  `  %  \\)");
+      console.error(
+        error.message,
+        "Evite utilizar caracteres especiales. (<  >  '  \"  ;  `  %  \\)"
+      );
       throw error;
     }
   };
 
-
   /**
    * Actualiza un producto existente y refresca los datos en el estado local
-   * 
+   *
    * @async
    * @param {number} id_producto - ID del producto a actualizar
    * @param {Object} data - Datos actualizados del producto
    * @param {string} [data.nombre] - Nombre actualizado del producto
-   * @param {string} [data.categoria] - Categoría actualizada del producto 
+   * @param {string} [data.categoria] - Categoría actualizada del producto
    * @param {string} [data.descripcion] - Descripción actualizada del producto
    * @param {string} [data.publico_objetivo] - Público objetivo actualizado
    * @param {string} [data.estado] - Estado actualizado del producto
@@ -175,7 +183,8 @@ const ProveedorProducto = ({ children }) => {
     crearProducto,
     actualizarProducto,
     producto, 
-    obtenerDatosProducto
+    obtenerDatosProducto,
+    cargandoProductos
   };
 
   return (
