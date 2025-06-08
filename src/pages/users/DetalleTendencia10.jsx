@@ -21,9 +21,9 @@ ChartJS.register(
 );
 
 const redes = [
-  { id: "youtube", nombre: "YouTube", color: "#c4302b" },
-  { id: "reddit", nombre: "Reddit", color: "#FF5700" },
-  { id: "web", nombre: "Web", color: "#4A90E2" }
+  { id: "youtube", nombre: "YouTube", color: "#D32F2F" },
+  { id: "reddit", nombre: "Reddit", color: "#F57C00" },
+  { id: "web", nombre: "Web", color: "#7B3F99" }
 ];
 
 const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) => {
@@ -60,9 +60,9 @@ const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) =>
           data: dataPoints,
           borderColor: r.color,
           backgroundColor: r.color,
-          borderWidth: 2,
+          borderWidth: 3,
           tension: 0.4,
-          pointRadius: 4,
+          pointRadius: 2,
         };
       }),
   };
