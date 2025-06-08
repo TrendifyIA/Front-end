@@ -129,14 +129,24 @@ const ProveedorProducto = ({ children }) => {
    */
   const actualizarProducto = async (id_producto, data) => {
     try {
+      const formData = new FormData();
+      formData.append("nombre", data.nombre);
+      formData.append("categoria", data.categoria);
+      formData.append("descripcion", data.descripcion);
+      formData.append("publico_objetivo", data.publico_objetivo);
+      formData.append("estado", data.estado);
+      formData.append("id_empresa", idEmpresa);
+
+      // Adjuntar el archivo si está disponible
+      if (data.imagenFile) {
+        formData.append("ruta_img", data.imagenFile);
+      }
+
       const response = await fetch(
         `http://127.0.0.1:8080/producto/actualizar-producto/${id_producto}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+          body: formData,
         }
       );
 
