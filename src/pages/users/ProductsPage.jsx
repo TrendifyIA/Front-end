@@ -43,7 +43,7 @@ const ProductsPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6 relative">
       {procesando && <Procesando />}
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">Empresa: {empresa.nombre || "cargando..."} </h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-4">Empresa: {empresa?.nombre || "cargando..."} </h1>
 
       <button
         onClick={() => {abrirProductoModal()}}
