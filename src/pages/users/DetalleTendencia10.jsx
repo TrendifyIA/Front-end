@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -10,7 +10,6 @@ import {
   Legend,
   Tooltip,
 } from "chart.js";
-import { Link } from "react-router-dom";
 
 ChartJS.register(
   LineElement,
@@ -21,17 +20,17 @@ ChartJS.register(
   Tooltip
 );
 
-const ResumenTendencias9 = () => {
+const DetalleTendencia10 = () => {
   const [mostrar, setMostrar] = useState(true);
   const [datosPromedio, setDatosPromedio] = useState([]);
   const [labels, setLabels] = useState([]);
   const [palabrasClave, setPalabrasClave] = useState([]);
-  const [resumenIA, setResumenIA] = useState(""); // Nuevo estado para el resumen IA
+  const [resumenIA, setResumenIA] = useState("");
 
   const location = useLocation();
   const campanaId = location.state?.id_campana;
 
-  // Solicitud de palabras clave y datos de tendencia
+  // Cargar palabras clave y datos de tendencia
   useEffect(() => {
     const fetchData = async () => {
       if (!campanaId) return;
@@ -86,22 +85,20 @@ const ResumenTendencias9 = () => {
     fetchData();
   }, [campanaId]);
 
-  // Solicitud del resumen IA
+  // Cargar resumen IA
   useEffect(() => {
     const obtenerResumenIA = async () => {
       if (!campanaId) return;
       try {
-        const res = await fetch(
-          //cambia la url
-          `https://bb2a-189-203-36-117.ngrok-free.app/api/resumen-campana/${campanaId}`
-        );
+        const resumenURL = `${import.meta.env.VITE_BACKEND_URL.replace("/preguntar", "")}/api/resumen-campana/${campanaId}`;
+        const res = await fetch(resumenURL);
 
         if (!res.ok) throw new Error("Error al obtener el resumen");
         const data = await res.json();
-        setResumenIA(data.resumen);
+        setResumenIA(data.resumen || "[Sin resumen generado]");
       } catch (error) {
         console.error("Error al obtener resumen de IA:", error);
-        setResumenIA("No se pudo generar el resumen.");
+        setResumenIA("No se pudo obtener el resumen. Intenta de nuevo.");
       }
     };
 
@@ -136,14 +133,8 @@ const ResumenTendencias9 = () => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: { position: "top" },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
+    plugins: { legend: { position: "top" } },
+    scales: { y: { beginAtZero: true } },
   };
 
   return (
@@ -152,7 +143,6 @@ const ResumenTendencias9 = () => {
         Análisis general de tendencias
       </h1>
 
-      {/* Gráfica + checkbox */}
       <div className="flex items-start mb-6 w-full">
         <div className="flex-grow bg-white rounded shadow p-6 h-[450px]">
           <Line data={data} options={options} />
@@ -185,7 +175,6 @@ const ResumenTendencias9 = () => {
         </Link>
       </div>
 
-      {/* Resumen IA */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h2 className="font-bold text-lg mb-2">Análisis de tendencias</h2>
         <p>{resumenIA}</p>
@@ -194,4 +183,4 @@ const ResumenTendencias9 = () => {
   );
 };
 
-export default ResumenTendencias9;
+export default DetalleTendencia10;

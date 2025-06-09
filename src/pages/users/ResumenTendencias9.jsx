@@ -75,17 +75,11 @@ const ResumenTendencias9 = () => {
       if (!campanaId) return;
       try {
         const res = await fetch(
-          (aqu)
-          //cambia la url
-          `https://bb2a-189-203-36-117.ngrok-free.app/api/resumen-campana/${campanaId}`,
-          {
-            headers: {
-              "ngrok-skip-browser-warning": "true",
-            },
-          }
+          `${import.meta.env.VITE_API_URL}/api/resumen-campana/${campanaId}`
         );
+
+        if (!res.ok) throw new Error("Error al obtener el resumen");
         const data = await res.json();
-        console.log("Resumen IA recibido:", data);
         setResumenIA(data.resumen || "[Sin resumen generado]");
       } catch (error) {
         console.error("Error al obtener resumen de IA:", error);
@@ -95,6 +89,7 @@ const ResumenTendencias9 = () => {
 
     obtenerResumenIA();
   }, [campanaId]);
+
 
   const colores = [
     "#7B3F99", // morado
@@ -166,7 +161,7 @@ const ResumenTendencias9 = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h2 className="font-bold text-lg mb-2">Resumen de IA</h2>
+        <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
         {resumenIA
           .split(/(Resumen actual:|Proyección futura:|Recomendaciones estratégicas:)/)
           .filter(Boolean)
