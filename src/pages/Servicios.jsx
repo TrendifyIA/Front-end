@@ -3,7 +3,7 @@ import React from "react";
 // Importación de imágenes desde assets
 import imgIA from "../assets/images/ia.png";
 import imgEstrategia from "../assets/images/estrategia.png";
-import imgData from "../assets/images/data.jpg";
+import imgData from "../assets/images/data.png";
 
 const servicios = [
   {
