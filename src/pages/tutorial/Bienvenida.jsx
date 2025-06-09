@@ -1,10 +1,5 @@
 /**
  * @file Bienvenida.jsx
- * @author ...
- * @description Página de bienvenida al tutorial de Trendify.
- */
-/**
- * @file Bienvenida.jsx
  * @author Sandra Herrera
  * @description Pantalla de bienvenida para el tutorial de Trendify.
  * Solicita información clave sobre la empresa, producto y campaña.

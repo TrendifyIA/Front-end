@@ -9,11 +9,11 @@ import MinChePhoto from '../assets/images/profile.jpg';
 import AndreaPhoto from '../assets/images/profile.jpg';
 import KevinPhoto from '../assets/images/profile.jpg';
 import FernandaPhoto from '../assets/images/profile.jpg';
-import SandraPhoto from '../assets/images/profile.jpg';
-import IanPhoto from '../assets/images/profile.jpg';
-import PabloPhoto from '../assets/images/profile.jpg';
+import SandraPhoto from '../assets/images/Sandra.png';
+import IanPhoto from '../assets/images/Alexei.png';
+import PabloPhoto from '../assets/images/Pablo.png';
 import JennyferPhoto from '../assets/images/profile.jpg';
-import IgnacioPhoto from '../assets/images/profile.jpg';
+import IgnacioPhoto from '../assets/images/Ignacio.png';
 
 const AboutUsPage = () => {
   const team = [
