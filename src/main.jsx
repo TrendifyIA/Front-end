@@ -1,6 +1,6 @@
 /**
  * @file main.jsx
- * @author Andrea Doce, Alexei, Eduardo Rosas, Jennyfer Jasso, Sandra, ...
+ * @author Andrea Doce, Alexei Martínez, Eduardo Rosas, Jennyfer Jasso, Sandra Hernández, Min Che Kim, ...
  * @description Punto de entrada principal para la aplicación Trendify donde se configuran las rutas y se renderiza la aplicación.
  */
 import { StrictMode } from "react";
@@ -35,10 +35,17 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import SubscribedRoute from "./components/SubscribedRoute.jsx";
 import Empresa from "./pages/users/Empresa.jsx";
 import ProveedorTutorial from "./context/ProveedorTutorial";
+import ResumenTendencias9 from "./pages/users/ResumenTendencias9.jsx";
+import DetalleTendencia10 from "./pages/users/DetalleTendencia10.jsx";
+
 import TutorialRoute from "./components/TutorialRoute.jsx";
 import ProveedorEmpresa from "./context/ProveedorEmpresa";
 import ProveedorProducto from "./context/ProveedorProducto";
 import ProveedorCampana from "./context/ProveedorCampana";
+import ProveedorModal from "./context/ProveedorModal.jsx";
+import ProveedorUsuario from "./context/ProveedorUsuario.jsx";
+import { ProveedorProcesado } from "./context/ProveedorProcesado.jsx";
+// import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -61,8 +68,35 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Dashboard /> },
-      { path: "adminproductos", element: <ProductsPage /> },
-      { path: "empresa", element: <Empresa /> },
+      { path: "producto", element: <Producto /> },
+      { path: "campana", element: <Campana /> },
+      {
+        path: "adminproductos",
+        element: (
+          <ProveedorUsuario>
+            <ProveedorProducto>
+              <ProveedorCampana>
+                <ProveedorModal>
+                  <ProveedorProcesado>
+                    <ProductsPage />
+                  </ProveedorProcesado>
+                </ProveedorModal>
+              </ProveedorCampana>
+            </ProveedorProducto>
+          </ProveedorUsuario>
+        ),
+      },
+      {
+        path: "empresa",
+        element: (
+          <ProveedorEmpresa>
+            <Empresa />
+          </ProveedorEmpresa>
+        ),
+      },
+      { path: "resumen-tendencias", element: <ResumenTendencias9 /> },
+      { path: "detalle-tendencia", element: <DetalleTendencia10 /> },
+      { path: "resumen", element: <SummaryPage /> },
     ],
   },
   {
@@ -74,7 +108,9 @@ const router = createBrowserRouter([
         path: "login",
         element: (
           <ProveedorTutorial>
-            <Login />
+            <ProveedorEmpresa>
+              <Login />
+            </ProveedorEmpresa>
           </ProveedorTutorial>
         ),
       },
@@ -92,15 +128,15 @@ const router = createBrowserRouter([
     path: "/tutorial",
     element: (
       <ProveedorTutorial>
-        <TutorialRoute>
-          <ProveedorEmpresa>
-            <ProveedorProducto>
-              <ProveedorCampana>
+        <ProveedorEmpresa>
+          <ProveedorProducto>
+            <ProveedorCampana>
+              <TutorialRoute>
                 <TutorialLayout />
-              </ProveedorCampana>
-            </ProveedorProducto>
-          </ProveedorEmpresa>
-        </TutorialRoute>
+              </TutorialRoute>
+            </ProveedorCampana>
+          </ProveedorProducto>
+        </ProveedorEmpresa>
       </ProveedorTutorial>
     ),
     children: [
@@ -110,13 +146,20 @@ const router = createBrowserRouter([
       { path: "empresa", element: <TutorialEmpresa /> },
       { path: "resumen", element: <SummaryPage /> },
       { path: "confirmacion", element: <ConfirmacionDatos /> },
-      { path: "procesando", element: <Procesando /> },
     ],
   },
+  {
+    path: "/procesando",
+    element: (
+      <Procesando></Procesando>
+    )
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+    <ProveedorUsuario>
+      <RouterProvider router={router}></RouterProvider>
+    </ProveedorUsuario>
   </StrictMode>
 );

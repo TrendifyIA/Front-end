@@ -8,9 +8,17 @@ import { PiGraphDuotone } from "react-icons/pi";
 import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import { FaRegBell } from "react-icons/fa";
 import { BiLogOut } from "react-icons/bi";
-
+import { useNavigate } from "react-router-dom";
 
 const SideBar = () => {
+
+  const navigate = useNavigate();
+
+  const cerrarSesion = () => {
+    localStorage.removeItem("token"); // Borra el token del localStorage
+    navigate("/simple/login"); // Redirige al login (ajusta la ruta si es necesario)
+  };
+
   return (
     <div className="w-[280px] h-screen bg-primary-500 font-family flex flex-col justify-around items-center fixed gap-20">
       <div>
@@ -27,7 +35,7 @@ const SideBar = () => {
         </ul>
       </div>
       <div>
-        <span className="flex text-white gap-2.5 font-medium leading-4 cursor-pointer hover:scale-105"><i className="text-lg"><BiLogOut></BiLogOut></i><p className="text-white">Cerrar Sesión</p></span>
+        <span className="flex text-white gap-2.5 font-medium leading-4 cursor-pointer hover:scale-105" onClick={cerrarSesion}><i className="text-lg"><BiLogOut></BiLogOut></i><p className="text-white">Cerrar Sesión</p></span>
       </div>
     </div>
   )

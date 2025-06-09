@@ -86,7 +86,9 @@ const handleSubmit = async (e) => {
             <input name="password" value={form.password} onChange={handleChange} type="password" placeholder="Contraseña" className="w-full px-4 py-2 border rounded" />
             <label className="flex items-center text-sm">
               <input name="acepta" type="checkbox" checked={form.acepta} onChange={handleChange} className="mr-2" />
-              Acepta nuestras <a href="#" className="text-blue-600 underline ml-1">Condiciones de uso</a> y <a href="#" className="text-blue-600 underline ml-1">Política de privacidad</a>
+              Acepta nuestras <a href="#" className="text-blue-600 underline ml-1">Condiciones de uso</a>
+              <span className="mx-1">y</span>
+              <a href="#" className="text-blue-600 underline">Política de privacidad</a>
             </label>
             <CustomButton
               texto="Registrarse"

@@ -6,7 +6,9 @@
 import React, { useContext, useState } from "react";
 import CustomButton from "../components/CustomButton.jsx";
 import { ContextoTutorial } from "../context/ProveedorTutorial.jsx";
+import { ContextoEmpresa } from "../context/ProveedorEmpresa.jsx";
 
+import ReCAPTCHA from "react-google-recaptcha";
 /**
  * Componente que representa la página de login de la aplicación Trendify.
  * Permite al usuario ingresar sus credenciales y redirige con base en el estado
@@ -21,8 +23,9 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const { obtenerTutorialCompletado } = useContext(ContextoTutorial);
+  const { isEmpresaRegistrada } = useContext(ContextoEmpresa);
   /**
    * Maneja los cambios en los campos del formulario de login.
    *
@@ -41,9 +44,18 @@ const Login = () => {
    * @param {React.FormEvent} e - Evento de envío del formulario.
    */
 
+  //Constante para el reCAPTCHA
+  const [captchaToken, setCaptchaToken] = useState("null");
+
   const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
+  setLoading(true);
+
+  if (!captchaToken) {
+    setError("Por favor verifica el captcha.");
+    return;
+  }
 
   try {
     const response = await fetch("http://127.0.0.1:8080/usuario/login", {
@@ -54,8 +66,10 @@ const Login = () => {
       body: JSON.stringify({
         email: credenciales.email,
         password: credenciales.password,
+        captcha: captchaToken,
       }),
     });
+
 
     const data = await response.json();
 
@@ -71,10 +85,11 @@ const Login = () => {
 
       const id_usuario = data.id_usuario;
       const tutorialCompletado = await obtenerTutorialCompletado(id_usuario);
-      console.log("Tutorial completado:", tutorialCompletado);
+      const empresaRegistrada = await isEmpresaRegistrada(id_usuario);
+      //console.log("Tutorial completado:", tutorialCompletado);
 
       // Redirigir según el estado de tutorial_completo
-        if (tutorialCompletado) {
+        if (tutorialCompletado || empresaRegistrada) {
           window.location.replace("/users/adminproductos");
         } else if (data.activa === true) {
           window.location.replace("/tutorial/");
@@ -88,6 +103,8 @@ const Login = () => {
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
     setError("No se pudo conectar con el servidor");
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -160,6 +177,11 @@ const Login = () => {
               tipo="primario"
               extraClases="text-center w-full"
               type="submit"
+            />
+            <ReCAPTCHA
+              sitekey = {import.meta.env.VITE_GOOGLE_RECAPTCHA}
+              onChange={(token) => setCaptchaToken(token)}
+              className="flex justify-center"
             />
           </form>
         </div>

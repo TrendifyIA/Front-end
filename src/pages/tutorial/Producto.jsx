@@ -65,7 +65,7 @@ const Producto = () => {
   /**
    * Maneja el cambio de cualquier input del formulario
    *
-   * @param {React.ChangeEvent<HTMLInputElement>} e
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLSelectElement>} e
    */
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -134,10 +134,12 @@ const Producto = () => {
     <div className="bg-gray-100 min-h-screen font-sans">
       <div className="bg-[#0B2C63] text-white p-6">
         <h1 className="text-lg font-semibold">
-          Por favor, complete los siguientes campos para registrar el producto que se desea analizar.
+          Por favor, complete los siguientes campos para registrar el producto
+          que se desea analizar.
         </h1>
         <p className="text-sm">
-          Asegúrese de completar todos los campos para obtener resultados más precisos y útiles en el análisis.
+          Asegúrese de completar todos los campos para obtener resultados más
+          precisos y útiles en el análisis.
         </p>
       </div>
 
@@ -200,14 +202,69 @@ const Producto = () => {
                 className="w-full border rounded px-3 py-2 cursor-pointer"
               >
                 <option value="">Seleccione una categoría</option>
-                {/* Opciones (no modificadas) */}
+                <option value="Accesorios de moda">Accesorios de moda</option>
+                Add commentMore actions
                 <option value="Alimentos">Alimentos</option>
+                <option value="Artículos promocionales">
+                  Artículos promocionales
+                </option>
                 <option value="Bebidas">Bebidas</option>
+                <option value="Calzado">Calzado</option>
+                <option value="Cosméticos">Cosméticos</option>
+                <option value="Decoración para el hogar">
+                  Decoración para el hogar
+                </option>
+                <option value="Dispositivos médicos">
+                  Dispositivos médicos
+                </option>
+                <option value="Electrodomésticos">Electrodomésticos</option>
                 <option value="Electrónicos">Electrónicos</option>
+                <option value="Gadgets tecnológicos">
+                  Gadgets tecnológicos
+                </option>
+                <option value="Herramientas y equipos">
+                  Herramientas y equipos
+                </option>
+                <option value="Higiene personal">Higiene personal</option>
+                <option value="Juguetes">Juguetes</option>
+                <option value="Libros y material educativo">
+                  Libros y material educativo
+                </option>
+                <option value="Materiales de construcción">
+                  Materiales de construcción
+                </option>
+                <option value="Medicamentos">Medicamentos</option>
+                <option value="Muebles">Muebles</option>
+                <option value="Papelería y oficina">Papelería y oficina</option>
                 <option value="Prendas de vestir">Prendas de vestir</option>
-                <option value="Productos artesanales">Productos artesanales</option>
+                <option value="Productos artesanales">
+                  Productos artesanales
+                </option>
+                <option value="Productos de limpieza">
+                  Productos de limpieza
+                </option>
+                <option value="Productos deportivos">
+                  Productos deportivos
+                </option>
+                <option value="Productos ecológicos">
+                  Productos ecológicos
+                </option>
+                <option value="Productos infantiles">
+                  Productos infantiles
+                </option>
+                <option value="Productos para mascotas">
+                  Productos para mascotas
+                </option>
+                <option value="Refacciones y autopartes">
+                  Refacciones y autopartes
+                </option>
+                <option value="Software y aplicaciones">
+                  Software y aplicaciones
+                </option>
+                <option value="Suplementos alimenticios">
+                  Suplementos alimenticios
+                </option>
                 <option value="Vehículos">Vehículos</option>
-                {/* ...otros omitidos por brevedad */}
               </select>
             </div>
           </div>
@@ -252,6 +309,7 @@ const Producto = () => {
             </div>
           </div>
 
+          {/* Imagen del producto */}
           <div className="mb-6">
             <label className="block mb-2 font-medium">Imagen de producto</label>
 
@@ -270,16 +328,16 @@ const Producto = () => {
                 onChange={handleImageChange}
               />
             </label>
-            {/* {form.imagenPreview && (
+            {form.imagenPreview && (
               <img
                 src={form.imagenPreview}
                 alt="Imagen de producto"
                 className="mt-2 max-h-50 rounded shadow"
               />
-            )} */}
+            )}
 
             <p id="nombre-imagen" className="text-sm text-gray-600 mt-2 italic">
-              {form.ruta_img ? `Imagen seleccionada: ${form.ruta_img}` : ""}
+              {form.imageFile ? `Imagen seleccionada: ${form.imageFile}` : ""}
             </p>
           </div>
 
