@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { ProcesamientoContext } from "../../context/ProveedorProcesado"; // Ajusta la ruta real
 
 const Procesando = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const idCampana = location.state?.id_campana;
+  const { setProcesando } = useContext(ProcesamientoContext);
 
   const [estado, setEstado] = useState("procesando");
 
@@ -16,16 +15,14 @@ const Procesando = () => {
     }, 6000);
 
     const timer2 = setTimeout(() => {
-      navigate("/users/resumen-tendencias", {
-        state: { id_campana: idCampana }
-      });
+      setProcesando(false); // Señal de que ha terminado
     }, 8000);
 
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, [navigate, idCampana]);
+  }, [setProcesando]);
 
   return (
     <div className="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">
