@@ -1,4 +1,3 @@
-// StripeModal.jsx
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -21,15 +20,44 @@ function CheckoutForm({ onClose }) {
 
     setIsLoading(true);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
-      confirmParams: {
-        return_url: "http://localhost:5173/simple/login",
-      },
+      redirect: "if_required",
     });
 
-    if (error) alert(error.message);
-    setIsLoading(false);
+    if (error) {
+      console.error("Error de pago:", error);
+      alert("Error al procesar el pago. Inténtalo de nuevo.");
+      setIsLoading(false);
+      return;
+    }
+
+    // ✅ Nuevo formato para activar suscripción
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/usuario/suscripcion`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ activar: true }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert("No se pudo actualizar la suscripción: " + (data.error || data.message || ""));
+        setIsLoading(false);
+        return;
+      }
+
+      alert("Pago exitoso y suscripción activada. Redirigiendo...");
+      window.location.href = "/simple/login";
+    } catch (error) {
+      console.error("Error al actualizar la suscripción:", error);
+      alert("Error inesperado al actualizar la suscripción");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -43,7 +71,10 @@ function CheckoutForm({ onClose }) {
           {isLoading ? "Procesando..." : "Pagar"}
         </button>
       </form>
-      <button onClick={onClose} className="mt-4 w-full text-sm text-red-500 hover:underline">
+      <button
+        onClick={onClose}
+        className="mt-4 w-full text-sm text-red-500 hover:underline"
+      >
         Cancelar
       </button>
     </div>
@@ -56,6 +87,10 @@ export default function StripeModal({ onClose }) {
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/pago`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
