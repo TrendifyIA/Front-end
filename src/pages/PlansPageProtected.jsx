@@ -30,7 +30,7 @@ const PlansPageProtected = () => {
 
         if (res.ok && data.activa === true) {
             console.log("Usuario tiene suscripción activa");
-          navigate("/users/bienvenida"); // Usuario ya tiene suscripción, redirige al dashboard
+          navigate("/users/adminproductos"); // Usuario ya tiene suscripción, redirige al dashboard
         }
         else{
             console.log("No tienes suscripción activa");
@@ -45,7 +45,7 @@ const PlansPageProtected = () => {
   }, [navigate]);
   const plans = [
     {
-      title: "Plan Plata",
+      title: "Suscripción",
       price: "$700 MXN al mes",
       description:
         "Diseñado para aquellas empresas que están comenzando a posicionarse en su nicho y quieren mantenerse activas.",
@@ -54,37 +54,6 @@ const PlansPageProtected = () => {
         "Visualización por país y evolución en 3 meses.",
       ],
       excludedFeatures: [
-        "Acceso a 12 meses de datos y comparación de hasta 6 palabras.",
-        "Exportación de datos y explicaciones por IA.",
-        "Notificaciones en tiempo real y predicciones con IA.",
-        "Reportes estratégicos y filtrado por por ciudad/estado/país.",
-      ],
-    },
-    {
-      title: "Plan Oro",
-      price: "$1000 MXN al mes",
-      description:
-        "Enfocada a marketers y analistas que necesitan información más detallada y capacidades predictivas. (Incluye los beneficios del Plan Plata)",
-      features: [
-        "Top 10 tendencias y comparación de hasta 3 palabras clave.",
-        "Visualización por país y evolución en 3 meses.",
-        "Acceso a 12 meses de datos y comparación de hasta 6 palabras.",
-        "Exportación de datos y explicaciones por IA.",
-      ],
-      excludedFeatures: [
-        "Notificaciones en tiempo real y predicciones con IA.",
-        "Reportes estratégicos y filtrado por por ciudad/estado/país.",
-      ],
-      isPopular: true,
-    },
-    {
-      title: "Plan Diamante",
-      price: "$1300 MXN al mes",
-      description:
-        "Para empresas y agencias que requieren un análisis de tendencias avanzado con inteligencia artificial. (Incluye los beneficios del Plan Oro)",
-      features: [
-        "Top 10 tendencias y comparación de hasta 3 palabras clave.",
-        "Visualización por país y evolución en 3 meses.",
         "Acceso a 12 meses de datos y comparación de hasta 6 palabras.",
         "Exportación de datos y explicaciones por IA.",
         "Notificaciones en tiempo real y predicciones con IA.",
@@ -100,7 +69,7 @@ const PlansPageProtected = () => {
           Elije el plan ideal
         </h1>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="flex justify-center">
           {plans.map((plan, index) => (
             <PlanCard key={index} {...plan} />
           ))}

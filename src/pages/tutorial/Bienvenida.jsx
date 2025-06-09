@@ -1,5 +1,10 @@
 /**
  * @file Bienvenida.jsx
+ * @author ...
+ * @description Página de bienvenida al tutorial de Trendify.
+ */
+/**
+ * @file Bienvenida.jsx
  * @author Sandra Herrera
  * @description Pantalla de bienvenida para el tutorial de Trendify.
  * Solicita información clave sobre la empresa, producto y campaña.
@@ -23,10 +28,12 @@ const Bienvenida = () => {
           ¡Bienvenido a Trendify!
         </h1>
         <p className="text-white text-lg md:text-xl text-center max-w-3xl mx-auto mb-4 mt-8">
-          Para comenzar a utilizar Trendify, te pediremos algunos datos clave que nos permitirán crear campañas personalizadas y detectar tendencias relevantes que aporten valor a tu empresa.
+          Para comenzar a utilizar Trendify, te pediremos algunos datos clave
+          que nos permitirán crear campañas personalizadas y detectar tendencias
+          relevantes que aporten valor a tu empresa.
         </p>
       </div>
-      
+
       {/* Sección de pasos para completar: Empresa, Producto, Campaña */}
       <div className="bg-[#e1ecfd] flex-1 w-full relative pb-12">
         <div className="max-w-4xl mx-auto -mt-32">
@@ -34,12 +41,15 @@ const Bienvenida = () => {
             <div className="flex flex-col md:flex-row justify-between items-center gap-8">
               {/* Paso 1: Empresa */}
               <div className="flex flex-col items-center flex-1">
-                <h3 className="font-bold text-xl mb-2 text-[#02245A]">Empresa</h3>
+                <h3 className="font-bold text-xl mb-2 text-[#02245A]">
+                  Empresa
+                </h3>
                 <div className="w-24 h-24 mb-2 bg-[#02245A] rounded-full flex items-center justify-center">
                   <BsBuildings className="text-white" size={56} />
                 </div>
                 <p className="text-[#222] text-center text-base">
-                  Información sobre su empresa como nombre, segmento y público objetivo.
+                  Información sobre su empresa como nombre, segmento y público
+                  objetivo.
                 </p>
               </div>
 
@@ -47,20 +57,25 @@ const Bienvenida = () => {
               
               {/* Paso 2: Producto */}
               <div className="flex flex-col items-center flex-1">
-                <h3 className="font-bold text-xl mb-2 text-[#02245A]">Producto</h3>
+                <h3 className="font-bold text-xl mb-2 text-[#02245A]">
+                  Producto
+                </h3>
                 <div className="w-24 h-24 mb-2 bg-[#02245A] rounded-full flex items-center justify-center">
                   <BsBoxSeam className="text-white" size={56} />
                 </div>
                 <p className="text-[#222] text-center text-base">
-                  Información sobre su producto como nombre, segmento y descripción.
+                  Información sobre su producto como nombre, segmento y
+                  descripción.
                 </p>
               </div>
-  
+
               <div className="hidden md:block h-1 w-24 bg-[#7ea6e6] mx-2"></div>
               
               {/* Paso 3: Campaña */}
               <div className="flex flex-col items-center flex-1">
-                <h3 className="font-bold text-xl mb-2 text-[#02245A]">Campaña</h3>
+                <h3 className="font-bold text-xl mb-2 text-[#02245A]">
+                  Campaña
+                </h3>
                 <div className="w-24 h-24 mb-2 bg-[#02245A] rounded-full flex items-center justify-center">
                   <RiMegaphoneLine className="text-white" size={56} />
                 </div>

@@ -25,9 +25,10 @@ const STORAGE_KEY = "tutorial_empresa_form";
  */
 const TutorialEmpresa = () => {
   const navegar = useNavigate();
-  const { empresa, setEmpresa } = useContext(ContextoTutorial);
+  const { empresa, setEmpresa } = useContext(ContextoTutorial); // Contexto para manejar el estado de la empresa
+  const [error, setError] = useState(""); // Estado para manejar errores de validación
 
-  // Estado local del formulario, inicializado desde localStorage o contexto
+  // Estado local para manejar el formulario de empresa
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved
@@ -64,6 +65,17 @@ const TutorialEmpresa = () => {
    */
   const handleNext = (e) => {
     e.preventDefault();
+    const camposIncompletos = Object.entries(form).some(
+      ([_, valor]) => !valor.trim()
+    );
+
+    if (camposIncompletos) {
+      setError("Por favor, complete todos los campos antes de continuar.");
+      return;
+    }
+
+    setError("");
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
     setEmpresa(form);
     navegar("/tutorial/Producto");
   };
@@ -74,6 +86,7 @@ const TutorialEmpresa = () => {
    */
   const handleBack = (e) => {
     e.preventDefault();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
     setEmpresa(form);
     navegar("/tutorial");
   };
@@ -91,6 +104,7 @@ const TutorialEmpresa = () => {
         </p>
       </div>
 
+      {/* Línea de progreso */}
       <div className="flex justify-center items-center my-12 space-x-8">
         {/* Paso Empresa */}
         <div className="flex flex-col items-center">
@@ -118,8 +132,16 @@ const TutorialEmpresa = () => {
       </div>
 
       {/* Formulario de empresa */}
+      {/* Formulario de empresa */}
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Empresa</h2>
+
+        {error && (
+          <div className="mb-6 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
+
         <form>
           <div className="flex flex-row gap-4 w-full">
             <div className="flex flex-col gap-2 mb-4 w-1/2">
@@ -137,7 +159,7 @@ const TutorialEmpresa = () => {
               />
             </div>
             <div className="flex flex-col gap-2 mb-4 w-1/2">
-              <label htmlFor="segment" className="font-medium">
+              <label htmlFor="nicho" className="font-medium">
                 Sector de mercado
               </label>
               <select
@@ -160,6 +182,7 @@ const TutorialEmpresa = () => {
               </select>
             </div>
           </div>
+
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label htmlFor="location" className="font-medium">
               Dirección física
@@ -174,6 +197,7 @@ const TutorialEmpresa = () => {
               className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
             />
           </div>
+
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Propuesta de valor</label>
             <input
@@ -185,6 +209,7 @@ const TutorialEmpresa = () => {
               className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
             />
           </div>
+
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">
               Descripción de servicios/productos
@@ -198,6 +223,7 @@ const TutorialEmpresa = () => {
               className="border-2 border-neutral-400 p-2 rounded-[5px] focus:outline-none focus:border-secondary-400"
             />
           </div>
+
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Competidores</label>
             <input
@@ -210,6 +236,7 @@ const TutorialEmpresa = () => {
             />
           </div>
 
+          {/* Botones de navegación */}
           {/* Botones de navegación */}
           <div className="flex justify-between px-10">
             <CustomButton
