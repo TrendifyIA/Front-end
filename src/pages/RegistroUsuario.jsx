@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CustomButton from '../components/CustomButton';
 import ModalTerminos from '../components/ModalTerminos';
 import ModalPrivacidad from '../components/ModalPrivacidad';
+import InputPassword from '../components/InputPassword';
 
 const Registro = () => {
   const [error, setError] = useState('');
@@ -83,7 +84,7 @@ const Registro = () => {
             <input name="apellido_paterno" value={form.apellido_paterno} onChange={handleChange} type="text" placeholder="Apellido Paterno" className="w-full px-4 py-2 border rounded" />
             <input name="apellido_materno" value={form.apellido_materno} onChange={handleChange} type="text" placeholder="Apellido Materno" className="w-full px-4 py-2 border rounded" />
             <input name="email" value={form.email} onChange={handleChange} type="email" placeholder="Correo Electrónico" className="w-full px-4 py-2 border rounded" />
-            <input name="password" value={form.password} onChange={handleChange} type="password" placeholder="Contraseña" className="w-full px-4 py-2 border rounded" />
+            <InputPassword value={form.password} onChange={handleChange} />
 
             <label className="flex items-center text-sm flex-wrap">
               <input name="acepta" type="checkbox" checked={form.acepta} onChange={handleChange} className="mr-2" />
