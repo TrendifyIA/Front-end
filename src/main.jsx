@@ -1,6 +1,6 @@
 /**
  * @file main.jsx
- * @author Andrea Doce, Alexei Martínez, Eduardo Rosas, Jennyfer Jasso, Sandra Hernández, Min Che Kim, ...
+ * @author Andrea Doce, Alexei Martínez, Eduardo Rosas, Jennyfer Jasso, Sandra Hernández, Min Che Kim, Fernanda Ponce...
  * @description Punto de entrada principal para la aplicación Trendify donde se configuran las rutas y se renderiza la aplicación.
  */
 import { StrictMode } from "react";

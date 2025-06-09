@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { /* useSearchParams */ } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -23,15 +23,15 @@ ChartJS.register(
 const redes = [
   { id: "youtube", nombre: "YouTube", color: "#D32F2F" },
   { id: "reddit", nombre: "Reddit", color: "#F57C00" },
-  { id: "web", nombre: "Web", color: "#7B3F99" }
+  { id: "web", nombre: "Web", color: "#7B3F99" },
 ];
 
 const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) => {
   const allDates = Array.from(
     new Set([
-      ...datosReddit.map(d => d._id),
-      ...datosYouTube.map(d => d._id),
-      ...datosWeb.map(d => d._id)
+      ...datosReddit.map((d) => d._id),
+      ...datosYouTube.map((d) => d._id),
+      ...datosWeb.map((d) => d._id),
     ])
   ).sort();
 
@@ -40,20 +40,20 @@ const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) =>
     datasets: redes
       .filter((r) => seleccionadas.includes(r.id))
       .map((r) => {
-        let dataPoints = [];
-
-        const datos = r.id === "reddit" ? datosReddit :
-                      r.id === "youtube" ? datosYouTube :
-                      datosWeb;
+        const datos =
+          r.id === "reddit" ? datosReddit :
+          r.id === "youtube" ? datosYouTube :
+          datosWeb;
 
         const dataByDate = {};
-        datos.forEach(d => {
+        datos.forEach((d) => {
           const currentValue = d.max_buzzscore || d.avg_buzzscore || 0;
           if (!dataByDate[d._id] || currentValue > dataByDate[d._id]) {
             dataByDate[d._id] = currentValue;
           }
         });
-        dataPoints = allDates.map(date => dataByDate[date] || 0);
+
+        const dataPoints = allDates.map((date) => dataByDate[date] || 0);
 
         return {
           label: r.nombre,
@@ -73,19 +73,19 @@ const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) =>
       legend: { position: "top" },
       tooltip: {
         callbacks: {
-          label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}`
-        }
-      }
+          label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}`,
+        },
+      },
     },
     scales: {
       y: {
         beginAtZero: true,
         suggestedMax: 100,
-        ticks: { stepSize: 20 }
+        ticks: { stepSize: 20 },
       },
       x: {
-        ticks: { maxRotation: 45, minRotation: 45 }
-      }
+        ticks: { maxRotation: 45, minRotation: 45 },
+      },
     },
   };
 
@@ -93,6 +93,10 @@ const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) =>
 };
 
 const DetalleTendencias10 = () => {
+  const location = useLocation();
+  const idCampana = location.state?.id_campana;
+  const keywordSeleccionada = location.state?.palabra;
+
   const [seleccionadas, setSeleccionadas] = useState(["youtube", "reddit", "web"]);
   const [datosReddit, setDatosReddit] = useState([]);
   const [datosYouTube, setDatosYouTube] = useState([]);
@@ -100,16 +104,11 @@ const DetalleTendencias10 = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // const [searchParams] = useSearchParams();
-  // const idCampana = searchParams.get("id_campana");
-  // const keywordSeleccionada = searchParams.get("keyword");
-
-  // Mientras no haya navegación desde otra pantalla
-  const idCampana = "13";
-  const keywordSeleccionada = "biogás";
+  if (!idCampana || !keywordSeleccionada) {
+    return <div className="p-6 text-red-600">No se proporcionaron datos válidos.</div>;
+  }
 
   useEffect(() => {
-    if (!keywordSeleccionada || !idCampana) return;
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -131,10 +130,6 @@ const DetalleTendencias10 = () => {
           webRes.json()
         ]);
 
-        console.log("Datos Reddit:", redditData);
-        console.log("Datos YouTube:", youtubeData);
-        console.log("Datos Web:", webData);
-
         setDatosReddit(redditData);
         setDatosYouTube(youtubeData);
         setDatosWeb(webData);
@@ -145,6 +140,7 @@ const DetalleTendencias10 = () => {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [keywordSeleccionada, idCampana]);
 
@@ -182,10 +178,9 @@ const DetalleTendencias10 = () => {
           ))}
         </div>
       </div>
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h2 className="font-bold text-lg mb-2">
-          Análisis general de las tendencias
-        </h2>
+
+      <div className="bg-white rounded-lg shadow p-6 mb-6 mt-6">
+        <h2 className="font-bold text-lg mb-2">Análisis general de las tendencias</h2>
         <p>
           Como puedes ver en la gráfica, tu campaña tiene una mejor recepción en
           YouTube que en Reddit. Por lo tanto, proponemos que redobles tus
