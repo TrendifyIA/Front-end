@@ -3,7 +3,7 @@
  * @author Min Che Kim, ...
  * @description Componente que representa una campaña en la tabla de campañas. Contiene información como el nombre, estatus y acciones disponibles (editar, eliminar, procesar/revisar).
  */
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import {
   FaEdit,
   FaTrashAlt,
@@ -36,14 +36,17 @@ const Campana = (props) => {
   const {procesando, setProcesando} = useContext(ProcesamientoContext)
   const navigate = useNavigate();
 
-  const procesarCampana = async () => {
-    if (estatusLocal === false) {
-      setProcesando(true);
-
-      // Navega a pantalla de "procesando"
-      navigate("/procesando", {
+  useEffect(() => {
+    if (!procesando && estatusLocal === 1) {
+      navigate("/users/resumen-tendencias", {
         state: { id_campana: props.id_campana },
       });
+    }
+  }, [procesando]);
+
+  const procesarCampana = async () => {
+    if (estatusLocal === false) {
+      setProcesando(true); // Solo activa el overlay visual
 
       try {
         const respuesta = await fetch("http://127.0.0.1:8080/proceso/iniciar", {
@@ -60,18 +63,22 @@ const Campana = (props) => {
 
         setEstatusLocal(1);
 
-        // Guardar en localStorage
         localStorage.setItem("campana_activa", JSON.stringify({
           id: props.id_campana,
           activo: true,
           tiempo: Date.now()
         }));
 
+        // ✅ Redirige al finalizar exitosamente
+        navigate("/users/resumen-tendencias", {
+          state: { id_campana: props.id_campana },
+        });
+
       } catch (error) {
         console.error("Error al procesar:", error);
         alert("Error al procesar la campaña.");
       } finally {
-        setProcesando(false); // Apaga el flag
+        setProcesando(false);
       }
     } else {
       navigate("/users/resumen-tendencias", {
