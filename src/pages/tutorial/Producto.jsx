@@ -3,10 +3,8 @@
  * @author Andrea Doce, Jennyfer Jasso
  * @description Página de formulario para registrar información de un producto en el tutorial.
  */
-
-import { BsBoxSeam, BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import { BsBoxSeam, BsArrowLeft, BsArrowRight, BsImage } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
-import { BsImage } from "react-icons/bs";
 import { RiMegaphoneLine } from "react-icons/ri";
 import CustomButton from "../../components/CustomButton";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +37,7 @@ const Producto = () => {
           estado: "",
           ruta_img: "",
           imagenPreview: "",
+          imagenFile: null,
         };
   });
 
@@ -47,21 +46,21 @@ const Producto = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
 
-  // useEffect(() => {
-  //   if (form.ruta_img && form.imagenPreview) {
-  //     return;
-  //   }
-  //   if (form.ruta_img) {
-  //     const img = new Image();
-  //     img.src = form.ruta_img;
-  //     img.onload = () => {
-  //       setForm((prev) => ({
-  //         ...prev,
-  //         imagenPreview: img.src,
-  //       }));
-  //     };
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (form.ruta_img && form.imagenPreview) {
+      return;
+    }
+    if (form.ruta_img) {
+      const img = new Image();
+      img.src = form.ruta_img;
+      img.onload = () => {
+        setForm((prev) => ({
+          ...prev,
+          imagenPreview: img.src,
+        }));
+      };
+    }
+  }, []);
 
   /**
    * maneja los cambios de los campos del formulario.
@@ -84,8 +83,9 @@ const Producto = () => {
     if (file) {
       setForm((prev) => ({
         ...prev,
-        ruta_img: file.name, // Solo el nombre para la base de datos
-        imagenPreview: URL.createObjectURL(file), // Preview temporal
+        ruta_img: URL.createObjectURL(file),
+        imagenPreview: URL.createObjectURL(file),
+        imagenFile: file,
       }));
     }
   };
@@ -96,6 +96,22 @@ const Producto = () => {
    */
   const handleNext = (e) => {
     e.preventDefault();
+
+    // Validar campos requeridos
+    const camposIncompletos = [
+      "nombre",
+      "categoria",
+      "descripcion",
+      "publico_objetivo",
+      "estado",
+    ].some((campo) => !form[campo]?.toString().trim());
+
+    if (camposIncompletos || !form.ruta_img) {
+      setError("Por favor, complete todos los campos y seleccione una imagen.");
+      return;
+    }
+
+    setError("");
     setProducto(form);
     navegar("/tutorial/Campana");
   };
@@ -154,6 +170,12 @@ const Producto = () => {
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Producto</h2>
 
+        {error && (
+          <div className="mb-6 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
+
         <form>
           {/* Nombre y categoría del producto */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -162,7 +184,6 @@ const Producto = () => {
               <input
                 required
                 type="text"
-                id="nombreProducto"
                 name="nombre"
                 value={form.nombre}
                 onChange={handleChange}
@@ -173,7 +194,6 @@ const Producto = () => {
               <label className="block mb-1 font-medium">Categoría</label>
               <select
                 required
-                id="categoria"
                 name="categoria"
                 value={form.categoria}
                 onChange={handleChange}
@@ -181,6 +201,7 @@ const Producto = () => {
               >
                 <option value="">Seleccione una categoría</option>
                 <option value="Accesorios de moda">Accesorios de moda</option>
+                Add commentMore actions
                 <option value="Alimentos">Alimentos</option>
                 <option value="Artículos promocionales">
                   Artículos promocionales
@@ -251,7 +272,6 @@ const Producto = () => {
             <input
               required
               type="text"
-              id="descripcion"
               name="descripcion"
               value={form.descripcion}
               onChange={handleChange}
@@ -265,7 +285,6 @@ const Producto = () => {
               <input
                 required
                 type="text"
-                id="publico_objetivo"
                 name="publico_objetivo"
                 value={form.publico_objetivo}
                 onChange={handleChange}
@@ -276,7 +295,6 @@ const Producto = () => {
               <label className="block mb-1 font-medium">Estado</label>
               <select
                 required
-                id="estado"
                 name="estado"
                 value={form.estado}
                 onChange={handleChange}
@@ -306,18 +324,6 @@ const Producto = () => {
                 accept="image/*"
                 className="hidden"
                 onChange={handleImageChange}
-                // onChange={(e) => {
-                //   const file = e.target.files?.[0];
-                //   if (file) {
-                //     setForm((prev) => ({
-                //       ...prev,
-                //       ruta_img: file.name,
-                //     }));
-                //     document.getElementById(
-                //       "nombre-imagen"
-                //     ).textContent = `Imagen seleccionada: ${file.name}`;
-                //   }
-                // }}
               />
             </label>
             {form.imagenPreview && (
@@ -329,7 +335,7 @@ const Producto = () => {
             )}
 
             <p id="nombre-imagen" className="text-sm text-gray-600 mt-2 italic">
-              {form.ruta_img ? `Imagen seleccionada: ${form.ruta_img}` : ""}
+              {form.imageFile ? `Imagen seleccionada: ${form.imageFile}` : ""}
             </p>
           </div>
 

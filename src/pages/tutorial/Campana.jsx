@@ -67,6 +67,27 @@ const Campana = () => {
    */
   const handleNext = (e) => {
     e.preventDefault();
+
+    const camposRequeridos = [
+      "nombre",
+      "objetivo",
+      "mensaje_clave",
+      "f_inicio",
+      "f_fin",
+      "presupuesto",
+      "canales_distribucion",
+    ];
+
+    const camposIncompletos = camposRequeridos.some(
+      (campo) => !form[campo]?.toString().trim()
+    );
+
+    if (camposIncompletos || Number(form.presupuesto) <= 0) {
+      setError("Por favor, complete todos los campos y asegúrese de que el presupuesto sea mayor a 0.");
+      return;
+    }
+
+    setError("");
     setCampana(form);
     navegar("/tutorial/confirmacion");
   };
@@ -86,16 +107,13 @@ const Campana = () => {
       {/* Encabezado de la página */}
       <div className="bg-[#0B2C63] text-white p-6">
         <h1 className="text-lg font-semibold">
-          Por favor, complete los siguientes campos para registrar la campaña
-          que se desea analizar.
+          Por favor, complete los siguientes campos para registrar la campaña que se desea analizar.
         </h1>
         <p className="text-sm">
-          La información ingresada permitirá identificar aspectos clave de la
-          campaña y facilitará la detección de tendencias relevantes.
+          La información ingresada permitirá identificar aspectos clave de la campaña y facilitará la detección de tendencias relevantes.
         </p>
         <p className="text-sm">
-          Asegúrese de completar todos los campos para obtener resultados más
-          precisos y útiles en el análisis.
+          Asegúrese de completar todos los campos para obtener resultados más precisos y útiles en el análisis.
         </p>
       </div>
 
@@ -128,7 +146,11 @@ const Campana = () => {
       {/* Formulario de campaña */}
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Campaña</h2>
-
+        {error && (
+          <div className="mb-6 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
         <form>
           {/*Nombre y objetivo de la campaña */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -170,9 +192,7 @@ const Campana = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium">
-              Canales de distribución
-            </label>
+            <label className="block mb-1 font-medium">Canales de distribución</label>
             <input
               required
               type="text"
@@ -212,9 +232,7 @@ const Campana = () => {
             <div className="mb-6">
               <label className="block mb-1 font-medium">Presupuesto</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">
-                  $
-                </span>
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">$</span>
                 <input
                   required
                   type="number"

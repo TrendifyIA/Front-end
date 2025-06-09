@@ -3,7 +3,7 @@ import CustomButton from '../components/CustomButton';
 
 
 const Registro = () => {
-  const [error, setError] = useState(''); // Estado para manejar errores
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     nombre: '',
     apellido_paterno: '',
@@ -23,7 +23,7 @@ const Registro = () => {
   
 const handleSubmit = async (e) => {
   e.preventDefault();
-  setError(''); // Limpiar errores anteriores
+  setError('');
 
   if (!form.acepta) {
     setError('Debes aceptar los términos.');
@@ -42,7 +42,7 @@ const handleSubmit = async (e) => {
     const data = await response.json();
 
     if (!response.ok) {
-      setError(data.mensaje || 'Error en el registro');
+      setError(data.error || 'Error en el registro');
       return;
     }
 
@@ -82,11 +82,13 @@ const handleSubmit = async (e) => {
             <input name="nombre" value={form.nombre} onChange={handleChange} type="text" placeholder="Nombre(s)" className="w-full px-4 py-2 border rounded" />
             <input name="apellido_paterno" value={form.apellido_paterno} onChange={handleChange} type="text" placeholder="Apellido Paterno" className="w-full px-4 py-2 border rounded" />
             <input name="apellido_materno" value={form.apellido_materno} onChange={handleChange} type="text" placeholder="Apellido Materno" className="w-full px-4 py-2 border rounded" />
-            <input name="email" value={form.correo} onChange={handleChange} type="email" placeholder="Correo Electrónico" className="w-full px-4 py-2 border rounded" />
-            <input name="password" value={form.contraseña} onChange={handleChange} type="password" placeholder="Contraseña" className="w-full px-4 py-2 border rounded" />
+            <input name="email" value={form.email} onChange={handleChange} type="email" placeholder="Correo Electrónico" className="w-full px-4 py-2 border rounded" />
+            <input name="password" value={form.password} onChange={handleChange} type="password" placeholder="Contraseña" className="w-full px-4 py-2 border rounded" />
             <label className="flex items-center text-sm">
               <input name="acepta" type="checkbox" checked={form.acepta} onChange={handleChange} className="mr-2" />
-              Acepta nuestras <a href="#" className="text-blue-600 underline ml-1">Condiciones de uso</a> y <a href="#" className="text-blue-600 underline ml-1">Política de privacidad</a>
+              Acepta nuestras <a href="#" className="text-blue-600 underline ml-1">Condiciones de uso</a>
+              <span className="mx-1">y</span>
+              <a href="#" className="text-blue-600 underline">Política de privacidad</a>
             </label>
             <CustomButton
               texto="Registrarse"
