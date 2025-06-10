@@ -2,8 +2,6 @@ import React from 'react';
 
 const PaymentMethods = () => {
   const paymentMethods = [
-    { name: 'AMEX', logo: '/ruta/a/amex.svg' },
-    { name: 'VISA', logo: '/ruta/a/visa.svg' },
   ];
 
   return (
