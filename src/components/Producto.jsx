@@ -10,6 +10,7 @@ import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import ListaCampanas from "./ListaCampanas";
 import { ModalContext } from "../context/ProveedorModal";
 import { FaChevronDown, FaChevronUp, FaPlus } from "react-icons/fa6";
+import { ContextoProducto } from "../context/ProveedorProducto";
 
 /**
  * Componente que renderiza un producto con sus campañas asociadas
@@ -27,6 +28,7 @@ const Producto = (props) => {
   const [nombreTemporal, setNombreTemporal] = useState("");
 
   const { abrirProductoModal, abrirCampanaModal } = useContext(ModalContext);
+  const { eliminarProducto } = useContext(ContextoProducto);
 
   const [verCampanas, setVerCampanas] = useState(() => {
     try {
@@ -117,7 +119,9 @@ const Producto = (props) => {
                       </span>
                       <span
                         className="bg-red-100 hover:bg-red-300 p-2 rounded-md cursor-pointer"
-                        onClick={() => {}}
+                        onClick={() => {
+                          eliminarProducto(props.id_producto);
+                        }}
                       >
                         <FaTrashAlt className="text-red-600 hover:text-red-700" />
                       </span>
