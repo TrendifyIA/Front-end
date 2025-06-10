@@ -1,6 +1,6 @@
 /**
  * @file Empresa.jsx
- * @author Jennyfer Jasso, Eduardo Rosas ...
+ * @author Jennyfer Jasso, Eduardo Rosas Yael Pérez
  * @description Página de formulario para registrar información de una empresa en el tutorial.
  */
 import {
@@ -12,15 +12,24 @@ import {
 import { RiMegaphoneLine } from "react-icons/ri";
 import CustomButton from "../../components/CustomButton";
 import { ContextoTutorial } from "../../context/ProveedorTutorial";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const STORAGE_KEY = "tutorial_empresa_form";
 
+/**
+ * Componente de formulario que permite al usuario registrar los datos de una empresa
+ * como parte del proceso guiado del tutorial.
+ * Utiliza localStorage para persistir los datos entre recargas y el contexto para compartirlos entre pasos.
+ *
+ * @returns {JSX.Element} Formulario de empresa dentro del tutorial.
+ */
 const TutorialEmpresa = () => {
   const navegar = useNavigate();
-  const { empresa, setEmpresa } = useContext(ContextoTutorial);
+  const { empresa, setEmpresa } = useContext(ContextoTutorial); // Contexto para manejar el estado de la empresa
+  const [error, setError] = useState(""); // Estado para manejar errores de validación
 
+  // Estado local para manejar el formulario de empresa
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved
@@ -35,8 +44,16 @@ const TutorialEmpresa = () => {
         };
   });
 
-  const [error, setError] = useState("");
+  // Almacena el formulario en localStorage cada vez que cambia
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+  }, [form]);
 
+  /**
+   * Maneja el cambio de cualquier input del formulario
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e
+   */
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -44,6 +61,10 @@ const TutorialEmpresa = () => {
     });
   };
 
+  /**
+   * Al hacer clic en "Siguiente", guarda los datos en el contexto y avanza a la sección de producto.
+   * @param {React.FormEvent} e
+   */
   const handleNext = (e) => {
     e.preventDefault();
     const camposIncompletos = Object.entries(form).some(
@@ -61,6 +82,10 @@ const TutorialEmpresa = () => {
     navegar("/tutorial/Producto");
   };
 
+  /**
+   * Al hacer clic en "Atrás", guarda los datos en el contexto y vuelve a la portada del tutorial.
+   * @param {React.FormEvent} e
+   */
   const handleBack = (e) => {
     e.preventDefault();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
@@ -80,6 +105,7 @@ const TutorialEmpresa = () => {
         </p>
       </div>
 
+      {/* Línea de progreso */}
       <div className="flex justify-center items-center my-12 space-x-8">
         <div className="flex flex-col items-center">
           <div className="border-4 border-[#0B2C63] text-[#0B2C63] rounded-full p-3 text-xl bg-white">
@@ -103,6 +129,7 @@ const TutorialEmpresa = () => {
         </div>
       </div>
 
+      {/* Formulario de empresa */}
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Empresa</h2>
 
@@ -170,9 +197,8 @@ const TutorialEmpresa = () => {
 
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Propuesta de valor</label>
-            <input
+            <textarea
               required
-              type="text"
               name="propuesta_valor"
               value={form.propuesta_valor}
               onChange={handleChange}
@@ -184,9 +210,8 @@ const TutorialEmpresa = () => {
             <label className="font-medium">
               Descripción de servicios/productos
             </label>
-            <input
+            <textarea
               required
-              type="text"
               name="descripcion_servicio"
               value={form.descripcion_servicio}
               onChange={handleChange}
@@ -196,9 +221,8 @@ const TutorialEmpresa = () => {
 
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Competidores</label>
-            <input
+            <textarea
               required
-              type="text"
               name="competidores"
               value={form.competidores}
               onChange={handleChange}
@@ -206,6 +230,7 @@ const TutorialEmpresa = () => {
             />
           </div>
 
+          {/* Botones de navegación */}
           <div className="flex justify-between px-10">
             <CustomButton
               texto={<BsArrowLeft className="text-2xl" />}
