@@ -5,6 +5,7 @@ import TrendIcon from "../assets/images/landing3.png";
 import StrategyIcon from "../assets/images/landing4.png";
 import SurveyIllustration from "../assets/images/landing5.png";
 import Illustration2 from "../assets/images/landing6.png";
+import CustomButton from "../components/CustomButton";
 
 const LandingPage = () => {
   return (
@@ -21,9 +22,11 @@ const LandingPage = () => {
               Analiza, colabora y crea mejores estrategias sin límites. Todo en
               un solo lugar.
             </p>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-lg">
-              Probar Ahora
-            </button>
+            <CustomButton
+              texto={"Probar Ahora"}
+              tipo="terciario"
+              ruta="/simple/login"
+            ></CustomButton>
           </div>
 
           <div className="md:w-1/2 flex justify-center">
@@ -43,7 +46,7 @@ const LandingPage = () => {
               <img src={ChartIcon} alt="Estadísticas" className="w-30 h-25" />
               <p className="text-gray-700 text-lg">
                 Observa estadísticas en tiempo real sobre lo más relevante de tu
-                nicho.
+                sector.
               </p>
             </div>
             <div className="flex items-start gap-4 bg-[#E1ECFD] p-4 rounded-lg">
@@ -63,7 +66,7 @@ const LandingPage = () => {
           </div>
 
           <div className="flex flex-col items-center justify-center bg-white mt-28">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 bg-[#fff] ">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 bg-[#fff] w-full">
               Identifica <br />
               tendencias antes <br />
               que tu <br />
@@ -77,7 +80,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="bg-blue-500 py-16 px-6">
+      {/* <div className="bg-blue-500 py-16 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -100,9 +103,9 @@ const LandingPage = () => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="bg-[#E1ECFD] py-16 px-6">
+      <div className="bg-blue-500 py-16 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="flex justify-center">
             <img
@@ -113,19 +116,19 @@ const LandingPage = () => {
           </div>
 
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Datos que impulsan tu crecimiento
             </h2>
             <ul className="space-y-4 text-lg text-black-700">
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2 text-white">
                 <span className="text-green-500 font-bold">✔</span>
                 Predice cambios en el mercado antes que nadie.
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2 text-white">
                 <span className="text-green-500 font-bold">✔</span>
                 Reduce el tiempo de análisis y aumenta la rentabilidad.
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2 text-white">
                 <span className="text-green-500 font-bold">✔</span>
                 Mejora la percepción de tu marca con mensajes más efectivos.
               </li>
@@ -134,10 +137,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div
-        className="bg-white py-36
-     px-6"
-      >
+      <div className="bg-[#E1ECFD] py-36px-6 h-screen justify-center items-center flex">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -149,7 +149,7 @@ const LandingPage = () => {
             </p>
           </div>
 
-          <div className="relative bg-[#E1ECFD] p-6 rounded-lg shadow-lg">
+          <div className="relative bg-white p-6 rounded-lg shadow-lg">
             <p className="text-gray-700 text-lg italic">
               "Desde que usamos KeySpotting, nuestras campañas son más precisas
               y nuestro ROI ha aumentado un 35%."
