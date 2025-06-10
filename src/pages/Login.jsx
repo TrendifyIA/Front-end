@@ -7,7 +7,6 @@ import React, { useContext, useState } from "react";
 import CustomButton from "../components/CustomButton.jsx";
 import { ContextoTutorial } from "../context/ProveedorTutorial.jsx";
 import { ContextoEmpresa } from "../context/ProveedorEmpresa.jsx";
-
 import ReCAPTCHA from "react-google-recaptcha";
 /**
  * Componente que representa la página de login de la aplicación Trendify.

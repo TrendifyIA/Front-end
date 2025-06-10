@@ -158,8 +158,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ProveedorUsuario>
-      <RouterProvider router={router}></RouterProvider>
-    </ProveedorUsuario>
+      <ProveedorUsuario>
+        <RouterProvider router={router}></RouterProvider>
+      </ProveedorUsuario>
   </StrictMode>
 );
