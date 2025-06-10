@@ -36,42 +36,10 @@ const ResumenTendencias9 = () => {
   const [palabrasClave, setPalabrasClave] = useState([]);
   const [mostrarPalabras, setMostrarPalabras] = useState({});
   const [tipoGrafica, setTipoGrafica] = useState("line");
-  const [resumenIA, setResumenIA] = useState("")
   const location = useLocation();
   const navigate = useNavigate();
 
   const campanaId = location.state?.id_campana;
-
-  const datosApi = import.meta.env.VITE_API_URL;
-
-  useEffect(() => {
-    if (!campanaId) return;
-    const fetchResumen = async () => {
-      try {
-        const res = await fetch(
-          `${datosApi}/api/resumen-campana/${campanaId}?days=30`
-        );
-        const ct = res.headers.get("content-type") || "";
-        if (!res.ok) {
-          console.error("Error IA status", res.status);
-          setResumenIA("Error obteniendo resumen IA.");
-          return;
-        }
-        if (!ct.includes("application/json")) {
-          const text = await res.text();
-          console.error("IA endpoint HTML:", text);
-          setResumenIA("Respuesta inesperada de IA.");
-          return;
-        }
-        const { resumen } = await res.json();
-        setResumenIA(resumen ?? "[Sin resumen]");
-      } catch (err) {
-        console.error("fetchResumen error:", err);
-        setResumenIA("Error al obtener resumen IA.");
-      }
-    };
-    fetchResumen();
-  }, [campanaId, datosApi]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -306,8 +274,22 @@ const ResumenTendencias9 = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
-        <p className="text-gray-800 whitespace-pre-wrap">{resumenIA}</p>
+        <h2 className="font-bold text-lg mb-2">Análisis de tendencias</h2>
+        <p>
+          Como puedes ver la palabra más relevante durante el mes fue X, seguida
+          de Y y Z. Proponemos que pongas especial atención en estas tres para
+          promover tu estrategia de marketing ya que puede afectar
+          significativamente la campaña.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="font-bold text-lg mb-2">Recomendaciones</h2>
+        <p>
+          Como recomendación te sugerimos que en tu campaña implementes
+          publicidad relacionada con la tendencia Y y que tu producto vea
+          relacionado algo con la tendencia X siendo la principal.
+        </p>
       </div>
     </div>
   );

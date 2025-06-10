@@ -13,7 +13,6 @@ import {
 import BotonIcon from "../components/BotonIcon";
 import { ModalContext } from "../context/ProveedorModal";
 import { useNavigate } from "react-router-dom"
-import Procesando from "../pages/tutorial/Procesando";
 import { ProcesamientoContext } from "../context/ProveedorProcesado";
 import { ContextoCampana } from "../context/ProveedorCampana";
 
