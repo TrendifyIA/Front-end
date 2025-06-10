@@ -37,15 +37,34 @@ const Producto = () => {
           publico_objetivo: "",
           estado: "",
           ruta_img: "",
-          imagenFile: null,
+          img_preview: "",
+          // imagenFile: null,
+          image_name: ""
         };
   });
+
 
   // Almacena el formulario en localStorage cada vez que cambia
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
-
+  
+  useEffect(() => {
+    if (form.ruta_img && form.img_preview) {
+      return;
+    }
+    if (form.ruta_img && typeof form.ruta_img === "string") {
+      const img = new Image();
+      img.src = form.ruta_img;
+      img.onload = () => {
+        setForm((prev) => ({
+          ...prev,
+          img_preview: img.src,
+        }));
+      };
+    }
+  }, []);
+  
   /**
    * Maneja el cambio de cualquier input del formulario
    *
@@ -74,10 +93,14 @@ const Producto = () => {
       }
       setForm((prev) => ({
         ...prev,
-        ruta_img: URL.createObjectURL(file),
-        imagenFile: file,
+        ruta_img: file,
+        img_preview: URL.createObjectURL(file),
+        image_name: file.name
+        // imagenFile: file,
       }));
+      
     }
+    // console.log("Imagen seleccionada:", file);
   };
 
   /**
@@ -100,10 +123,11 @@ const Producto = () => {
     if (camposIncompletos || !form.ruta_img) {
       setError("Por favor, complete todos los campos y seleccione una imagen.");
       return;
-    }
+    }      
 
     setError("");
     setProducto(form);
+    console.log("Imagen del producto:", form.ruta_img);
     navegar("/tutorial/Campana");
   };
 
@@ -313,10 +337,10 @@ const Producto = () => {
                 className="hidden"
                 onChange={handleImageChange}
               />
-              {form.ruta_img ? (
+              {form.img_preview ? (
                 <>
                   <img
-                    src={form.ruta_img}
+                    src={form.img_preview}
                     alt={`Imagen del producto ${form.nombre}`}
                     className="w-30 h-30 object-contain mb-2 rounded"
                   />
@@ -333,7 +357,7 @@ const Producto = () => {
             </label>
 
             <p id="nombre-imagen" className="text-sm text-gray-600 mt-2 italic">
-              {form.imageFile ? `Imagen seleccionada: ${form.imageFile}` : ""}
+              {form.ruta_img ? `Imagen seleccionada: ${form.image_name}` : ""}
             </p>
           </div>
 
