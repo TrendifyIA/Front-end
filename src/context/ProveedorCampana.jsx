@@ -13,7 +13,7 @@ export const ContextoCampana = createContext();
 
 /**
  * Proveedor de contexto que gestiona el estado y operaciones CRUD para las campañas
- * 
+ *
  * @component
  * @param {Object} props - Propiedades del componente
  * @param {React.ReactNode} props.children - Componentes hijos que consumirán el contexto
@@ -23,6 +23,8 @@ const ProveedorCampana = ({ children }) => {
   const [campana, setCampana] = useState(null);
   const [todasLasCampanas, setTodasLasCampanas] = useState([]);
   const [campanasPorProducto, setCampanasPorProducto] = useState({});
+  
+  const [cargandoCampanas, setCargandoCampanas] = useState(true);
   const { productos } = useContext(ContextoProducto);
 
   /**
@@ -44,12 +46,18 @@ const ProveedorCampana = ({ children }) => {
     return null;
   }, []);
 
+  
   /**
    * Efecto que carga las campañas cuando cambia el listado de productos
    * Realiza peticiones paralelas para obtener las campañas de cada producto
    */
   useEffect(() => {
-    if (!productos || productos.length === 0) return;
+    if (!productos || productos.length === 0) {
+      setCargandoCampanas(false);
+      return;
+    }
+
+    setCargandoCampanas(true);
 
     // Crear un array de promesas, una por cada producto
     const promesas = productos.map((producto) =>
@@ -72,13 +80,18 @@ const ProveedorCampana = ({ children }) => {
 
         setCampanasPorProducto(nuevasCampanasPorProducto);
         setTodasLasCampanas(todasCampanas);
+        setCargandoCampanas(false);
       })
-      .catch((error) => console.error("Error fetching campañas:", error));
+      .catch((error) => {
+        console.error("Error fetching campañas:", error);
+        setCargandoCampanas(false);
+      });
   }, [productos]);
+
 
   /**
    * Crea una nueva campaña en el sistema y actualiza el estado local
-   * 
+   *
    * @async
    * @param {Object} data - Datos de la campaña a crear
    * @param {number} data.id_producto - ID del producto asociado a la campaña
@@ -113,14 +126,16 @@ const ProveedorCampana = ({ children }) => {
         [data.id_producto]: campanasData,
       }));
     } catch (error) {
-      console.error("Evite utilizar caracteres especiales. (<  >  \'  \"  ;  `  %  \\)");
+      console.error(
+        "Evite utilizar caracteres especiales. (<  >  '  \"  ;  `  %  \\)"
+      );
       throw error;
     }
   };
 
   /**
    * Actualiza una campaña existente y refresca los datos en el estado local
-   * 
+   *
    * @async
    * @param {number} id_campana - ID de la campaña a actualizar
    * @param {Object} data - Datos actualizados de la campaña
@@ -160,16 +175,64 @@ const ProveedorCampana = ({ children }) => {
 
       // Actualiza el listado específico para el producto
       setCampanasPorProducto((prevCampanas) => ({
-          ...prevCampanas,
-          [data.id_producto]: prevCampanas[data.id_producto].map((campana) =>
+        ...prevCampanas,
+        [data.id_producto]: prevCampanas[data.id_producto].map((campana) =>
           campana.id_campana == id_campana ? campanasActualizado : campana
-        )
+        ),
       }));
     } catch (err) {
       console.error("Error actualizando campaña:", err.message);
       throw err;
     }
-  };
+  }
+
+  /**
+   * Elimina una campaña del sistema y actualiza el estado local
+   *
+   * @async
+   * @param {number} id_campana - ID de la campaña a eliminar
+   * @param {number} id_producto - ID del producto asociado a la campaña
+   * @throws {Error} Si la eliminación falla
+   * @returns {Promise<void>}
+  **/
+  const eliminarCampana = async (id_campana, id_producto) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8080/campana/eliminar-campana/${id_campana}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.mensaje || `Error: ${response.status}`);
+      }
+
+      // Actualizar el estado de campanas
+      const campanasResponse = await fetch(
+        `http://127.0.0.1:8080/campana/campanas/${id_producto}`
+      );
+      const campanasData = await campanasResponse.json();
+
+      setCampanasPorProducto((prevCampanas) => ({
+        ...prevCampanas,
+        [id_producto]: campanasData,
+      }));
+
+      setTodasLasCampanas((prevCampanas) =>
+        prevCampanas.filter((campana) => campana.id_campana !== id_campana)
+      );
+
+    } catch (error) {
+      console.error("Error eliminando campaña:", error.message);
+      throw error;
+    }
+  }
 
   const value = {
     campanas: todasLasCampanas,
@@ -179,8 +242,10 @@ const ProveedorCampana = ({ children }) => {
     },
     crearCampana,
     actualizarCampana,
+    eliminarCampana,
     campana,
-    obtenerDatosCampana
+    obtenerDatosCampana,
+    cargandoCampanas
   };
 
   return (

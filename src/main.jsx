@@ -78,7 +78,9 @@ const router = createBrowserRouter([
               <ProveedorCampana>
                 <ProveedorModal>
                   <ProveedorProcesado>
-                    <ProductsPage />
+                    <ProveedorEmpresa>
+                      <ProductsPage />
+                    </ProveedorEmpresa>
                   </ProveedorProcesado>
                 </ProveedorModal>
               </ProveedorCampana>
@@ -128,15 +130,17 @@ const router = createBrowserRouter([
     path: "/tutorial",
     element: (
       <ProveedorTutorial>
-        <ProveedorEmpresa>
-          <ProveedorProducto>
-            <ProveedorCampana>
-              <TutorialRoute>
-                <TutorialLayout />
-              </TutorialRoute>
-            </ProveedorCampana>
-          </ProveedorProducto>
-        </ProveedorEmpresa>
+        <ProveedorUsuario>
+          <ProveedorEmpresa>
+            <ProveedorProducto>
+              <ProveedorCampana>
+                <TutorialRoute>
+                  <TutorialLayout />
+                </TutorialRoute>
+              </ProveedorCampana>
+            </ProveedorProducto>
+          </ProveedorEmpresa>
+        </ProveedorUsuario>
       </ProveedorTutorial>
     ),
     children: [

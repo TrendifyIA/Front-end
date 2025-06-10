@@ -3,7 +3,13 @@
  * @author Min Che Kim, Jennyfer Jasso
  * @description Página de información de la empresa (muestra los datos de la empresa a la que pertenece el usuario).
  */
-import { createContext, useState, useEffect, useContext, useCallback } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 
 import { UsuarioContext } from "./ProveedorUsuario";
 
@@ -14,7 +20,7 @@ export const ContextoProducto = createContext();
 
 /**
  * Proveedor de contexto que gestiona el estado y operaciones CRUD para los productos
- * 
+ *
  * @component
  * @param {Object} props - Propiedades del componente
  * @param {React.ReactNode} props.children - Componentes hijos que consumirán el contexto
@@ -24,6 +30,7 @@ const ProveedorProducto = ({ children }) => {
   const [productos, setProductos] = useState([]);
   const [producto, setProducto] = useState(null);
 
+  const [cargandoProductos, setCargandoProductos] = useState(true);
   const { idEmpresa } = useContext(UsuarioContext);
   // console.log("idempresa", idEmpresa);
 
@@ -46,20 +53,25 @@ const ProveedorProducto = ({ children }) => {
    */
   useEffect(() => {
     if (idEmpresa) {
+      setCargandoProductos(true);
       fetch(`http://127.0.0.1:8080/producto/productos/${idEmpresa}`)
         .then((response) => response.json())
         .then((data) => {
           setProductos(data);
           // console.log("Productos fetched:", data);
+          setCargandoProductos(false);
         })
 
-        .catch((error) => console.error("Error fetching productos:", error));
+        .catch((error) => {
+          console.error("Error fetching productos:", error);
+          setCargandoProductos(false);
+        });
     }
   }, [idEmpresa]);
 
   /**
    * Crea un nuevo producto en el sistema y actualiza el estado local
-   * 
+   *
    * @async
    * @param {Object} data - Datos del producto a crear
    * @param {string} data.nombre - Nombre del producto
@@ -105,22 +117,23 @@ const ProveedorProducto = ({ children }) => {
         const productosData = await productosResponse.json();
         setProductos(productosData);
       }
-
     } catch (error) {
-      console.error(error.message, "Evite utilizar caracteres especiales. (<  >  \'  \"  ;  `  %  \\)");
+      console.error(
+        error.message,
+        "Evite utilizar caracteres especiales. (<  >  '  \"  ;  `  %  \\)"
+      );
       throw error;
     }
   };
 
-
   /**
    * Actualiza un producto existente y refresca los datos en el estado local
-   * 
+   *
    * @async
    * @param {number} id_producto - ID del producto a actualizar
    * @param {Object} data - Datos actualizados del producto
    * @param {string} [data.nombre] - Nombre actualizado del producto
-   * @param {string} [data.categoria] - Categoría actualizada del producto 
+   * @param {string} [data.categoria] - Categoría actualizada del producto
    * @param {string} [data.descripcion] - Descripción actualizada del producto
    * @param {string} [data.publico_objetivo] - Público objetivo actualizado
    * @param {string} [data.estado] - Estado actualizado del producto
@@ -129,14 +142,24 @@ const ProveedorProducto = ({ children }) => {
    */
   const actualizarProducto = async (id_producto, data) => {
     try {
+      const formData = new FormData();
+      formData.append("nombre", data.nombre);
+      formData.append("categoria", data.categoria);
+      formData.append("descripcion", data.descripcion);
+      formData.append("publico_objetivo", data.publico_objetivo);
+      formData.append("estado", data.estado);
+      formData.append("id_empresa", idEmpresa);
+
+      // Adjuntar el archivo si está disponible
+      if (data.imagenFile) {
+        formData.append("ruta_img", data.imagenFile);
+      }
+
       const response = await fetch(
         `http://127.0.0.1:8080/producto/actualizar-producto/${id_producto}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+          body: formData,
         }
       );
 
@@ -157,6 +180,38 @@ const ProveedorProducto = ({ children }) => {
       );
     } catch (err) {
       console.error("Error actualizando producto:", err.message);
+      throw err;
+    }
+  };
+
+  const eliminarProducto = async (id_producto) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8080/producto/eliminar-producto/${id_producto}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.mensaje || `Error: ${response.status}`);
+      }
+
+      // Actualizar el esatdo de productos
+      const productosResponse = await fetch(
+        `http://127.0.0.1:8080/producto/productos/${idEmpresa}`
+      );
+      const productosData = await productosResponse.json();
+      setProductos(productosData);
+      
+    } catch (error) {
+      console.error("Error eliminando producto:", error.message);
+      throw error;
     }
   };
 
@@ -164,8 +219,10 @@ const ProveedorProducto = ({ children }) => {
     productos,
     crearProducto,
     actualizarProducto,
-    producto, 
-    obtenerDatosProducto
+    eliminarProducto,
+    producto,
+    obtenerDatosProducto,
+    cargandoProductos,
   };
 
   return (
