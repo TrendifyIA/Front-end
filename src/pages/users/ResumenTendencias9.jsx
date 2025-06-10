@@ -16,6 +16,7 @@ import {
 
 import "chartjs-adapter-date-fns";
 import { MatrixController, MatrixElement } from 'chartjs-chart-matrix';
+import CustomButton from "../../components/CustomButton"
 
 ChartJS.register(
   LineElement,
@@ -249,6 +250,10 @@ const ResumenTendencias9 = () => {
     });
   };
 
+  const Laila = () => {
+    window.location.href = "https://www.google.com";
+  }
+
   return (
     <div className="pt-6 px-6 w-full">
       <h1 className="text-3xl font-bold mb-4">Análisis general de tendencias</h1>
@@ -309,6 +314,11 @@ const ResumenTendencias9 = () => {
         <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
         <p className="text-gray-800 whitespace-pre-wrap">{resumenIA}</p>
       </div>
+
+      <CustomButton
+        texto={"Descubre Laila"}
+        onClick={Laila}
+      ></CustomButton>
     </div>
   );
 };
