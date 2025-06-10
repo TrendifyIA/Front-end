@@ -1,3 +1,9 @@
+/**
+ * @file LandingPage.jsx
+ * @author Sandra Herrera
+ * @description Página principal de Trendify.
+ */
+
 import React from "react";
 import Illustration from "../assets/images/landing1.png";
 import ChartIcon from "../assets/images/landing2.png";
@@ -7,9 +13,15 @@ import SurveyIllustration from "../assets/images/landing5.png";
 import Illustration2 from "../assets/images/landing6.png";
 import CustomButton from "../components/CustomButton";
 
+/**
+ * @component Componente funcional que representa la landing page.
+ * @returns {JSX.Element} Elemento JSX con la landing page.
+ */
 const LandingPage = () => {
   return (
+    // Contenedor principal
     <div className="min-h-screen bg-[#0c1f57] flex flex-col font-family">
+      {/* Sección principal: título, descripción y botón de acción */}
       <div className="flex flex-1 items-center justify-center px-6">
         <div className="flex flex-col md:flex-row items-center justify-between max-w-8xl w-full mx-auto py-16">
           <div className="text-white md:w-1/2 mb-8 md:mb-0">
@@ -39,6 +51,7 @@ const LandingPage = () => {
         </div>
       </div>
 
+      {/* Sección de beneficios */}
       <div className="bg-white py-16 px-6">
         <div className="flex items-start gap-4 bg-[#fff] p-4 rounded-lg">
           <div className="space-y-8">
@@ -65,6 +78,7 @@ const LandingPage = () => {
             </div>
           </div>
 
+          {/* Mensaje lateral de tendencias */}
           <div className="flex flex-col items-center justify-center bg-white mt-28">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 bg-[#fff] w-full">
               Identifica <br />
@@ -80,7 +94,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* <div className="bg-blue-500 py-16 px-6">
+      <div className="bg-blue-500 py-16 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -95,6 +109,7 @@ const LandingPage = () => {
             </p>
           </div>
 
+          {/* Ilustración de encuestas */}
           <div className="flex justify-center">
             <img
               src={SurveyIllustration}
@@ -105,7 +120,7 @@ const LandingPage = () => {
         </div>
       </div> */}
 
-      <div className="bg-blue-500 py-16 px-6">
+      <div className="bg-[#E1ECFD] py-16 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="flex justify-center">
             <img
@@ -115,6 +130,7 @@ const LandingPage = () => {
             />
           </div>
 
+          {/* Lista de beneficios de datos */}
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Datos que impulsan tu crecimiento
@@ -137,7 +153,10 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="bg-[#E1ECFD] py-36px-6 h-screen justify-center items-center flex">
+      <div
+        className="bg-white py-36
+     px-6"
+      >
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

@@ -1,8 +1,13 @@
 /**
  * @file Empresa.jsx
+<<<<<<< HEAD
  * @author Jennyfer Jasso, Eduardo Rosas Yael Pérez
+=======
+ * @author Sandra Herrera, Jennyfer Jasso
+>>>>>>> 3c0857c75cbf2648f5753862aa6e16c52d3318c4
  * @description Página de formulario para registrar información de una empresa en el tutorial.
  */
+
 import {
   BsBuildings,
   BsBoxSeam,
@@ -15,21 +20,18 @@ import { ContextoTutorial } from "../../context/ProveedorTutorial";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+// Clave para almacenar el formulario en localStorage
 const STORAGE_KEY = "tutorial_empresa_form";
 
 /**
- * Componente de formulario que permite al usuario registrar los datos de una empresa
- * como parte del proceso guiado del tutorial.
- * Utiliza localStorage para persistir los datos entre recargas y el contexto para compartirlos entre pasos.
- *
- * @returns {JSX.Element} Formulario de empresa dentro del tutorial.
+ * @component Permite guardar y recuperar datos del formulario usando localStorage y contexto.
+ * @returns {JSX.Element} Elemento JSX con el formulario de empresa.
  */
 const TutorialEmpresa = () => {
   const navegar = useNavigate();
-  const { empresa, setEmpresa } = useContext(ContextoTutorial); // Contexto para manejar el estado de la empresa
-  const [error, setError] = useState(""); // Estado para manejar errores de validación
+  const { empresa, setEmpresa } = useContext(ContextoTutorial);
 
-  // Estado local para manejar el formulario de empresa
+  // Estado local del formulario, inicializado desde localStorage o contexto
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved
@@ -44,15 +46,14 @@ const TutorialEmpresa = () => {
         };
   });
 
-  // Almacena el formulario en localStorage cada vez que cambia
+  // Guarda el formulario en localStorage cada vez que cambia
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
 
   /**
-   * Maneja el cambio de cualquier input del formulario
-   *
-   * @param {React.ChangeEvent<HTMLInputElement>} e
+   * Maneja los cambios en los campos del formulario.
+   * @param {Object} e Evento de cambio del input.
    */
   const handleChange = (e) => {
     setForm({
@@ -62,8 +63,8 @@ const TutorialEmpresa = () => {
   };
 
   /**
-   * Al hacer clic en "Siguiente", guarda los datos en el contexto y avanza a la sección de producto.
-   * @param {React.FormEvent} e
+   * Guarda los datos y navega a la siguiente pantalla.
+   * @param {Object} e Evento de submit.
    */
   const handleNext = (e) => {
     e.preventDefault();
@@ -83,8 +84,8 @@ const TutorialEmpresa = () => {
   };
 
   /**
-   * Al hacer clic en "Atrás", guarda los datos en el contexto y vuelve a la portada del tutorial.
-   * @param {React.FormEvent} e
+   * Guarda los datos y navega a la pantalla anterior.
+   * @param {Object} e Evento de submit.
    */
   const handleBack = (e) => {
     e.preventDefault();
@@ -94,6 +95,7 @@ const TutorialEmpresa = () => {
   };
 
   return (
+    // Contenedor principal de la página
     <div className="bg-gray-100 min-h-screen font-sans">
       <div className="bg-[#0B2C63] text-white p-6">
         <h1 className="text-lg font-semibold">
@@ -107,6 +109,7 @@ const TutorialEmpresa = () => {
 
       {/* Línea de progreso */}
       <div className="flex justify-center items-center my-12 space-x-8">
+        {/* Paso Empresa */}
         <div className="flex flex-col items-center">
           <div className="border-4 border-[#0B2C63] text-[#0B2C63] rounded-full p-3 text-xl bg-white">
             <BsBuildings />
@@ -114,6 +117,7 @@ const TutorialEmpresa = () => {
           <p className="mt-2 text-sm font-medium text-[#0B2C63]">Empresa</p>
         </div>
         <div className="h-1 w-50 bg-gray-300"></div>
+        {/* Paso Producto */}
         <div className="flex flex-col items-center">
           <div className="border-4 border-gray-400 text-gray-400 rounded-full p-3 text-xl bg-white">
             <BsBoxSeam />
@@ -121,6 +125,7 @@ const TutorialEmpresa = () => {
           <p className="mt-2 text-sm font-medium text-gray-400">Producto</p>
         </div>
         <div className="h-1 w-50 bg-gray-300"></div>
+        {/* Paso Campaña */}
         <div className="flex flex-col items-center opacity-50">
           <div className="border-4 border-gray-400 text-gray-400 rounded-full p-3 text-xl bg-white">
             <RiMegaphoneLine />

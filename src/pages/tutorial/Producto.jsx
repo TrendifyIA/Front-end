@@ -1,7 +1,7 @@
 /**
  * @file Producto.jsx
- * @author Jennyfer Jasso, Eduardo Rosas, ...
- * @description Página de formulario para registrar información de una campaña en el tutorial.
+ * @author Andrea Doce, Jennyfer Jasso
+ * @description Página de formulario para registrar información de un producto en el tutorial.
  */
 import { BsBoxSeam, BsArrowLeft, BsArrowRight, BsImage } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
@@ -12,20 +12,20 @@ import { useContext, useState, useEffect } from "react";
 import { ContextoTutorial } from "../../context/ProveedorTutorial";
 import { LuMousePointerClick } from "react-icons/lu";
 
+// Almacena el estado del formulario en el localStorage
 const STORAGE_KEY = "tutorial_producto_form";
 
 /**
- * Componente de formulario que permite al usuario registrar los datos de un producto
- * como parte del proceso guiado del tutorial.
- * Utiliza localStorage para persistir los datos entre recargas y el contexto para compartirlos entre pasos.
- *
- * @returns {JSX.Element} Formulario de producto dentro del tutorial.
+ * componente que representa la página de Producto en el tutorial.
+ * Permite al usuario ingresar información sobre un producto.
+ * Se guarda la información localmente y permite navegar entre pasos del tutorial.
+ * @returns {JSX.Element} Componente de la página de Producto.
  */
 const Producto = () => {
   const navegar = useNavigate();
-  const { producto, setProducto } = useContext(ContextoTutorial); // Contexto para manejar el estado del producto
-  const [error, setError] = useState(""); // Estado para manejar errores de validación
-  // Estado local para manejar el formulario de producto
+  // Obtiene el estado del producto del contexto del tutorial
+  const { producto, setProducto } = useContext(ContextoTutorial);
+  // Estado del formulario, recupera datos del localStorage
   const [form, setForm] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved
@@ -43,8 +43,12 @@ const Producto = () => {
         };
   });
 
+<<<<<<< HEAD
 
   // Almacena el formulario en localStorage cada vez que cambia
+=======
+  //UseEffect para guardar el estado del formulario en el localStorage al modificarlo.
+>>>>>>> 3c0857c75cbf2648f5753862aa6e16c52d3318c4
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
@@ -66,9 +70,8 @@ const Producto = () => {
   }, []);
   
   /**
-   * Maneja el cambio de cualquier input del formulario
-   *
-   * @param {React.ChangeEvent<HTMLInputElement | HTMLSelectElement>} e
+   * maneja los cambios de los campos del formulario.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio del input.
    */
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,9 +82,8 @@ const Producto = () => {
   };
 
   /**
-   * Maneja la selección de la imagen del producto y actualiza la vista previa.
-   *
-   * @param {React.ChangeEvent<HTMLInputElement>} e
+   * maneja el cambio de la imagen del producto, genera vista previa y actualiza el estado del formulario.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio del input.
    */
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -104,9 +106,8 @@ const Producto = () => {
   };
 
   /**
-   * Al hacer clic en "Siguiente", guarda los datos en el contexto y avanza a la sección de producto.
-   *
-   * @param {React.FormEvent} e
+   * Navega a la página de confirmación del tutorial y guarda el estado del producto.
+   * @param {React.FormEvent<HTMLFormElement>} e - Evento de envío del formulario.
    */
   const handleNext = (e) => {
     e.preventDefault();
@@ -132,9 +133,8 @@ const Producto = () => {
   };
 
   /**
-   * Al hacer clic en "Atrás", guarda los datos en el contexto y vuelve a la portada del tutorial.
-   *
-   * @param {React.FormEvent} e
+   * Navega al paso anterior del tutorial (Empresa) y guarda el estado del producto.
+   * @param {React.FormEvent<HTMLFormElement>} e - Evento de envío del formulario.
    */
   const handleBack = (e) => {
     e.preventDefault();
@@ -144,6 +144,7 @@ const Producto = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen font-sans">
+      {/* Encabezado informativo */}
       <div className="bg-[#0B2C63] text-white p-6">
         <h1 className="text-lg font-semibold">
           Por favor, complete los siguientes campos para registrar el producto
@@ -155,7 +156,7 @@ const Producto = () => {
         </p>
       </div>
 
-      {/* Línea de progreso */}
+      {/* Barra de progreso del tutorial */}
       <div className="flex justify-center items-center my-12 space-x-8">
         <div className="flex flex-col items-center">
           <div className="bg-green-600 text-white rounded-full p-3 text-xl">
@@ -181,7 +182,7 @@ const Producto = () => {
         </div>
       </div>
 
-      {/* Formulario */}
+      {/* Formulario de Producto */}
       <div className="bg-white mx-auto max-w-3xl p-8 rounded shadow">
         <h2 className="text-4xl font-bold mb-6">Producto</h2>
 
@@ -192,6 +193,7 @@ const Producto = () => {
         )}
 
         <form>
+          {/* Nombre y categoría del producto */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block mb-1 font-medium">Nombre</label>
@@ -291,7 +293,7 @@ const Producto = () => {
               className="w-full border rounded px-3 py-2"
             />
           </div>
-
+          {/* Público objetivo y estado del producto */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block mb-1 font-medium">Público objetivo</label>
