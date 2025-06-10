@@ -36,7 +36,7 @@ const DetalleTendencia10 = () => {
       if (!campanaId) return;
       try {
         const res = await fetch(
-          ${import.meta.env.VITE_API_URL}/keyword/${campanaId}?days=30
+          `${import.meta.env.VITE_API_URL}/keyword/${campanaId}`
         );
         const contentType = res.headers.get("content-type");
         if (!res.ok || !contentType.includes("application/json")) {
@@ -54,7 +54,7 @@ const DetalleTendencia10 = () => {
         for (const palabra of palabras) {
           try {
             const resPalabra = await fetch(
-              ${import.meta.env.VITE_API_URL}/api/data/normalized?topic=${palabra}?days=30
+              `${import.meta.env.VITE_API_URL}/api/data/normalized?topic=${palabra}`
             );
             if (!resPalabra.ok)
               throw new Error("Error al obtener datos de " + palabra);
@@ -90,7 +90,7 @@ const DetalleTendencia10 = () => {
     const obtenerResumenIA = async () => {
       if (!campanaId) return;
       try {
-        const resumenURL = ${import.meta.env.VITE_BACKEND_URL.replace("/preguntar", "")}/api/resumen-campana/${campanaId}?days=30
+        const resumenURL = `${import.meta.env.VITE_BACKEND_URL.replace("/preguntar", "")}/api/resumen-campana/${campanaId}`;
         const res = await fetch(resumenURL);
 
         if (!res.ok) throw new Error("Error al obtener el resumen");
