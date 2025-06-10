@@ -12,11 +12,11 @@ const Procesando = () => {
   useEffect(() => {
     const timer1 = setTimeout(() => {
       setEstado("completado");
-    }, 6000);
+    }, 90000);
 
     const timer2 = setTimeout(() => {
       setProcesando(false); // Señal de que ha terminado
-    }, 8000);
+    }, 5000);
 
     return () => {
       clearTimeout(timer1);

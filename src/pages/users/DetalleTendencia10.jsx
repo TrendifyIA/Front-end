@@ -124,9 +124,85 @@ const DetalleTendencias10 = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [resumenIA, setResumenIA] = useState("")
+
   if (!idCampana || !keywordSeleccionada) {
     return <div className="p-6 text-red-600">No se proporcionaron datos válidos.</div>;
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!idCampana) return;
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/keyword/${idCampana}?days=30`
+        );
+        const contentType = res.headers.get("content-type");
+        if (!res.ok || !contentType.includes("application/json")) {
+          const text = await res.text();
+          console.error("Respuesta inesperada:", text);
+          throw new Error("Respuesta inválida del endpoint /keyword/");
+        }
+        const data = await res.json();
+        const palabras = data.keywords;
+        setPalabrasClave(palabras);
+
+        const nuevosPromedios = [];
+        let labelsTemporales = [];
+
+        for (const palabra of palabras) {
+          try {
+            const resPalabra = await fetch(
+              `${import.meta.env.VITE_API_URL}/api/data/normalized?topic=${palabra}?days=30`
+            );
+            if (!resPalabra.ok)
+              throw new Error("Error al obtener datos de " + palabra);
+            const dataPalabra = await resPalabra.json();
+
+            const buzzcores = dataPalabra.resultados.map(
+              (r) => r.buzzcore_promedio
+            );
+            const fechas = dataPalabra.resultados.map((r) => r.fecha);
+
+            nuevosPromedios.push(buzzcores);
+
+            if (labelsTemporales.length === 0) {
+              labelsTemporales = fechas;
+            }
+          } catch (err) {
+            console.error("Error al obtener datos de la palabra:", err);
+          }
+        }
+
+        setDatosPromedio(nuevosPromedios);
+        setLabels(labelsTemporales);
+      } catch (error) {
+        console.error("Error general:", error);
+      }
+    };
+
+    fetchData();
+  }, [idCampana]);
+
+  // Cargar resumen IA
+  useEffect(() => {
+    const obtenerResumenIA = async () => {
+      if (!idCampana) return;
+      try {
+        const resumenURL = `${import.meta.env.VITE_BACKEND_URL.replace("/preguntar", "")}/api/resumen-campana/${idCampana}?days=30`
+        const res = await fetch(resumenURL);
+
+        if (!res.ok) throw new Error("Error al obtener el resumen");
+        const data = await res.json();
+        setResumenIA(data.resumen || "[Sin resumen generado]");
+      } catch (error) {
+        console.error("Error al obtener resumen de IA:", error);
+        setResumenIA("No se pudo obtener el resumen. Intenta de nuevo.");
+      }
+    };
+
+    obtenerResumenIA();
+  }, [idCampana]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -211,23 +287,9 @@ const DetalleTendencias10 = () => {
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6 mb-6 mt-6">
-        <h2 className="font-bold text-lg mb-2">Análisis general de las tendencias</h2>
-        <p>
-          Como puedes ver en la gráfica, tu campaña tiene una mejor recepción en
-          YouTube que en Reddit. Por lo tanto, proponemos que redobles tus
-          esfuerzos en esta plataforma y reanudes una estrategia nueva en Reddit
-          para lograr más permeabilidad en el público.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="font-bold text-lg mb-2">Recomendaciones</h2>
-        <p>
-          Te recomendamos que inviertas un 10% más en publicidad en YouTube y
-          cambies de estrategia en Reddit, intentando contratar influencers con
-          Karma más alto para llegar a más público.
-        </p>
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 className="font-bold text-lg mb-2">Análisis de tendencias</h2>
+        <p>{resumenIA}</p>
       </div>
     </div>
   );
