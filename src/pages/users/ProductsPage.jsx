@@ -51,32 +51,8 @@ const ProductsPage = () => {
       >
         + Agregar producto
       </button>
-
-      <div className="rounded-lg bg-white shadow">
-        <table className="w-full">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/4">
-                Nombre del producto
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/4">
-                Campaña
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/6">
-                Estatus
-              </th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-1/3">
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-              <ListaProductos />
-          </tbody>
-          
-        </table>
-      </div>
-
+      
+      <ListaProductos />
       
     </div>
   );

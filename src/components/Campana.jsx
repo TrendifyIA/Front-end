@@ -10,11 +10,13 @@ import {
   FaSyncAlt,
   FaCheck
 } from "react-icons/fa";
-import BotonIcon from "./BotonIcon";
+import BotonIcon from "../components/BotonIcon";
 import { ModalContext } from "../context/ProveedorModal";
 import { useNavigate } from "react-router-dom"
 import Procesando from "../pages/tutorial/Procesando";
 import { ProcesamientoContext } from "../context/ProveedorProcesado";
+import { ContextoCampana } from "../context/ProveedorCampana";
+
 
 /**
  * Componente que representa una campaña en la tabla de campañas
@@ -31,7 +33,7 @@ import { ProcesamientoContext } from "../context/ProveedorProcesado";
 const Campana = (props) => {
 
   const { abrirCampanaModal } = useContext(ModalContext);
-
+  const { eliminarCampana } = useContext(ContextoCampana);
   const [estatusLocal, setEstatusLocal] = useState(props.estatus) // Controla el estatus
   const {procesando, setProcesando} = useContext(ProcesamientoContext)
   const navigate = useNavigate();
@@ -86,9 +88,8 @@ const Campana = (props) => {
       });
     }
   };
-
   return (
-    <tr>
+    <tr className="border-t border-gray-200">
       <td className="px-4 py-3 text-sm text-blue-600 font-medium">
         {props.nombre}
       </td>
@@ -116,17 +117,22 @@ const Campana = (props) => {
             className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 min-w-[80px] justify-center"
             nombre="Eliminar"
             icon={FaTrashAlt}
-            onClick={() => {}}
+            onClick={() => {eliminarCampana(props.id_campana, props.id_producto)}}
           />
 
           <BotonIcon
             className={`flex items-center gap-1 text-white px-3 py-1 rounded-md text-sm min-w-[100px] justify-center ${
-              estatusLocal === true
+                props.estatus
                 ? "bg-green-600 hover:bg-green-700"
                 : "bg-gray-400 hover:bg-gray-500"
-            }`}
-            nombre={estatusLocal === true ? "Revisar" : "Procesar"}
-            icon={estatusLocal === true ? FaCheck : FaSyncAlt}
+              } `}
+              nombre={
+                props.estatus
+                ? "Revisar"
+                : "Procesar"
+              
+              }
+              icon={props.estatus ? FaCheck : FaSyncAlt}
             onClick={procesarCampana}
           />
         </div>

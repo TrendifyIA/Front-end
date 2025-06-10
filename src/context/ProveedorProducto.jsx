@@ -3,7 +3,13 @@
  * @author Min Che Kim, Jennyfer Jasso
  * @description Página de información de la empresa (muestra los datos de la empresa a la que pertenece el usuario).
  */
-import { createContext, useState, useEffect, useContext, useCallback } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 
 import { UsuarioContext } from "./ProveedorUsuario";
 
@@ -28,7 +34,6 @@ const ProveedorProducto = ({ children }) => {
   const { idEmpresa } = useContext(UsuarioContext);
   // console.log("idempresa", idEmpresa);
 
-  
   /**
    * Función para obtener los datos de un producto por su ID.
    *
@@ -179,13 +184,45 @@ const ProveedorProducto = ({ children }) => {
     }
   };
 
+  const eliminarProducto = async (id_producto) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8080/producto/eliminar-producto/${id_producto}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.mensaje || `Error: ${response.status}`);
+      }
+
+      // Actualizar el esatdo de productos
+      const productosResponse = await fetch(
+        `http://127.0.0.1:8080/producto/productos/${idEmpresa}`
+      );
+      const productosData = await productosResponse.json();
+      setProductos(productosData);
+      
+    } catch (error) {
+      console.error("Error eliminando producto:", error.message);
+      throw error;
+    }
+  };
+
   const value = {
     productos,
     crearProducto,
     actualizarProducto,
-    producto, 
+    eliminarProducto,
+    producto,
     obtenerDatosProducto,
-    cargandoProductos
+    cargandoProductos,
   };
 
   return (
