@@ -1,6 +1,7 @@
+import React from 'react';
 import { useState, useEffect } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
-import { Line } from "react-chartjs-2";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import { Line, Chart, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   LineElement,
@@ -9,73 +10,39 @@ import {
   PointElement,
   Legend,
   Tooltip,
+  TimeScale,
+  BarElement
 } from "chart.js";
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Legend, Tooltip);
+import "chartjs-adapter-date-fns";
+import { MatrixController, MatrixElement } from 'chartjs-chart-matrix';
+
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Legend,
+  Tooltip,
+  TimeScale,
+  MatrixController,
+  MatrixElement,
+  BarElement,
+);
 
 const ResumenTendencias9 = () => {
   const [datosPromedio, setDatosPromedio] = useState([]);
   const [labels, setLabels] = useState([]);
   const [palabrasClave, setPalabrasClave] = useState([]);
   const [mostrarPalabras, setMostrarPalabras] = useState({});
-  const [resumenIA, setResumenIA] = useState("");
-
-  const { state } = useLocation();
+  const [tipoGrafica, setTipoGrafica] = useState("line");
+  const [resumenIA, setResumenIA] = useState("")
+  const location = useLocation();
   const navigate = useNavigate();
-  const campanaId = state?.id_campana;
 
-  const datosApi = import.meta.env.VITE_API_URL; // e.g. http://127.0.0.1:8080
+  const campanaId = location.state?.id_campana;
 
-  useEffect(() => {
-    if (!campanaId) return;
-    const fetchData = async () => {
-      try {
-        // 1. Obtener keywords
-        const resK = await fetch(`${datosApi}/keyword/${campanaId}?days=30`);
-        if (!resK.ok) return;
-        const { keywords } = await resK.json();
-        if (!keywords.length) return;
-
-        setPalabrasClave(keywords);
-        setMostrarPalabras(keywords.reduce((m, p) => ({ ...m, [p]: true }), {}));
-
-        // 2. Para cada palabra, llamar al endpoint correcto de datos normalizados
-        const promesas = keywords.map(async (palabra) => {
-          const url = new URL(`${datosApi}/keyword/${campanaId}/normalized`);
-          url.searchParams.append("topic", palabra);
-          url.searchParams.append("days", "30");
-
-          const res = await fetch(url.href);
-          if (!res.ok) return null;
-          const ct = res.headers.get("content-type") || "";
-          if (!ct.includes("application/json")) return null;
-
-          const { resultados } = await res.json();
-          return {
-            palabra,
-            buzzcores: resultados.map((r) => r.buzzcore_promedio),
-            fechas: resultados.map((r) => r.fecha),
-          };
-        });
-
-        const resultados = await Promise.all(promesas);
-        const datos = [];
-        let fechasBase = [];
-        resultados.forEach((item) => {
-          if (item) {
-            datos.push(item.buzzcores);
-            if (!fechasBase.length) fechasBase = item.fechas;
-          }
-        });
-
-        setDatosPromedio(datos);
-        setLabels(fechasBase);
-      } catch (err) {
-        console.error("fetchData error:", err);
-      }
-    };
-    fetchData();
-  }, [campanaId, datosApi]);
+  const datosApi = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!campanaId) return;
@@ -106,71 +73,238 @@ const ResumenTendencias9 = () => {
     fetchResumen();
   }, [campanaId, datosApi]);
 
-  const toggleCheckbox = (palabra) => {
-    setMostrarPalabras((prev) => ({ ...prev, [palabra]: !prev[palabra] }));
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`http://localhost:8080/keyword/${campanaId}`);
+        if (!res.ok) throw new Error("Error al obtener las palabras clave");
+        const data = await res.json();
+        const palabras = data.keywords;
+        setPalabrasClave(palabras);
 
-  const irADetalle = (palabra) => {
-    navigate(
-      "/users/detalletendencia",
-      { state: { id_campana: campanaId, palabra } }
-    );
+        const nuevosMostrar = {};
+        palabras.forEach((p) => (nuevosMostrar[p] = true));
+        setMostrarPalabras(nuevosMostrar);
+
+        const promesas = palabras.map(async (palabra) => {
+          const resPalabra = await fetch(
+            `http://localhost:8080/api/data/normalized?topic=${palabra}`
+          );
+          if (!resPalabra.ok)
+            throw new Error("Error al obtener datos de " + palabra);
+          const dataPalabra = await resPalabra.json();
+
+          return {
+            palabra,
+            buzzcores: dataPalabra.resultados.map((r) => r.buzzcore_promedio),
+            fechas: dataPalabra.resultados.map((r) => r.fecha),
+          };
+        });
+
+        const resultados = await Promise.all(promesas);
+        const nuevosPromedios = [];
+        let labelsTemporales = [];
+
+        resultados.forEach((res) => {
+          if (res) {
+            nuevosPromedios.push(res.buzzcores);
+            if (labelsTemporales.length === 0) labelsTemporales = res.fechas;
+          }
+        });
+
+        setDatosPromedio(nuevosPromedios);
+        setLabels(labelsTemporales);
+      } catch (error) {
+        console.error("Error general:", error);
+      }
+    };
+
+    fetchData();
+  }, [campanaId]);
+
+  // Preparar datos para heatmap
+  const heatmapData = React.useMemo(() => {
+    if (!datosPromedio.length || !labels.length) return { datasets: [] };
+
+    // calcular min y max
+    const allValues = datosPromedio.flat();
+    const minValue = Math.min(...allValues);
+    const maxValue = Math.max(...allValues);
+
+    return {
+      datasets: [
+        {
+          label: 'Relevancia',
+          data: datosPromedio.flatMap((fila, rowIndex) =>
+            fila.map((valor, colIndex) => ({
+              x: labels[colIndex],
+              y: palabrasClave[rowIndex],
+              v: valor,
+            }))
+          ),
+          backgroundColor: (ctx) => {
+            const value = ctx.dataset.data[ctx.dataIndex].v;
+            const alpha = (value - minValue) / (maxValue - minValue) || 0;
+            return `rgba(220, 53, 69, ${alpha.toFixed(2)})`;
+          },
+          borderWidth: 1,
+          borderColor: 'rgba(255,255,255,0.2)',
+        },
+      ],
+    };
+  }, [datosPromedio, labels, palabrasClave]);
+
+  const heatmapOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'category',
+        labels,
+        offset: true,
+        title: { display: true, text: 'Fecha', font: { size: 14, weight: "bold", } },
+      },
+      y: {
+        type: 'category',
+        labels: palabrasClave,
+        offset: true,
+        reverse: true,
+        title: { display: true, text: 'Palabra clave', font: { size: 14, weight: "bold", } },
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          title: (items) => items[0].dataset.data[items[0].dataIndex].x,
+          label: (ctx) => {
+            const { y, v } = ctx.dataset.data[ctx.dataIndex];
+            return `${y}: ${v}`;
+          },
+        },
+      },
+      legend: { display: false },
+    },
   };
 
   const colores = [
     "#7B3F99", "#D32F2F", "#F57C00", "#1976D2",
-    "#388E3C", "#F06292", "#0097A7", "#AFB42B",
+    "#388E3C", "#F06292", "#0097A7", "#AFB42B"
   ];
+
+  const data = {
+    labels: tipoGrafica === "line" ? labels : undefined,
+    datasets: datosPromedio.map((dataArray, idx) => {
+      const palabra = palabrasClave[idx];
+      return {
+        label: palabra,
+        data: mostrarPalabras[palabra]
+          ? tipoGrafica === "line"
+            ? dataArray
+            : dataArray.map((valor, i) => ({ x: labels[i], y: valor }))
+          : [],
+        borderColor: colores[idx % colores.length],
+        backgroundColor: colores[idx % colores.length],
+        fill: false,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        showLine: tipoGrafica === "line",
+      };
+    }),
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: "top" } },
+    scales: {
+      x: tipoGrafica === "scatter"
+        ? {
+            type: "time",
+            time: { unit: "day", tooltipFormat: "yyyy-MM-dd" },
+            title: { display: true, text: "Fechas", font: { size: 14, weight: "bold", } },
+          }
+        : {
+            stacked: tipoGrafica === "bar",
+            title: { display: true, text: "Fechas", font: { size: 14, weight: "bold", } },
+          },
+      y: {
+        beginAtZero: true,
+        stacked: tipoGrafica === "bar",
+        title: { display: true, text: "Relevancia promedio", font: { size: 14, weight: "bold", } },
+      },
+    },
+  };
+
+  const toggleCheckbox = (palabra) => {
+    setMostrarPalabras((prev) => ({
+      ...prev,
+      [palabra]: !prev[palabra],
+    }));
+  };
+
+  const irADetalle = (palabra) => {
+    navigate("/users/detalle-tendencia", {
+      state: { palabra, id_campana: campanaId },
+    });
+  };
 
   return (
     <div className="pt-6 px-6 w-full">
       <h1 className="text-3xl font-bold mb-4">Análisis general de tendencias</h1>
+
+      <div className="mb-4 flex gap-4">
+        {["line","scatter","heatmap","bar"].map((tipo) => (
+          <label key={tipo} className="flex items-center gap-2">
+            <input
+              type="radio"
+              value={tipo}
+              checked={tipoGrafica === tipo}
+              onChange={() => setTipoGrafica(tipo)}
+            />
+            {tipo === 'heatmap' ? 'Mapa de calor' : tipo === 'boxplot' ? 'BoxPlot' : tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+          </label>
+        ))}
+      </div>
+
       <div className="flex items-start mb-6 w-full">
         <div className="flex-grow bg-white rounded shadow p-6 h-[450px]">
-          <Line
-            data={{
-              labels,
-              datasets: datosPromedio.map((arr, i) => ({
-                label: palabrasClave[i],
-                data: mostrarPalabras[palabrasClave[i]] ? arr : [],
-                borderColor: colores[i % colores.length],
-                fill: false,
-                tension: 0.4,
-              })),
-            }}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { position: "top" } },
-              scales: { y: { beginAtZero: true } },
-            }}
-          />
+          {tipoGrafica === "heatmap" ? (
+            <Chart type="matrix" data={heatmapData} options={heatmapOptions} />
+          ) : tipoGrafica === "bar" ? (
+            <Bar data={data} options={options} />
+          ) : (
+            <Line data={data} options={options} />
+          )}
         </div>
-        <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2">
-          {palabrasClave.map((pal, idx) => (
-            <label key={idx} className="flex items-center gap-2 cursor-pointer">
+
+        <div className="ml-6 flex.flex-col gap-3 w-[160px] shrink-0 mt-2">
+          {palabrasClave.map((palabra, index) => (
+            <label key={index} className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                checked={mostrarPalabras[pal]}
-                onChange={() => toggleCheckbox(pal)}
+                checked={mostrarPalabras[palabra]}
+                onChange={() => toggleCheckbox(palabra)}
               />
               <span
                 className="font-medium text-sm text-black hover:underline"
-                onClick={() => irADetalle(pal)}
+                onClick={() => irADetalle(palabra)}
               >
-                {pal}
+                {palabra}
               </span>
             </label>
           ))}
         </div>
       </div>
-      <div className="mb-6">
+
+      <div>
         <Link to="/users/adminproductos">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-            Volver a campañas
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer">
+            Volver a la página de campañas
           </button>
         </Link>
       </div>
+
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
         <p className="text-gray-800 whitespace-pre-wrap">{resumenIA}</p>
