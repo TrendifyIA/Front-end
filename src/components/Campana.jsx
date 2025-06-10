@@ -95,8 +95,8 @@ const Campana = (props) => {
       <td className="px-4 py-3">
         <span
           className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${props.estatus === true
-              ? "bg-green-100 text-green-800"
-              : "bg-yellow-100 text-yellow-800"
+            ? "bg-green-100 text-green-800"
+            : "bg-yellow-100 text-yellow-800"
             }`}
         >
           {props.estatus === true ? "Procesado" : "Sin procesar"}
@@ -120,8 +120,8 @@ const Campana = (props) => {
 
           <BotonIcon
             className={`flex items-center gap-1 text-white px-3 py-1 rounded-md text-sm min-w-[100px] justify-center ${estatusLocal === true
-                ? "bg-green-600 hover:bg-green-700"
-                : "bg-gray-400 hover:bg-gray-500"
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-gray-400 hover:bg-gray-500"
               }`}
             nombre={estatusLocal === true ? "Revisar" : "Procesar"}
             icon={estatusLocal === true ? FaCheck : FaSyncAlt}
