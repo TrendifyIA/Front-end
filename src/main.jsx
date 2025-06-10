@@ -11,7 +11,6 @@ import PublicLayout from "./pages/layouts/PublicLayout.jsx";
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
 import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
-import App from "./App.jsx";
 import Landing from "./pages/LandingPage.jsx";
 import Planes from "./pages/PlansPage.jsx";
 import PlanesProtected from "./pages/PlansPageProtected.jsx";
@@ -54,7 +53,7 @@ const router = createBrowserRouter([
     element: <PublicLayout />,
     children: [
       { index: true, element: <Landing /> },
-      { path: "planes", element: <Planes /> },
+      { path: "suscripcion", element: <Planes /> },
       { path: "servicios", element: <Servicios /> },
       { path: "nosotros", element: <Nosotros /> },
     ],
