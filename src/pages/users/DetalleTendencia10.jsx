@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Line } from "react-chartjs-2";
+import { useNavigate } from "react-router-dom"
 import {
   Chart as ChartJS,
   LineElement,
@@ -27,6 +29,7 @@ const redes = [
 ];
 
 const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) => {
+  
   const allDates = Array.from(
     new Set([
       ...datosReddit.map((d) => d._id),
@@ -67,27 +70,43 @@ const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) =>
       }),
   };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: { position: "top" },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}`,
+const options = {
+  responsive: true,
+  plugins: {
+    legend: { position: "top" },
+    tooltip: {
+      callbacks: {
+        label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}`,
+      },
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      suggestedMax: 100,
+      ticks: { stepSize: 20 },
+      title: {
+        display: true,
+        text: "Relevancia por red social",
+        font: {
+          size: 14,
+          weight: "bold",
         },
       },
     },
-    scales: {
-      y: {
-        beginAtZero: true,
-        suggestedMax: 100,
-        ticks: { stepSize: 20 },
-      },
-      x: {
-        ticks: { maxRotation: 45, minRotation: 45 },
+    x: {
+      ticks: { maxRotation: 45, minRotation: 45 },
+      title: {
+        display: true,
+        text: "Fechas",
+        font: {
+          size: 14,
+          weight: "bold",
+        },
       },
     },
-  };
+  },
+};
 
   return <Line data={data} options={options} />;
 };
@@ -96,6 +115,7 @@ const DetalleTendencias10 = () => {
   const location = useLocation();
   const idCampana = location.state?.id_campana;
   const keywordSeleccionada = location.state?.palabra;
+  const navigate = useNavigate();
 
   const [seleccionadas, setSeleccionadas] = useState(["youtube", "reddit", "web"]);
   const [datosReddit, setDatosReddit] = useState([]);
@@ -153,6 +173,12 @@ const DetalleTendencias10 = () => {
   if (loading) return <div className="p-6">Cargando...</div>;
   if (error) return <div className="p-6 text-red-600">Error: {error}</div>;
 
+  function Regresar(){
+    navigate("/users/resumen-tendencias", {
+      state: { id_campana: idCampana },
+    });
+  }
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Palabra: {keywordSeleccionada}</h1>
@@ -177,6 +203,12 @@ const DetalleTendencias10 = () => {
             </label>
           ))}
         </div>
+      </div>
+
+      <div className="mt-3">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer" onClick={Regresar}>
+          Volver a la página de campañas
+        </button>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6 mt-6">

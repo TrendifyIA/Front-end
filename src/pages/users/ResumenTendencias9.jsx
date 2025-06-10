@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { Line, Chart, Bar } from "react-chartjs-2";
@@ -13,11 +14,6 @@ import {
   BarElement
 } from "chart.js";
 
-// import {
-//   BoxPlotController,
-//   BoxAndWhiskers,
-// } from 'chartjs-chart-box-and-violin-plot';
-
 import "chartjs-adapter-date-fns";
 import { MatrixController, MatrixElement } from 'chartjs-chart-matrix';
 
@@ -29,11 +25,9 @@ ChartJS.register(
   Legend,
   Tooltip,
   TimeScale,
-  MatrixController, 
+  MatrixController,
   MatrixElement,
   BarElement,
-  //BoxPlotController,
-  //BoxAndWhiskers
 );
 
 const ResumenTendencias9 = () => {
@@ -41,7 +35,7 @@ const ResumenTendencias9 = () => {
   const [labels, setLabels] = useState([]);
   const [palabrasClave, setPalabrasClave] = useState([]);
   const [mostrarPalabras, setMostrarPalabras] = useState({});
-  const [tipoGrafica, setTipoGrafica] = useState("line")
+  const [tipoGrafica, setTipoGrafica] = useState("line");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -56,32 +50,23 @@ const ResumenTendencias9 = () => {
         const palabras = data.keywords;
         setPalabrasClave(palabras);
 
-        // Inicializar estado de checkboxes
         const nuevosMostrar = {};
         palabras.forEach((p) => (nuevosMostrar[p] = true));
         setMostrarPalabras(nuevosMostrar);
 
-        // Hacer todas las peticiones en paralelo
         const promesas = palabras.map(async (palabra) => {
-          try {
-            const resPalabra = await fetch(
-              `http://localhost:8080/api/data/normalized?topic=${palabra}`
-            );
-            if (!resPalabra.ok)
-              throw new Error("Error al obtener datos de " + palabra);
-            const dataPalabra = await resPalabra.json();
+          const resPalabra = await fetch(
+            `http://localhost:8080/api/data/normalized?topic=${palabra}`
+          );
+          if (!resPalabra.ok)
+            throw new Error("Error al obtener datos de " + palabra);
+          const dataPalabra = await resPalabra.json();
 
-            return {
-              palabra,
-              buzzcores: dataPalabra.resultados.map(
-                (r) => r.buzzcore_promedio
-              ),
-              fechas: dataPalabra.resultados.map((r) => r.fecha),
-            };
-          } catch (err) {
-            console.error("Error al obtener datos de la palabra:", err);
-            return null;
-          }
+          return {
+            palabra,
+            buzzcores: dataPalabra.resultados.map((r) => r.buzzcore_promedio),
+            fechas: dataPalabra.resultados.map((r) => r.fecha),
+          };
         });
 
         const resultados = await Promise.all(promesas);
@@ -91,9 +76,7 @@ const ResumenTendencias9 = () => {
         resultados.forEach((res) => {
           if (res) {
             nuevosPromedios.push(res.buzzcores);
-            if (labelsTemporales.length === 0) {
-              labelsTemporales = res.fechas;
-            }
+            if (labelsTemporales.length === 0) labelsTemporales = res.fechas;
           }
         });
 
@@ -105,7 +88,71 @@ const ResumenTendencias9 = () => {
     };
 
     fetchData();
-  }, []);
+  }, [campanaId]);
+
+  // Preparar datos para heatmap
+  const heatmapData = React.useMemo(() => {
+    if (!datosPromedio.length || !labels.length) return { datasets: [] };
+
+    // calcular min y max
+    const allValues = datosPromedio.flat();
+    const minValue = Math.min(...allValues);
+    const maxValue = Math.max(...allValues);
+
+    return {
+      datasets: [
+        {
+          label: 'Relevancia',
+          data: datosPromedio.flatMap((fila, rowIndex) =>
+            fila.map((valor, colIndex) => ({
+              x: labels[colIndex],
+              y: palabrasClave[rowIndex],
+              v: valor,
+            }))
+          ),
+          backgroundColor: (ctx) => {
+            const value = ctx.dataset.data[ctx.dataIndex].v;
+            const alpha = (value - minValue) / (maxValue - minValue) || 0;
+            return `rgba(220, 53, 69, ${alpha.toFixed(2)})`;
+          },
+          borderWidth: 1,
+          borderColor: 'rgba(255,255,255,0.2)',
+        },
+      ],
+    };
+  }, [datosPromedio, labels, palabrasClave]);
+
+  const heatmapOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'category',
+        labels,
+        offset: true,
+        title: { display: true, text: 'Fecha', font: { size: 14, weight: "bold", } },
+      },
+      y: {
+        type: 'category',
+        labels: palabrasClave,
+        offset: true,
+        reverse: true,
+        title: { display: true, text: 'Palabra clave', font: { size: 14, weight: "bold", } },
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          title: (items) => items[0].dataset.data[items[0].dataIndex].x,
+          label: (ctx) => {
+            const { y, v } = ctx.dataset.data[ctx.dataIndex];
+            return `${y}: ${v}`;
+          },
+        },
+      },
+      legend: { display: false },
+    },
+  };
 
   const colores = [
     "#7B3F99", "#D32F2F", "#F57C00", "#1976D2",
@@ -121,10 +168,7 @@ const ResumenTendencias9 = () => {
         data: mostrarPalabras[palabra]
           ? tipoGrafica === "line"
             ? dataArray
-            : dataArray.map((valor, i) => ({
-                x: labels[i],
-                y: valor,
-              }))
+            : dataArray.map((valor, i) => ({ x: labels[i], y: valor }))
           : [],
         borderColor: colores[idx % colores.length],
         backgroundColor: colores[idx % colores.length],
@@ -132,7 +176,7 @@ const ResumenTendencias9 = () => {
         tension: 0.4,
         pointRadius: 4,
         pointHoverRadius: 6,
-        showLine: tipoGrafica === "line", // En scatter, ocultamos la línea
+        showLine: tipoGrafica === "line",
       };
     }),
   };
@@ -140,39 +184,22 @@ const ResumenTendencias9 = () => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: { position: "top" },
-    },
+    plugins: { legend: { position: "top" } },
     scales: {
       x: tipoGrafica === "scatter"
         ? {
             type: "time",
-            time: {
-              unit: "day",
-              tooltipFormat: "yyyy-MM-dd",
-            },
-            title: {
-              display: true,
-              text: "Fechas",
-              font: { size: 14 },
-            },
+            time: { unit: "day", tooltipFormat: "yyyy-MM-dd" },
+            title: { display: true, text: "Fechas", font: { size: 14, weight: "bold", } },
           }
         : {
-            stacked: tipoGrafica === "bar", // Apilar solo si es de barras
-            title: {
-              display: true,
-              text: "Fechas",
-              font: { size: 14 },
-            },
+            stacked: tipoGrafica === "bar",
+            title: { display: true, text: "Fechas", font: { size: 14, weight: "bold", } },
           },
       y: {
         beginAtZero: true,
-        stacked: tipoGrafica === "bar", // Apilar solo si es de barras
-        title: {
-          display: true,
-          text: "Relevancia promedio",
-          font: { size: 14 },
-        },
+        stacked: tipoGrafica === "bar",
+        title: { display: true, text: "Relevancia promedio", font: { size: 14, weight: "bold", } },
       },
     },
   };
@@ -186,155 +213,26 @@ const ResumenTendencias9 = () => {
 
   const irADetalle = (palabra) => {
     navigate("/users/detalle-tendencia", {
-      state: {
-        palabra,
-        id_campana: campanaId,
-      },
+      state: { palabra, id_campana: campanaId },
     });
   };
 
-  // const datosHeatmap = [];
-
-  // palabrasClave.forEach((palabra, palabraIdx) => {
-  //   if (!mostrarPalabras[palabra]) return;
-
-  //   const valores = datosPromedio[palabraIdx];
-  //   valores.forEach((valor, i) => {
-  //     datosHeatmap.push({
-  //       x: labels[i],
-  //       y: palabra,
-  //       v: valor,
-  //     });
-  //   });
-  // });
-
-  // const heatmapData = {
-  //   datasets: [{
-  //     label: "Relevancia por palabra",
-  //     data: datosHeatmap,
-  //     backgroundColor: function(ctx) {
-  //       const value = ctx.dataset.data[ctx.dataIndex].v;
-  //       // Colorear con una escala simple basada en el valor
-  //       const alpha = value / 100;
-  //       return `rgba(255, 99, 132, ${alpha})`; // puedes ajustar colores
-  //     },
-  //     width: ({chart}) => (chart.chartArea || {}).width / labels.length - 1,
-  //     height: ({chart}) => (chart.chartArea || {}).height / palabrasClave.length - 1,
-  //   }]
-  // };
-
-  // const heatmapOptions = {
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   scales: {
-  //     x: {
-  //       type: 'category',
-  //       labels: labels,
-  //       title: {
-  //         display: true,
-  //         text: "Fecha",
-  //       },
-  //     },
-  //     y: {
-  //       type: 'category',
-  //       labels: palabrasClave.filter(p => mostrarPalabras[p]),
-  //       title: {
-  //         display: true,
-  //         text: "Palabra clave",
-  //       },
-  //     }
-  //   },
-  //   plugins: {
-  //     legend: { display: false },
-  //     tooltip: {
-  //       callbacks: {
-  //         title: () => null,
-  //         label: (ctx) => `Relevancia: ${ctx.raw.v}`,
-  //       }
-  //     }
-  //   }
-  // };
-
-  // const boxPlotData = {
-  //   labels,
-  //   datasets: palabrasClave.map((palabra, idx) => {
-  //     if (!mostrarPalabras[palabra]) return null;
-
-  //     const valores = datosPromedio[idx];
-
-  //     const dataBox = valores.map((val) => {
-  //       const spread = val * 0.2; // solo un ejemplo de variabilidad artificial
-  //       return {
-  //         min: val - spread * 2,
-  //         q1: val - spread,
-  //         median: val,
-  //         q3: val + spread,
-  //         max: val + spread * 2
-  //       };
-  //     });
-
-  //     return {
-  //       label: palabra,
-  //       data: dataBox,
-  //       backgroundColor: colores[idx % colores.length],
-  //       borderColor: colores[idx % colores.length],
-  //       borderWidth: 1
-  //     };
-  //   }).filter(Boolean)
-  // };
-
   return (
     <div className="pt-6 px-6 w-full">
-      <h1 className="text-3xl font-bold mb-4">
-        Análisis general de tendencias
-      </h1>
+      <h1 className="text-3xl font-bold mb-4">Análisis general de tendencias</h1>
 
       <div className="mb-4 flex gap-4">
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            value="line"
-            checked={tipoGrafica === "line"}
-            onChange={() => setTipoGrafica("line")}
-          />
-          Línea
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            value="scatter"
-            checked={tipoGrafica === "scatter"}
-            onChange={() => setTipoGrafica("scatter")}
-          />
-          Dispersión
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            value="heatmap"
-            checked={tipoGrafica === "heatmap"}
-            onChange={() => setTipoGrafica("heatmap")}
-          />
-          Mapa de calor
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            value="bar"
-            checked={tipoGrafica === "bar"}
-            onChange={() => setTipoGrafica("bar")}
-          />
-          Barras apiladas
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            value="boxplot"
-            checked={tipoGrafica === "boxplot"}
-            onChange={() => setTipoGrafica("boxplot")}
-          />
-          BoxPlot
-        </label>
+        {["line","scatter","heatmap","bar"].map((tipo) => (
+          <label key={tipo} className="flex items-center gap-2">
+            <input
+              type="radio"
+              value={tipo}
+              checked={tipoGrafica === tipo}
+              onChange={() => setTipoGrafica(tipo)}
+            />
+            {tipo === 'heatmap' ? 'Mapa de calor' : tipo === 'boxplot' ? 'BoxPlot' : tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+          </label>
+        ))}
       </div>
 
       <div className="flex items-start mb-6 w-full">
@@ -343,15 +241,12 @@ const ResumenTendencias9 = () => {
             <Chart type="matrix" data={heatmapData} options={heatmapOptions} />
           ) : tipoGrafica === "bar" ? (
             <Bar data={data} options={options} />
-          ) : tipoGrafica === "boxplot" ? (
-            <Chart type="boxplot" data={boxPlotData} options={options} />
           ) : (
             <Line data={data} options={options} />
           )}
         </div>
 
-
-        <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2">
+        <div className="ml-6 flex.flex-col gap-3 w-[160px] shrink-0 mt-2">
           {palabrasClave.map((palabra, index) => (
             <label key={index} className="flex items-center gap-2 cursor-pointer">
               <input
@@ -372,7 +267,7 @@ const ResumenTendencias9 = () => {
 
       <div>
         <Link to="/users/adminproductos">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer">
             Volver a la página de campañas
           </button>
         </Link>
