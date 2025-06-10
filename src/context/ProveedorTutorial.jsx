@@ -79,6 +79,9 @@ const ProveedorTutorial = ({ children }) => {
    */
   const registrarDatos = useCallback(
     async (id_usuario) => {
+      
+    const formData = new FormData();
+
       const datosEmpresa = {
         id_usuario,
         nombre: empresa.nombre,
@@ -88,15 +91,21 @@ const ProveedorTutorial = ({ children }) => {
         propuesta_valor: empresa.propuesta_valor,
         competidores: empresa.competidores,
       };
+      formData.append("datosEmpresa", JSON.stringify(datosEmpresa));
 
       const datosProducto = {
         nombre: producto.nombre,
-        ruta_img: producto.ruta_img,
+        // ruta_img: producto.ruta_img,
         categoria: producto.categoria,
         descripcion: producto.descripcion,
         publico_objetivo: producto.publico_objetivo,
         estado: Number(producto.estado),
       };
+      formData.append("datosProducto", JSON.stringify(datosProducto));
+
+      if (producto.ruta_img) {
+        formData.append("ruta_img", producto.ruta_img);
+      }
 
       const datosCampana = {
         nombre: campana.nombre,
@@ -107,32 +116,22 @@ const ProveedorTutorial = ({ children }) => {
         presupuesto: Number(campana.presupuesto),
         canales_distribucion: campana.canales_distribucion,
       };
+      formData.append("datosCampana", JSON.stringify(datosCampana));
+      
+
+      var datos = {};
+      formData.forEach((value, key) => datos[key] = value )
 
       console.log(
         "JSON enviado a /tutorial/registro-completo:",
-        JSON.stringify(
-          {
-            empresa: datosEmpresa,
-            producto: datosProducto,
-            campana: datosCampana,
-          },
-          null,
-          2
-        )
+        datos
       );
 
       const res = await fetch(
         "http://127.0.0.1:8080/tutorial/registro-completo",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            empresa: datosEmpresa,
-            producto: datosProducto,
-            campana: datosCampana,
-          }),
+          body: formData,
         }
       );
 

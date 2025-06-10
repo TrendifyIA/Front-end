@@ -21,6 +21,7 @@ export const UsuarioContext = createContext();
  */
 const ProveedorUsuario = ({ children }) => {
     const [idEmpresa, setIdEmpresa] = useState(null);
+    const [nombreEmpresa, setNombreEmpresa] = useState("");
 
     /**
      * Efecto que obtiene el ID de empresa asociada al usuario autenticado
@@ -46,12 +47,13 @@ const ProveedorUsuario = ({ children }) => {
         })
         .then((data) => {
             setIdEmpresa(data.id_empresa);
+            setNombreEmpresa(data.nombre);
             //console.log("Datos del usuario obtenidos:", data.id_empresa);
         })
         .catch(error => console.error("Error fetching usuario:", error));
     }, []);
 
-    const value = { idEmpresa };
+    const value = { idEmpresa, nombreEmpresa };
     
 
     return (
