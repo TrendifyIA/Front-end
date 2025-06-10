@@ -44,7 +44,6 @@ import ProveedorProducto from "./context/ProveedorProducto";
 import ProveedorCampana from "./context/ProveedorCampana";
 import ProveedorModal from "./context/ProveedorModal.jsx";
 import ProveedorUsuario from "./context/ProveedorUsuario.jsx";
-// import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
 
 const router = createBrowserRouter([
   // Arreglo que continene las rutas de la app
@@ -129,15 +128,15 @@ const router = createBrowserRouter([
     element: (
       <ProveedorTutorial>
         <ProveedorUsuario>
-        <ProveedorEmpresa>
-          <ProveedorProducto>
-            <ProveedorCampana>
-              <TutorialRoute>
-                <TutorialLayout />
-              </TutorialRoute>
-            </ProveedorCampana>
-          </ProveedorProducto>
-        </ProveedorEmpresa>
+          <ProveedorEmpresa>
+            <ProveedorProducto>
+              <ProveedorCampana>
+                <TutorialRoute>
+                  <TutorialLayout />
+                </TutorialRoute>
+              </ProveedorCampana>
+            </ProveedorProducto>
+          </ProveedorEmpresa>
         </ProveedorUsuario>
       </ProveedorTutorial>
     ),

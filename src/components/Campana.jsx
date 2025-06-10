@@ -10,8 +10,9 @@ import {
   FaSyncAlt,
   FaCheck
 } from "react-icons/fa";
-import BotonIcon from "./BotonIcon";
+import BotonIcon from "../components/BotonIcon";
 import { ModalContext } from "../context/ProveedorModal";
+import { ContextoCampana } from "../context/ProveedorCampana";
 
 /**
  * Componente que representa una campaña en la tabla de campañas
@@ -32,9 +33,11 @@ const Campana = (props) => {
 
   const { abrirCampanaModal } = useContext(ModalContext);
 
+  const { eliminarCampana } = useContext(ContextoCampana);
+
   // console.log("abrirCampanaModal:", abrirCampanaModal);
   return (
-    <tr>
+    <tr className="border-t border-gray-200">
       <td className="px-4 py-3 text-sm text-blue-600 font-medium">
         {props.nombre}
       </td>
@@ -62,7 +65,7 @@ const Campana = (props) => {
             className="flex items-center gap-1 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 min-w-[80px] justify-center"
             nombre="Eliminar"
             icon={FaTrashAlt}
-            onClick={() => {}}
+            onClick={() => {eliminarCampana(props.id_campana, props.id_producto)}}
           />
 
           <BotonIcon

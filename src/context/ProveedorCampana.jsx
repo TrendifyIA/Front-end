@@ -88,6 +88,7 @@ const ProveedorCampana = ({ children }) => {
       });
   }, [productos]);
 
+
   /**
    * Crea una nueva campaña en el sistema y actualiza el estado local
    *
@@ -183,7 +184,55 @@ const ProveedorCampana = ({ children }) => {
       console.error("Error actualizando campaña:", err.message);
       throw err;
     }
-  };
+  }
+
+  /**
+   * Elimina una campaña del sistema y actualiza el estado local
+   *
+   * @async
+   * @param {number} id_campana - ID de la campaña a eliminar
+   * @param {number} id_producto - ID del producto asociado a la campaña
+   * @throws {Error} Si la eliminación falla
+   * @returns {Promise<void>}
+  **/
+  const eliminarCampana = async (id_campana, id_producto) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8080/campana/eliminar-campana/${id_campana}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.mensaje || `Error: ${response.status}`);
+      }
+
+      // Actualizar el estado de campanas
+      const campanasResponse = await fetch(
+        `http://127.0.0.1:8080/campana/campanas/${id_producto}`
+      );
+      const campanasData = await campanasResponse.json();
+
+      setCampanasPorProducto((prevCampanas) => ({
+        ...prevCampanas,
+        [id_producto]: campanasData,
+      }));
+
+      setTodasLasCampanas((prevCampanas) =>
+        prevCampanas.filter((campana) => campana.id_campana !== id_campana)
+      );
+
+    } catch (error) {
+      console.error("Error eliminando campaña:", error.message);
+      throw error;
+    }
+  }
 
   const value = {
     campanas: todasLasCampanas,
@@ -193,6 +242,7 @@ const ProveedorCampana = ({ children }) => {
     },
     crearCampana,
     actualizarCampana,
+    eliminarCampana,
     campana,
     obtenerDatosCampana,
     cargandoCampanas
