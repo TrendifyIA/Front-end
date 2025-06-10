@@ -39,20 +39,14 @@ const Producto = () => {
           ruta_img: "",
           img_preview: "",
           // imagenFile: null,
-          image_name: ""
+          image_name: "",
         };
   });
 
-<<<<<<< HEAD
-
-  // Almacena el formulario en localStorage cada vez que cambia
-=======
-  //UseEffect para guardar el estado del formulario en el localStorage al modificarlo.
->>>>>>> 3c0857c75cbf2648f5753862aa6e16c52d3318c4
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
-  
+
   useEffect(() => {
     if (form.ruta_img && form.img_preview) {
       return;
@@ -68,7 +62,7 @@ const Producto = () => {
       };
     }
   }, []);
-  
+
   /**
    * maneja los cambios de los campos del formulario.
    * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio del input.
@@ -97,10 +91,9 @@ const Producto = () => {
         ...prev,
         ruta_img: file,
         img_preview: URL.createObjectURL(file),
-        image_name: file.name
+        image_name: file.name,
         // imagenFile: file,
       }));
-      
     }
     // console.log("Imagen seleccionada:", file);
   };
@@ -124,7 +117,7 @@ const Producto = () => {
     if (camposIncompletos || !form.ruta_img) {
       setError("Por favor, complete todos los campos y seleccione una imagen.");
       return;
-    }      
+    }
 
     setError("");
     setProducto(form);
