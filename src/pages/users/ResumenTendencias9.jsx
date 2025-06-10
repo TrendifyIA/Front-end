@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useLocation, Link } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import {
@@ -22,51 +21,31 @@ ChartJS.register(
 );
 
 const ResumenTendencias9 = () => {
+  const [mostrar, setMostrar] = useState(true);
   const [datosPromedio, setDatosPromedio] = useState([]);
   const [labels, setLabels] = useState([]);
   const [palabrasClave, setPalabrasClave] = useState([]);
-  const [mostrarPalabras, setMostrarPalabras] = useState({});
   const [resumenIA, setResumenIA] = useState("");
 
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const campanaId = location.state?.id_campana;
   const campanaId = location.state?.id_campana;
 
   useEffect(() => {
     const fetchData = async () => {
       if (!campanaId) return;
       try {
-        const res = await fetch(`http://localhost:8080/keyword/${campanaId}`);
+        const res = await fetch(http://localhost:8080/keyword/${campanaId});
         const data = await res.json();
         const palabras = data.keywords;
         setPalabrasClave(palabras);
 
-        // Inicializar estado de checkboxes
-        const nuevosMostrar = {};
-        palabras.forEach((p) => (nuevosMostrar[p] = true));
-        setMostrarPalabras(nuevosMostrar);
+        const nuevosPromedios = [];
+        let labelsTemporales = [];
 
-        // Hacer todas las peticiones en paralelo
-        const promesas = palabras.map(async (palabra) => {
+        for (const palabra of palabras) {
           try {
             const resPalabra = await fetch(
-              `http://localhost:8080/api/data/normalized?topic=${palabra}`
-            );
-            if (!resPalabra.ok)
-              throw new Error("Error al obtener datos de " + palabra);
-            const dataPalabra = await resPalabra.json();
-
-            return {
-              palabra,
-              buzzcores: dataPalabra.resultados.map(
-                (r) => r.buzzcore_promedio
-              ),
-              fechas: dataPalabra.resultados.map((r) => r.fecha),
-            };
-            const resPalabra = await fetch(
-              `http://localhost:8080/api/data/normalized?topic=${palabra}`
+              http://localhost:8080/api/data/normalized?topic=${palabra}
             );
             const dataPalabra = await resPalabra.json();
             const buzzcores = dataPalabra.resultados.map((r) => r.buzzcore_promedio);
@@ -78,27 +57,10 @@ const ResumenTendencias9 = () => {
             }
           } catch (err) {
             console.error("Error al obtener datos de la palabra:", err);
-            return null;
           }
-        });
-
-        const resultados = await Promise.all(promesas);
-        const nuevosPromedios = [];
-        let labelsTemporales = [];
-
-        resultados.forEach((res) => {
-          if (res) {
-            nuevosPromedios.push(res.buzzcores);
-            if (labelsTemporales.length === 0) {
-              labelsTemporales = res.fechas;
-            }
-          }
-        });
+        }
 
         setDatosPromedio(nuevosPromedios);
-        setLabels(labelsTemporales);
-      } catch (error) {
-        console.error("Error general:", error);
         setLabels(labelsTemporales);
       } catch (err) {
         console.error("Error al obtener datos de campaña:", err);
@@ -113,7 +75,7 @@ const ResumenTendencias9 = () => {
       if (!campanaId) return;
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/resumen-campana/${campanaId}`
+          ${import.meta.env.VITE_API_URL}/api/resumen-campana/${campanaId}
         );
 
         if (!res.ok) throw new Error("Error al obtener el resumen");
@@ -130,10 +92,6 @@ const ResumenTendencias9 = () => {
 
 
   const colores = [
-    "#7B3F99", "#D32F2F", "#F57C00", "#1976D2",
-    "#388E3C", "#F06292", "#0097A7", "#AFB42B"
-  ];
-  const colores = [
     "#7B3F99", // morado
     "#D32F2F", // rojo
     "#F57C00", // naranja
@@ -145,21 +103,6 @@ const ResumenTendencias9 = () => {
   ];
 
   const data = {
-    labels,
-    datasets: datosPromedio.map((dataArray, idx) => {
-      const palabra = palabrasClave[idx];
-      return {
-        label: palabra,
-        data: mostrarPalabras[palabra] ? dataArray : [],
-        borderColor: colores[idx % colores.length],
-        backgroundColor: colores[idx % colores.length],
-        fill: false,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-      };
-    }),
-  };
     labels,
     datasets: datosPromedio.map((dataArray, idx) => ({
       label: palabrasClave[idx],
@@ -184,22 +127,6 @@ const ResumenTendencias9 = () => {
     },
   };
 
-  const toggleCheckbox = (palabra) => {
-    setMostrarPalabras((prev) => ({
-      ...prev,
-      [palabra]: !prev[palabra],
-    }));
-  };
-
-  const irADetalle = (palabra) => {
-    navigate("/users/detalle-tendencia", {
-      state: {
-        palabra,
-        id_campana: campanaId,
-      },
-    });
-  };
-
   return (
     <div className="pt-6 px-6 w-full">
       <h1 className="text-3xl font-bold mb-4">Análisis general de tendencias</h1>
@@ -212,16 +139,12 @@ const ResumenTendencias9 = () => {
         <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2">
           {palabrasClave.map((palabra, index) => (
             <label key={index} className="flex items-center gap-2 cursor-pointer">
-            <label key={index} className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                checked={mostrarPalabras[palabra]}
-                onChange={() => toggleCheckbox(palabra)}
+                checked={mostrar}
+                onChange={() => setMostrar((prev) => !prev)}
               />
-              <span
-                className="font-medium text-sm text-black hover:underline"
-                onClick={() => irADetalle(palabra)}
-              >
+              <span className="font-medium text-sm text-black hover:underline">
                 {palabra}
               </span>
             </label>
@@ -238,22 +161,6 @@ const ResumenTendencias9 = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h2 className="font-bold text-lg mb-2">Análisis de tendencias</h2>
-        <p>
-          Como puedes ver la palabra más relevante durante el mes fue X, seguida
-          de Y y Z. Proponemos que pongas especial atención en estas tres para
-          promover tu estrategia de marketing ya que puede afectar
-          significativamente la campaña.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="font-bold text-lg mb-2">Recomendaciones</h2>
-        <p>
-          Como recomendación te sugerimos que en tu campaña implementes
-          publicidad relacionada con la tendencia Y y que tu producto vea
-          relacionado algo con la tendencia X siendo la principal.
-        </p>
         <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
         {resumenIA
           .split(/(Resumen actual:|Proyección futura:|Recomendaciones estratégicas:)/)
