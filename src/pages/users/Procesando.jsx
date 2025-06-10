@@ -6,23 +6,17 @@ import { ProcesamientoContext } from "../../context/ProveedorProcesado"; // Ajus
 const Procesando = () => {
   const location = useLocation();
   const { setProcesando } = useContext(ProcesamientoContext);
+  const { procesando } = useContext(ProcesamientoContext);
 
   const [estado, setEstado] = useState("procesando");
 
   useEffect(() => {
-    const timer1 = setTimeout(() => {
+    if (!procesando) {
       setEstado("completado");
-    }, 90000);
-
-    const timer2 = setTimeout(() => {
-      setProcesando(false); // Señal de que ha terminado
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [setProcesando]);
+    } else {
+      setEstado("procesando");
+    }
+  }, [procesando]);
 
   return (
     <div className="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">
@@ -42,7 +36,9 @@ const Procesando = () => {
                   key={i}
                   className="w-4 h-4 rounded-full"
                   style={{
-                    backgroundColor: `hsl(${220 + i * 5}, 100%, ${80 - i * 2}%)`,
+                    backgroundColor: `hsl(${220 + i * 5}, 100%, ${
+                      80 - i * 2
+                    }%)`,
                   }}
                 />
               ))}
@@ -52,7 +48,9 @@ const Procesando = () => {
       ) : (
         <div className="flex flex-col items-center justify-center space-y-4 animate-fadeIn">
           <AiOutlineCheckCircle className="text-green-500 text-6xl animate-bounce" />
-          <h2 className="text-2xl font-bold text-green-600">¡Análisis completo!</h2>
+          <h2 className="text-2xl font-bold text-green-600">
+            ¡Análisis completo!
+          </h2>
         </div>
       )}
 
