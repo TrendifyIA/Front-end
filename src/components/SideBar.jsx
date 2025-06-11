@@ -14,10 +14,29 @@ const SideBar = () => {
 
   const navigate = useNavigate();
 
-  const cerrarSesion = () => {
-    localStorage.removeItem("token"); // Borra el token del localStorage
-    navigate("/simple/login"); // Redirige al login (ajusta la ruta si es necesario)
+  const cerrarSesion = async () => {
+    const token = localStorage.getItem("token");
+    try {
+    // Primero hacer la llamada API para marcar el token como inválido
+    await fetch('http://127.0.0.1:8080/usuario/logout', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  } catch (error) {
+    console.error("Error al hacer logout en servidor:", error);
+  } finally {
+    // Siempre limpiar localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("id_usuario");
+    
+    // Redirigir al login
+    navigate('/simple/login');
+  }
+    
   };
+  
 
   return (
     <div className="w-[280px] h-screen bg-primary-500 font-family flex flex-col justify-around items-center fixed gap-20">

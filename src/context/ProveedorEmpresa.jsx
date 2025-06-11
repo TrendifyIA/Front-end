@@ -21,35 +21,28 @@ const ProveedorEmpresa = ({ children }) => {
   const [empresa, setEmpresa] = useState(null);
   const [empresaRegistrada, setEmpresaRegistrada] = useState(false);
 
+  const getToken = () => {
+    return localStorage.getItem("token");
+  };
+
   /**
    * Obtiene los datos de una empresa por su ID..
    *
    * @param {number} idEmpresa - ID de la empresa a consultar.
    * @returns {Promise<Object|null>} - Retorna los datos de la empresa si existe, o null si no se encuentra.
    */
-  const obtenerDatosEmpresa = useCallback(async (idEmpresa) => {
-    const res = await fetch(`http://127.0.0.1:8080/empresa/${idEmpresa}`);
+  const obtenerDatosEmpresa = useCallback(async () => {
+    const token = getToken();
+
+    const res = await fetch(`http://127.0.0.1:8080/empresa`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // const res = await fetch(`http://127.0.0.1:8080/empresa/${idEmpresa}`);
     const data = await res.json();
     console.log("Datos de empresa:", data);
-    setEmpresa(data);
-    return data;
-  }, []);
-
-  /**
-   * Obtiene los datos de una empresa de un usuario en específico.
-   *
-   * @param {number|string} idUsuario - ID del usuario.
-   * @returns {Promise<Object>} Datos de la empresa asociada al usuario.
-   * @throws {Error} Si la empresa no fue encontrada.
-   */
-  const obtenerDatosEmpresaUsuario = useCallback(async (idUsuario) => {
-    const res = await fetch(
-      `http://127.0.0.1:8080/empresa/empresa/${idUsuario}`
-    );
-    if (!res.ok) {
-      throw new Error("Empresa no encontrada");
-    }
-    const data = await res.json();
     setEmpresa(data);
     return data;
   }, []);
@@ -60,11 +53,16 @@ const ProveedorEmpresa = ({ children }) => {
    * @param {number|string} id_usuario - ID del usuario a validar.
    * @returns {Promise<boolean>} True si existe, false si no.
    */
-  const isEmpresaRegistrada = useCallback(async (id_usuario) => {
+  const isEmpresaRegistrada = useCallback(async () => {
+    const token = getToken();
+    
     try {
-      const res = await fetch(
-        `http://127.0.0.1:8080/empresa/empresa/${id_usuario}`
-      );
+      const res = await fetch(`http://127.0.0.1:8080/empresa`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!res.ok) {
         return false;
       }
@@ -86,14 +84,17 @@ const ProveedorEmpresa = ({ children }) => {
    * @returns {Promise<boolean>} True si la modificación fue exitosa, false si hubo error.
    */
   const modificarEmpresa = useCallback(
-    async (id_empresa, datosActualizados) => {
+    async (datosActualizados) => {
+      const token = getToken();
+
       try {
         const res = await fetch(
-          `http://127.0.0.1:8080/empresa/modificar-empresa/${id_empresa}`,
+          `http://127.0.0.1:8080/empresa/modificar-empresa`,
           {
             method: "POST",
             headers: {
-              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
             },
             body: JSON.stringify(datosActualizados),
           }
@@ -119,8 +120,7 @@ const ProveedorEmpresa = ({ children }) => {
         obtenerDatosEmpresa,
         empresaRegistrada,
         isEmpresaRegistrada,
-        modificarEmpresa,
-        obtenerDatosEmpresaUsuario,
+        modificarEmpresa
       }}
     >
       {children}

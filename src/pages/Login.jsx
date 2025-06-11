@@ -85,9 +85,10 @@ const Login = () => {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("id_usuario", data.id_usuario);
 
-        const id_usuario = data.id_usuario;
-        const tutorialCompletado = await obtenerTutorialCompletado(id_usuario);
-        const empresaRegistrada = await isEmpresaRegistrada(id_usuario);
+      // const id_usuario = data.id_usuario;
+      const tutorialCompletado = await obtenerTutorialCompletado();
+      const empresaRegistrada = await isEmpresaRegistrada();
+      //console.log("Tutorial completado:", tutorialCompletado);
 
         // Redirección según estado del usuario
         if (tutorialCompletado || empresaRegistrada) {

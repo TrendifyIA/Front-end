@@ -64,7 +64,14 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
    */
   useEffect(() => {
     if (id_campana) {
-      fetch(`http://127.0.0.1:8080/campana/campana/${id_campana}`)
+      fetch(`http://127.0.0.1:8080/campana/campana/${id_campana}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           // Formatear datos

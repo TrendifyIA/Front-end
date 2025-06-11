@@ -25,8 +25,7 @@ const ConfirmacionDatos = () => {
    */
   const handleConfirm = async () => {
     try {
-      const id_usuario = Number(localStorage.getItem("id_usuario"));
-      await registrarDatos(id_usuario);
+      await registrarDatos();
       navegar("/tutorial/resumen");
     } catch (err) {
       alert(err.message);
