@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { Line, Chart, Bar } from "react-chartjs-2";
+import { LuMousePointerClick } from "react-icons/lu";
 import {
   Chart as ChartJS,
   LineElement,
@@ -283,7 +284,9 @@ const ResumenTendencias9 = () => {
           )}
         </div>
 
-        <div className="ml-6 flex.flex-col gap-3 w-[160px] shrink-0 mt-2">
+        <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2 bg-white rounded-sm p-4">
+          <h3 className='font-medium'>Tendencias Clave</h3>
+          <p className='text-[12px]'>Da clic en la palabra para ver más detalles.</p>
           {palabrasClave.map((palabra, index) => (
             <label key={index} className="flex items-center gap-2 cursor-pointer">
               <input
@@ -315,10 +318,30 @@ const ResumenTendencias9 = () => {
         <p className="text-gray-800 whitespace-pre-wrap">{resumenIA}</p>
       </div>
 
-      <CustomButton
-        texto={"Descubre Laila"}
-        onClick={Laila}
-      ></CustomButton>
+      <div className="fixed bottom-10 right-6 z-50 group mr-9">
+        <CustomButton
+          texto={
+            <span className="flex items-center gap-2">
+              Descubre Laila <LuMousePointerClick className="text-2xl font-medium" />
+            </span>
+          }
+          onClick={Laila}
+          tipo="normal"
+          extraClases={`
+            bg-gradient-to-r from-purple-700 via-fuchsia-600 to-pink-900
+            bg-[length:200%_200%] animate-gradient-x
+            text-white font-bold py-3 px-6 rounded-full
+            transition-transform transform hover:scale-105
+            shadow-2xl
+          `}
+        />
+
+        {/* Tooltip al hacer hover */}
+        <div className="absolute bottom-full right-1/2 translate-x-1/2 mb-3 w-72 px-4 py-2 bg-gradient-to-r from-purple-700 via-fuchsia-600 to-pink-500
+            bg-[length:200%_200%] text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+          Conoce a Laila, la primera asistente de IA centrada en marketing. ¡Da clic y descubre el futuro del Marketing!
+        </div>
+      </div>
     </div>
   );
 };
