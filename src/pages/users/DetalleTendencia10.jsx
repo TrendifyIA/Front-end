@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
-import { useNavigate } from "react-router-dom"
 import {
   Chart as ChartJS,
   LineElement,
@@ -28,89 +26,6 @@ const redes = [
   { id: "web", nombre: "Web", color: "#7B3F99" },
 ];
 
-const GraficaRedes = ({ seleccionadas, datosReddit, datosYouTube, datosWeb }) => {
-  
-  const allDates = Array.from(
-    new Set([
-      ...datosReddit.map((d) => d._id),
-      ...datosYouTube.map((d) => d._id),
-      ...datosWeb.map((d) => d._id),
-    ])
-  ).sort();
-
-  const data = {
-    labels: allDates,
-    datasets: redes
-      .filter((r) => seleccionadas.includes(r.id))
-      .map((r) => {
-        const datos =
-          r.id === "reddit" ? datosReddit :
-          r.id === "youtube" ? datosYouTube :
-          datosWeb;
-
-        const dataByDate = {};
-        datos.forEach((d) => {
-          const currentValue = d.max_buzzscore || d.avg_buzzscore || 0;
-          if (!dataByDate[d._id] || currentValue > dataByDate[d._id]) {
-            dataByDate[d._id] = currentValue;
-          }
-        });
-
-        const dataPoints = allDates.map((date) => dataByDate[date] || 0);
-
-        return {
-          label: r.nombre,
-          data: dataPoints,
-          borderColor: r.color,
-          backgroundColor: r.color,
-          borderWidth: 3,
-          tension: 0.4,
-          pointRadius: 2,
-        };
-      }),
-  };
-
-const options = {
-  responsive: true,
-  plugins: {
-    legend: { position: "top" },
-    tooltip: {
-      callbacks: {
-        label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}`,
-      },
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      suggestedMax: 100,
-      ticks: { stepSize: 20 },
-      title: {
-        display: true,
-        text: "Relevancia por red social",
-        font: {
-          size: 14,
-          weight: "bold",
-        },
-      },
-    },
-    x: {
-      ticks: { maxRotation: 45, minRotation: 45 },
-      title: {
-        display: true,
-        text: "Fechas",
-        font: {
-          size: 14,
-          weight: "bold",
-        },
-      },
-    },
-  },
-};
-
-  return <Line data={data} options={options} />;
-};
-
 const DetalleTendencias10 = () => {
   const location = useLocation();
   const idCampana = location.state?.id_campana;
@@ -121,99 +36,52 @@ const DetalleTendencias10 = () => {
   const [datosReddit, setDatosReddit] = useState([]);
   const [datosYouTube, setDatosYouTube] = useState([]);
   const [datosWeb, setDatosWeb] = useState([]);
+  const [resumenIA, setResumenIA] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [resumenIA, setResumenIA] = useState("")
-
-  if (!idCampana || !keywordSeleccionada) {
-    return <div className="p-6 text-red-600">No se proporcionaron datos válidos.</div>;
-  }
+  const datosApi = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!idCampana) return;
+    if (!idCampana) return;
+    const fetchResumen = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/keyword/${idCampana}?days=30`
+          `${datosApi}/api/resumen-campana/${idCampana}?days=30`
         );
-        const contentType = res.headers.get("content-type");
-        if (!res.ok || !contentType.includes("application/json")) {
+        const ct = res.headers.get("content-type") || "";
+        if (!res.ok) {
+          console.error("Error IA status", res.status);
+          setResumenIA("Error obteniendo resumen IA.");
+          return;
+        }
+        if (!ct.includes("application/json")) {
           const text = await res.text();
-          console.error("Respuesta inesperada:", text);
-          throw new Error("Respuesta inválida del endpoint /keyword/");
+          console.error("IA endpoint HTML:", text);
+          setResumenIA("Respuesta inesperada de IA.");
+          return;
         }
-        const data = await res.json();
-        const palabras = data.keywords;
-        setPalabrasClave(palabras);
-
-        const nuevosPromedios = [];
-        let labelsTemporales = [];
-
-        for (const palabra of palabras) {
-          try {
-            const resPalabra = await fetch(
-              `${import.meta.env.VITE_API_URL}/api/data/normalized?topic=${palabra}?days=30`
-            );
-            if (!resPalabra.ok)
-              throw new Error("Error al obtener datos de " + palabra);
-            const dataPalabra = await resPalabra.json();
-
-            const buzzcores = dataPalabra.resultados.map(
-              (r) => r.buzzcore_promedio
-            );
-            const fechas = dataPalabra.resultados.map((r) => r.fecha);
-
-            nuevosPromedios.push(buzzcores);
-
-            if (labelsTemporales.length === 0) {
-              labelsTemporales = fechas;
-            }
-          } catch (err) {
-            console.error("Error al obtener datos de la palabra:", err);
-          }
-        }
-
-        setDatosPromedio(nuevosPromedios);
-        setLabels(labelsTemporales);
-      } catch (error) {
-        console.error("Error general:", error);
+        const { resumen } = await res.json();
+        setResumenIA(resumen ?? "[Sin resumen]");
+      } catch (err) {
+        console.error("fetchResumen error:", err);
+        setResumenIA("Error al obtener resumen IA.");
       }
     };
-
-    fetchData();
-  }, [idCampana]);
-
-  // Cargar resumen IA
-  useEffect(() => {
-    const obtenerResumenIA = async () => {
-      if (!idCampana) return;
-      try {
-        const resumenURL = `${import.meta.env.VITE_BACKEND_URL.replace("/preguntar", "")}/api/resumen-campana/${idCampana}?days=30`
-        const res = await fetch(resumenURL);
-
-        if (!res.ok) throw new Error("Error al obtener el resumen");
-        const data = await res.json();
-        setResumenIA(data.resumen || "[Sin resumen generado]");
-      } catch (error) {
-        console.error("Error al obtener resumen de IA:", error);
-        setResumenIA("No se pudo obtener el resumen. Intenta de nuevo.");
-      }
-    };
-
-    obtenerResumenIA();
-  }, [idCampana]);
+    fetchResumen();
+  }, [idCampana, datosApi]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const baseUrl = "http://127.0.0.1:8080/api";
+        const baseUrl = `${datosApi}/api`;
+        const encodedKeyword = encodeURIComponent(keywordSeleccionada);
 
         const [redditRes, youtubeRes, webRes] = await Promise.all([
-          fetch(`${baseUrl}/reddit/trends?topic=${encodeURIComponent(keywordSeleccionada)}&days=30`),
-          fetch(`${baseUrl}/youtube/trends?topic=${encodeURIComponent(keywordSeleccionada)}&days=30`),
-          fetch(`${baseUrl}/web/trends?topic=${encodeURIComponent(keywordSeleccionada)}&days=30`)
+          fetch(`${baseUrl}/reddit/trends?topic=${encodedKeyword}&days=30`),
+          fetch(`${baseUrl}/youtube/trends?topic=${encodedKeyword}&days=30`),
+          fetch(`${baseUrl}/web/trends?topic=${encodedKeyword}&days=30`)
         ]);
 
         if (!redditRes.ok || !youtubeRes.ok || !webRes.ok) {
@@ -238,7 +106,7 @@ const DetalleTendencias10 = () => {
     };
 
     fetchData();
-  }, [keywordSeleccionada, idCampana]);
+  }, [keywordSeleccionada, idCampana, datosApi]);
 
   const toggleRed = (id) => {
     setSeleccionadas((prev) =>
@@ -246,10 +114,86 @@ const DetalleTendencias10 = () => {
     );
   };
 
+  const allDates = useMemo(() => {
+    const fechas = new Set();
+    datosReddit.forEach((d) => fechas.add(d._id));
+    datosYouTube.forEach((d) => fechas.add(d._id));
+    datosWeb.forEach((d) => fechas.add(d._id));
+    return Array.from(fechas).sort();
+  }, [datosReddit, datosYouTube, datosWeb]);
+
+  const data = {
+    labels: allDates,
+    datasets: redes
+      .filter((r) => seleccionadas.includes(r.id))
+      .map((r) => {
+        const fuente =
+          r.id === "reddit" ? datosReddit :
+          r.id === "youtube" ? datosYouTube :
+          datosWeb;
+
+        const dataByDate = {};
+        fuente.forEach((d) => {
+          const valor = d.max_buzzscore || d.avg_buzzscore || 0;
+          if (!dataByDate[d._id] || valor > dataByDate[d._id]) {
+            dataByDate[d._id] = valor;
+          }
+        });
+
+        const puntos = allDates.map((fecha) => dataByDate[fecha] || 0);
+
+        return {
+          label: r.nombre,
+          data: puntos,
+          borderColor: r.color,
+          backgroundColor: r.color,
+          borderWidth: 3,
+          tension: 0.4,
+          pointRadius: 2,
+        };
+      }),
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: { position: "top" },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}`,
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        suggestedMax: 100,
+        ticks: { stepSize: 20 },
+        title: {
+          display: true,
+          text: "Relevancia por red social",
+          font: { size: 14, weight: "bold" },
+        },
+      },
+      x: {
+        ticks: { maxRotation: 45, minRotation: 45 },
+        title: {
+          display: true,
+          text: "Fechas",
+          font: { size: 14, weight: "bold" },
+        },
+      },
+    },
+  };
+
+  if (!idCampana || !keywordSeleccionada) {
+    return <div className="p-6 text-red-600">No se proporcionaron datos válidos.</div>;
+  }
+
   if (loading) return <div className="p-6">Cargando...</div>;
   if (error) return <div className="p-6 text-red-600">Error: {error}</div>;
 
-  function Regresar(){
+  function Regresar() {
     navigate("/users/resumen-tendencias", {
       state: { id_campana: idCampana },
     });
@@ -258,14 +202,10 @@ const DetalleTendencias10 = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Palabra: {keywordSeleccionada}</h1>
+
       <div className="flex gap-6">
         <div className="flex-1 bg-white p-4 rounded shadow h-[450px]">
-          <GraficaRedes
-            seleccionadas={seleccionadas}
-            datosReddit={datosReddit}
-            datosYouTube={datosYouTube}
-            datosWeb={datosWeb}
-          />
+          <Line data={data} options={options} />
         </div>
         <div className="w-40 space-y-2">
           {redes.map((r) => (
@@ -282,14 +222,17 @@ const DetalleTendencias10 = () => {
       </div>
 
       <div className="mt-3">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer" onClick={Regresar}>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer"
+          onClick={Regresar}
+        >
           Volver a la página de campañas
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h2 className="font-bold text-lg mb-2">Análisis de tendencias</h2>
-        <p>{resumenIA}</p>
+      <div className="bg-white rounded-lg shadow p-6 mt-6">
+        <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
+        <p className="text-gray-800 whitespace-pre-wrap">{resumenIA}</p>
       </div>
     </div>
   );
