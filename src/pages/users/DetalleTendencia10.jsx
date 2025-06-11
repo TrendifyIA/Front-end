@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
+import CustomButton from "../../components/CustomButton"
+import { LuMousePointerClick } from "react-icons/lu";
 import {
   Chart as ChartJS,
   LineElement,
