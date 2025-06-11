@@ -39,12 +39,42 @@ const ResumenTendencias9 = () => {
   const [mostrarPalabras, setMostrarPalabras] = useState({});
   const [tipoGrafica, setTipoGrafica] = useState("line");
   const [resumenIA, setResumenIA] = useState("")
+  
   const location = useLocation();
   const navigate = useNavigate();
 
   const campanaId = location.state?.id_campana;
 
   const datosApi = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    if (!campanaId) return;
+    const fetchResumen = async () => {
+      try {
+        const res = await fetch(
+          `${datosApi}/api/resumen-campana/${campanaId}?days=30`
+        );
+        const ct = res.headers.get("content-type") || "";
+        if (!res.ok) {
+          console.error("Error IA status", res.status);
+          setResumenIA("Error obteniendo resumen IA.");
+          return;
+        }
+        if (!ct.includes("application/json")) {
+          const text = await res.text();
+          console.error("IA endpoint HTML:", text);
+          setResumenIA("Respuesta inesperada de IA.");
+          return;
+        }
+        const { resumen } = await res.json();
+        setResumenIA(resumen ?? "[Sin resumen]");
+      } catch (err) {
+        console.error("fetchResumen error:", err);
+        setResumenIA("Error al obtener resumen IA.");
+      }
+    };
+    fetchResumen();
+  }, [campanaId, datosApi]);
 
   useEffect(() => {
     if (!campanaId) return;
