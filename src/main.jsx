@@ -42,7 +42,6 @@ import ProveedorEmpresa from "./context/ProveedorEmpresa";
 import ProveedorProducto from "./context/ProveedorProducto";
 import ProveedorCampana from "./context/ProveedorCampana";
 import ProveedorModal from "./context/ProveedorModal.jsx";
-import ProveedorUsuario from "./context/ProveedorUsuario.jsx";
 import { ProveedorProcesado } from "./context/ProveedorProcesado.jsx";
 // import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
 
@@ -72,19 +71,17 @@ const router = createBrowserRouter([
       {
         path: "adminproductos",
         element: (
-          <ProveedorUsuario>
+          <ProveedorEmpresa>
             <ProveedorProducto>
               <ProveedorCampana>
                 <ProveedorModal>
                   <ProveedorProcesado>
-                    <ProveedorEmpresa>
-                      <ProductsPage />
-                    </ProveedorEmpresa>
+                    <ProductsPage />
                   </ProveedorProcesado>
                 </ProveedorModal>
               </ProveedorCampana>
             </ProveedorProducto>
-          </ProveedorUsuario>
+          </ProveedorEmpresa>
         ),
       },
       {
@@ -129,17 +126,15 @@ const router = createBrowserRouter([
     path: "/tutorial",
     element: (
       <ProveedorTutorial>
-        <ProveedorUsuario>
-          <ProveedorEmpresa>
-            <ProveedorProducto>
-              <ProveedorCampana>
-                <TutorialRoute>
-                  <TutorialLayout />
-                </TutorialRoute>
-              </ProveedorCampana>
-            </ProveedorProducto>
-          </ProveedorEmpresa>
-        </ProveedorUsuario>
+        <ProveedorEmpresa>
+          <ProveedorProducto>
+            <ProveedorCampana>
+              <TutorialRoute>
+                <TutorialLayout />
+              </TutorialRoute>
+            </ProveedorCampana>
+          </ProveedorProducto>
+        </ProveedorEmpresa>
       </ProveedorTutorial>
     ),
     children: [
@@ -153,16 +148,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/procesando",
-    element: (
-      <Procesando></Procesando>
-    )
-  }
+    element: <Procesando></Procesando>,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-      <ProveedorUsuario>
-        <RouterProvider router={router}></RouterProvider>
-      </ProveedorUsuario>
+    <RouterProvider router={router}></RouterProvider>
   </StrictMode>
 );

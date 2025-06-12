@@ -9,9 +9,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { BsImage } from "react-icons/bs";
 import { ContextoProducto } from "../context/ProveedorProducto";
-import { UsuarioContext } from "../context/ProveedorUsuario";
 import { LuMousePointerClick } from "react-icons/lu";
 import Campo from "./Campo";
+import { ContextoEmpresa } from "../context/ProveedorEmpresa";
 
 /**
  * Modal para crear o editar productos
@@ -48,16 +48,28 @@ const ProductoModal = ({ id_producto, onClose }) => {
   const [cargando, setCargando] = useState(false);
 
   const { crearProducto, actualizarProducto } = useContext(ContextoProducto);
-  const { idEmpresa } = useContext(UsuarioContext);
+  
+    const { empresa, obtenerDatosEmpresa } = useContext(ContextoEmpresa);
 
   const [imagePreview, setImagePreview] = useState("");
+
+  useEffect(() => {
+    obtenerDatosEmpresa();
+  }, [obtenerDatosEmpresa]);
 
   /**
    * Efecto para cargar los datos del producto cuando se edita uno existente
    */
   useEffect(() => {
     if (id_producto) {
-      fetch(`http://127.0.0.1:8080/producto/${id_producto}`)
+      fetch(`http://127.0.0.1:8080/producto/${id_producto}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           // Formatear datos
@@ -66,7 +78,7 @@ const ProductoModal = ({ id_producto, onClose }) => {
             categoria: data.categoria || "",
             descripcion: data.descripcion || "",
             publico: data.publico_objetivo || "",
-            estado: data.estado ? "Procesado" : "Sin Procesar",
+            estado: data.estado ? "Continuado" : "Descontinuado",
             imagen: data.ruta_img || null,
           };
 
@@ -181,8 +193,8 @@ const ProductoModal = ({ id_producto, onClose }) => {
       categoria: form.categoria,
       descripcion: form.descripcion,
       publico_objetivo: form.publico,
-      estado: form.estado === "Procesado" ? 1 : 0,
-      id_empresa: idEmpresa,
+      estado: form.estado === "Continuado" ? 1 : 0,
+      id_empresa: empresa.id_empresa,
       imagenFile: form.imagen instanceof File ? form.imagen : null,
     };
 
@@ -216,7 +228,7 @@ const ProductoModal = ({ id_producto, onClose }) => {
       setMensaje({
         tipo: "error",
         texto:
-          "Error al crear el producto. Evite utilizar caracteres especiales. (< > ' \" ; ` % \\)",
+          "Error al guardar el producto. Evite utilizar caracteres especiales. (< > ' \" ; ` % \\)",
       });
     } finally {
       setCargando(false);
