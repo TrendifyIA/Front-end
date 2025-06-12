@@ -52,7 +52,7 @@ const ResumenTendencias9 = () => {
     const fetchResumen = async () => {
       try {
         const res = await fetch(
-          `${datosApi}/api/resumen-campana/${campanaId}?days=30`
+          `${datosApi}/api/resumen-campana/${campanaId}`
         );
         const ct = res.headers.get("content-type") || "";
         if (!res.ok) {
@@ -81,7 +81,7 @@ const ResumenTendencias9 = () => {
     const fetchResumen = async () => {
       try {
         const res = await fetch(
-          `${datosApi}/api/resumen-campana/${campanaId}?days=30`
+          `${datosApi}/api/resumen-campana/${campanaId}`
         );
         const ct = res.headers.get("content-type") || "";
         if (!res.ok) {
@@ -282,7 +282,7 @@ const ResumenTendencias9 = () => {
   };
 
   const Laila = () => {
-    window.location.href = "https://www.google.com";
+    window.location.href = "http://10.48.65.250:5173";
   }
 
   return (

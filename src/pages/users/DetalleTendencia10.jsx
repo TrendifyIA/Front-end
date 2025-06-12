@@ -49,7 +49,7 @@ const DetalleTendencias10 = () => {
     const fetchResumen = async () => {
       try {
         const res = await fetch(
-          `${datosApi}/api/resumen-campana/${idCampana}?days=30`
+          `${datosApi}/api/resumen-campana/${idCampana}`
         );
         const ct = res.headers.get("content-type") || "";
         if (!res.ok) {
@@ -81,9 +81,9 @@ const DetalleTendencias10 = () => {
         const encodedKeyword = encodeURIComponent(keywordSeleccionada);
 
         const [redditRes, youtubeRes, webRes] = await Promise.all([
-          fetch(`${baseUrl}/reddit/trends?topic=${encodedKeyword}&days=30`),
-          fetch(`${baseUrl}/youtube/trends?topic=${encodedKeyword}&days=30`),
-          fetch(`${baseUrl}/web/trends?topic=${encodedKeyword}&days=30`)
+          fetch(`${baseUrl}/reddit/trends?topic=${encodedKeyword}`),
+          fetch(`${baseUrl}/youtube/trends?topic=${encodedKeyword}`),
+          fetch(`${baseUrl}/web/trends?topic=${encodedKeyword}`)
         ]);
 
         if (!redditRes.ok || !youtubeRes.ok || !webRes.ok) {
@@ -202,7 +202,7 @@ const DetalleTendencias10 = () => {
   }
 
   const Laila = () => {
-    window.location.href = "https://www.google.com";
+    window.location.href = "http://10.48.65.250:5173";
   }
 
   return (
@@ -233,7 +233,7 @@ const DetalleTendencias10 = () => {
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer"
           onClick={Regresar}
         >
-          Volver a la página de campañas
+          Volver a la página anterior
         </button>
       </div>
 

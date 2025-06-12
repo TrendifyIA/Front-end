@@ -145,13 +145,13 @@ const LandingPage = () => {
             </h2>
             <p className="text-lg text-gray-700">
               Descubre cómo empresas líderes están revolucionando su toma de
-              decisiones con KeySpotting.
+              decisiones con Trendify.
             </p>
           </div>
 
           <div className="relative bg-white p-6 rounded-lg shadow-lg">
             <p className="text-gray-700 text-lg italic">
-              "Desde que usamos KeySpotting, nuestras campañas son más precisas
+              "Desde que usamos Trendify, nuestras campañas son más precisas
               y nuestro ROI ha aumentado un 35%."
             </p>
           </div>
