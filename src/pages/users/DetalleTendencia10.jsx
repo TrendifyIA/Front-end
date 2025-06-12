@@ -201,9 +201,6 @@ const DetalleTendencias10 = () => {
     });
   }
 
-  const Laila = () => {
-    window.location.href = "http://10.48.65.250:5173";
-  }
 
   return (
     <div className="p-6">
@@ -240,31 +237,6 @@ const DetalleTendencias10 = () => {
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
         <p>{resumenIA}</p>
-      </div>
-
-      <div className="fixed bottom-10 right-6 z-50 group mr-9">
-        <CustomButton
-          texto={
-            <span className="flex items-center gap-2">
-              Descubre Laila <LuMousePointerClick className="text-2xl font-medium" />
-            </span>
-          }
-          onClick={Laila}
-          tipo="normal"
-          extraClases={`
-            bg-gradient-to-r from-purple-700 via-fuchsia-600 to-pink-900
-            bg-[length:200%_200%] animate-gradient-x
-            text-white font-bold py-3 px-6 rounded-full
-            transition-transform transform hover:scale-105
-            shadow-2xl
-          `}
-        />
-
-        {/* Tooltip al hacer hover */}
-        <div className="absolute bottom-full right-1/2 translate-x-1/2 mb-3 w-72 px-4 py-2 bg-gradient-to-r from-purple-700 via-fuchsia-600 to-pink-500
-            bg-[length:200%_200%] text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
-          Conoce a Laila, la primera asistente de IA centrada en marketing. ¡Da clic y descubre el futuro del Marketing!
-        </div>
       </div>
     </div>
   );
