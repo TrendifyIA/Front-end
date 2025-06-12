@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
+import CustomButton from "../../components/CustomButton"
+import { LuMousePointerClick } from "react-icons/lu";
 import {
   Chart as ChartJS,
   LineElement,
@@ -20,96 +23,92 @@ ChartJS.register(
 );
 
 const redes = [
-  { id: "web", nombre: "Web", color: "#111827" },
-  { id: "youtube", nombre: "YouTube", color: "#c4302b" },
-  { id: "reddit", nombre: "Reddit", color: "#FF5700" },
-  // Eliminamos "Random Data" de las opciones gráficas
+  { id: "youtube", nombre: "YouTube", color: "#D32F2F" },
+  { id: "reddit", nombre: "Reddit", color: "#F57C00" },
+  { id: "web", nombre: "Web", color: "#7B3F99" },
 ];
 
-const GraficaRedes = ({ seleccionadas, datosReddit, datosRandom }) => {
-  const data = {
-    labels:
-      datosReddit.length > 0
-        ? datosReddit.map((d) => d._id)
-        : Array.from({ length: 10 }, (_, i) => `Día ${i + 1}`),
-    datasets: redes
-      .filter((r) => seleccionadas.includes(r.id))
-      .map((r) => {
-        let dataPoints = [];
+const DetalleTendencias10 = () => {
+  const location = useLocation();
+  const idCampana = location.state?.id_campana;
+  const keywordSeleccionada = location.state?.palabra;
+  const navigate = useNavigate();
 
-        if (r.id === "reddit" && datosReddit.length > 0) {
-          dataPoints = datosReddit.map((d) => d.avg_buzzscore);
-        } else if (r.id === "web" && datosRandom.length > 0) {
-          // Usamos EXCLUSIVAMENTE los datos random para "web"
-          dataPoints = datosRandom.map((d) => d.avg_buzzscore);
-        } else if (r.id === "youtube") {
-          // Datos simulados para YouTube
-          dataPoints =
-            datosRandom.length > 0
-              ? datosRandom.map((d) => d.avg_buzzscore * 1.2) // 20% más alto que web
-              : Array.from({ length: 10 }, () =>
-                  Math.floor(Math.random() * 100)
-                );
-        }
-
-        return {
-          label: r.nombre,
-          data: dataPoints,
-          borderColor: r.color,
-          backgroundColor: r.color,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-        };
-      }),
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: "top" },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 100,
-      },
-    },
-  };
-
-  return <Line data={data} options={options} />;
-};
-
-const ResumenTendencias10 = () => {
-  const [seleccionadas, setSeleccionadas] = useState(["web", "reddit"]);
+  const [seleccionadas, setSeleccionadas] = useState(["youtube", "reddit", "web"]);
   const [datosReddit, setDatosReddit] = useState([]);
-  const [datosRandom, setDatosRandom] = useState([]);
+  const [datosYouTube, setDatosYouTube] = useState([]);
+  const [datosWeb, setDatosWeb] = useState([]);
+  const [resumenIA, setResumenIA] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const datosApi = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const obtenerDatos = async () => {
+    if (!idCampana) return;
+    const fetchResumen = async () => {
       try {
-        // Obtenemos datos de Reddit
-        const responseReddit = await fetch(
-          "http://localhost:8080/social/reddit/trends?topic=Fitness&days=30"
+        const res = await fetch(
+          `${datosApi}/api/resumen-campana/${idCampana}`
         );
-        const dataReddit = await responseReddit.json();
-        setDatosReddit(dataReddit);
+        const ct = res.headers.get("content-type") || "";
+        if (!res.ok) {
+          console.error("Error IA status", res.status);
+          setResumenIA("Error obteniendo resumen IA.");
+          return;
+        }
+        if (!ct.includes("application/json")) {
+          const text = await res.text();
+          console.error("IA endpoint HTML:", text);
+          setResumenIA("Respuesta inesperada de IA.");
+          return;
+        }
+        const { resumen } = await res.json();
+        setResumenIA(resumen ?? "[Sin resumen]");
+      } catch (err) {
+        console.error("fetchResumen error:", err);
+        setResumenIA("Error al obtener resumen IA.");
+      }
+    };
+    fetchResumen();
+  }, [idCampana, datosApi]);
 
-        // Obtenemos datos random (para simular "web")
-        const responseRandom = await fetch(
-          "http://localhost:8080/social/random/trends?topic=Fitness&days=30"
-        );
-        const dataRandom = await responseRandom.json();
-        setDatosRandom(dataRandom);
-      } catch (error) {
-        console.error("Error al obtener datos:", error);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const baseUrl = `${datosApi}/api`;
+        const encodedKeyword = encodeURIComponent(keywordSeleccionada);
+
+        const [redditRes, youtubeRes, webRes] = await Promise.all([
+          fetch(`${baseUrl}/reddit/trends?topic=${encodedKeyword}`),
+          fetch(`${baseUrl}/youtube/trends?topic=${encodedKeyword}`),
+          fetch(`${baseUrl}/web/trends?topic=${encodedKeyword}`)
+        ]);
+
+        if (!redditRes.ok || !youtubeRes.ok || !webRes.ok) {
+          throw new Error("No se pudieron cargar los datos.");
+        }
+
+        const [redditData, youtubeData, webData] = await Promise.all([
+          redditRes.json(),
+          youtubeRes.json(),
+          webRes.json()
+        ]);
+
+        setDatosReddit(redditData);
+        setDatosYouTube(youtubeData);
+        setDatosWeb(webData);
+      } catch (err) {
+        console.error("Error al obtener datos:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    obtenerDatos();
-  }, []);
+    fetchData();
+  }, [keywordSeleccionada, idCampana, datosApi]);
 
   const toggleRed = (id) => {
     setSeleccionadas((prev) =>
@@ -117,20 +116,102 @@ const ResumenTendencias10 = () => {
     );
   };
 
+  const allDates = useMemo(() => {
+    const fechas = new Set();
+    datosReddit.forEach((d) => fechas.add(d._id));
+    datosYouTube.forEach((d) => fechas.add(d._id));
+    datosWeb.forEach((d) => fechas.add(d._id));
+    return Array.from(fechas).sort();
+  }, [datosReddit, datosYouTube, datosWeb]);
+
+  const data = {
+    labels: allDates,
+    datasets: redes
+      .filter((r) => seleccionadas.includes(r.id))
+      .map((r) => {
+        const fuente =
+          r.id === "reddit" ? datosReddit :
+          r.id === "youtube" ? datosYouTube :
+          datosWeb;
+
+        const dataByDate = {};
+        fuente.forEach((d) => {
+          const valor = d.max_buzzscore || d.avg_buzzscore || 0;
+          if (!dataByDate[d._id] || valor > dataByDate[d._id]) {
+            dataByDate[d._id] = valor;
+          }
+        });
+
+        const puntos = allDates.map((fecha) => dataByDate[fecha] || 0);
+
+        return {
+          label: r.nombre,
+          data: puntos,
+          borderColor: r.color,
+          backgroundColor: r.color,
+          borderWidth: 3,
+          tension: 0.4,
+          pointRadius: 2,
+        };
+      }),
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: { position: "top" },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}`,
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        suggestedMax: 100,
+        ticks: { stepSize: 20 },
+        title: {
+          display: true,
+          text: "Relevancia por red social",
+          font: { size: 14, weight: "bold" },
+        },
+      },
+      x: {
+        ticks: { maxRotation: 45, minRotation: 45 },
+        title: {
+          display: true,
+          text: "Fechas",
+          font: { size: 14, weight: "bold" },
+        },
+      },
+    },
+  };
+
+  if (!idCampana || !keywordSeleccionada) {
+    return <div className="p-6 text-red-600">No se proporcionaron datos válidos.</div>;
+  }
+
+  if (loading) return <div className="p-6">Cargando...</div>;
+  if (error) return <div className="p-6 text-red-600">Error: {error}</div>;
+
+  function Regresar() {
+    navigate("/users/resumen-tendencias", {
+      state: { id_campana: idCampana },
+    });
+  }
+
+
   return (
-    <div className="pt-6 px-6 w-full">
-      <h1 className="text-3xl font-bold mb-4">Fitness / Tend1</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Palabra: {keywordSeleccionada}</h1>
 
-      <div className="flex items-start mb-6 w-full">
-        <div className="flex-grow bg-white rounded shadow p-6 h-[450px]">
-          <GraficaRedes
-            seleccionadas={seleccionadas}
-            datosReddit={datosReddit}
-            datosRandom={datosRandom}
-          />
+      <div className="flex gap-6">
+        <div className="flex-1 bg-white p-4 rounded shadow h-[450px]">
+          <Line data={data} options={options} />
         </div>
-
-        <div className="ml-6 flex flex-col gap-3 w-[160px] shrink-0 mt-2">
+        <div className="w-40 space-y-2 bg-white rounded-sm p-4">
+          <h3 className="font-medium">Redes Sociales</h3>
           {redes.map((r) => (
             <label key={r.id} className="flex items-center gap-2">
               <input
@@ -138,42 +219,27 @@ const ResumenTendencias10 = () => {
                 checked={seleccionadas.includes(r.id)}
                 onChange={() => toggleRed(r.id)}
               />
-              <span className="font-medium text-sm">{r.nombre}</span>
+              <span>{r.nombre}</span>
             </label>
           ))}
         </div>
       </div>
 
-      <div>
-        <Link to="/users/resumen-tendencias">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-            Volver al resumen de tendencias
-          </button>
-        </Link>
+      <div className="mt-3">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer"
+          onClick={Regresar}
+        >
+          Volver a la página anterior
+        </button>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h2 className="font-bold text-lg mb-2">
-          Análisis general de las tendencias
-        </h2>
-        <p>
-          Como puedes ver en la gráfica, tu campaña tiene una mejor recepción en
-          YouTube que en Reddit. Por lo tanto, proponemos que redobles tus
-          esfuerzos en esta plataforma y reanudes una estrategia nueva en Reddit
-          para lograr más permeabilidad en el público.
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="font-bold text-lg mb-2">Recomendaciones</h2>
-        <p>
-          Te recomendamos que inviertas un 10% más en publicidad en YouTube y
-          cambies de estrategia en Reddit, intentando contratar influencers con
-          Karma más alto para llegar a más público.
-        </p>
+        <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
+        <p>{resumenIA}</p>
       </div>
     </div>
   );
 };
 
-export default ResumenTendencias10;
+export default DetalleTendencias10;

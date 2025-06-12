@@ -7,53 +7,63 @@ import { useContext, useState, useEffect } from "react";
 import CustomButton from "../../components/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { ContextoTutorial } from "../../context/ProveedorTutorial";
+import { ContextoEmpresa } from "../../context/ProveedorEmpresa";
+import { ContextoProducto } from "../../context/ProveedorProducto";
+import { ContextoCampana } from "../../context/ProveedorCampana";
+import CampoTutorial from "../../components/CampoTutorial";
 
+/**
+ * Componente principal que muestra el resumen de empresa, producto y campaña
+ * después de completar el flujo del tutorial.
+ *
+ * @returns {JSX.Element} Página de confirmación y resumen de datos registrados.
+ */
 const Confirmacion = () => {
   const navigate = useNavigate();
-  const { idEmpresa, idProducto } = useContext(ContextoTutorial);
-  const [datosEmpresa, setDatosEmpresa] = useState(null);
-  const [datosProducto, setDatosProducto] = useState(null);
-  const [datosCampana, setDatosCampana] = useState(null);
+  const { idEmpresa, idProducto, tutorialCompletadoActualizar } =
+    useContext(ContextoTutorial);
+  const { empresa, obtenerDatosEmpresa } = useContext(ContextoEmpresa);
+  const { producto, obtenerDatosProducto } = useContext(ContextoProducto);
+  const { campana, obtenerDatosCampana } = useContext(ContextoCampana);
 
+  // Cargar datos de la empresa
   useEffect(() => {
     if (idEmpresa) {
-      fetch(`http://127.0.0.1:8080/empresa/${idEmpresa}`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Datos de empresa:", data);
-          setDatosEmpresa(data);
-        });
+      console.log("Obteniendo datos de la empresa con ID:", idEmpresa);
+      obtenerDatosEmpresa(idEmpresa);
     }
-  }, [idEmpresa]);
+  }, [idEmpresa, obtenerDatosEmpresa]);
 
+  // Cargar datos del producto
   useEffect(() => {
     if (idProducto) {
-      fetch(`http://127.0.0.1:8080/producto/${idProducto}`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Datos de producto:", data);
-          setDatosProducto(data);
-        });
+      console.log("Obteniendo datos del producto con ID:", idProducto);
+      obtenerDatosProducto(idProducto);
     }
-  }, [idProducto]);
+  }, [idProducto, obtenerDatosProducto]);
 
+  // Cargar datos de la campaña
   useEffect(() => {
     if (idProducto) {
-      fetch(`http://127.0.0.1:8080/campana/campanas/${idProducto}`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Datos de campaña:", data);
-          if (Array.isArray(data) && data.length > 0) {
-            setDatosCampana(data[data.length - 1]);
-          }
-        });
+      console.log(
+        "Obteniendo datos de la campaña para el producto con ID:",
+        idProducto
+      );
+      obtenerDatosCampana(idProducto);
     }
-  }, [idProducto]);
+  }, [idProducto, obtenerDatosCampana]);
 
-  if (!datosEmpresa || !datosProducto || !datosCampana) {
+  // Verificar que los datos estén cargados
+  if (!empresa || !producto || !campana) {
     return <div className="text-center mt-10">Cargando resumen...</div>;
   }
 
+  /**
+   * Formatea una fecha en string (formato local).
+   *
+   * @param {string|Date} fecha - Fecha a formatear.
+   * @returns {string} Fecha formateada.
+   */
   const formatearFecha = (fecha) => {
     if (!fecha) return "";
     const date = new Date(fecha);
@@ -77,22 +87,22 @@ const Confirmacion = () => {
         <section className="mb-8">
           <h3 className="text-4xl font-bold mb-6">Empresa</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Campo label="Nombre" valor={datosEmpresa.nombre} />
-            <Campo label="Sector" valor={datosEmpresa.nicho} />
-            <Campo label="Dirección" valor={datosEmpresa.direccion} />
-            <Campo
+            <CampoTutorial label="Nombre" valor={empresa.nombre} />
+            <CampoTutorial label="Sector de mercado" valor={empresa.nicho} />
+            <CampoTutorial label="Dirección" valor={empresa.direccion} />
+            <CampoTutorial
               label="Propuesta de valor"
-              valor={datosEmpresa.propuesta_valor}
+              valor={empresa.propuesta_valor}
               cols={2}
               multiline
             />
-            <Campo
+            <CampoTutorial
               label="Descripción de servicios"
-              valor={datosEmpresa.descripcion_servicio}
+              valor={empresa.descripcion_servicio}
               cols={2}
               multiline
             />
-            <Campo label="Competidores" valor={datosEmpresa.competidores} />
+            <CampoTutorial label="Competidores" valor={empresa.competidores} />
           </div>
         </section>
 
@@ -100,24 +110,22 @@ const Confirmacion = () => {
         <section className="mb-8">
           <h3 className="text-4xl font-bold mb-6">Producto</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Campo label="Nombre" valor={datosProducto.nombre} />
-            <Campo label="Categoría" valor={datosProducto.categoria} />
-            <Campo
+            <CampoTutorial label="Nombre" valor={producto.nombre} />
+            <CampoTutorial label="Categoría" valor={producto.categoria} />
+            <CampoTutorial
               label="Descripción"
-              valor={datosProducto.descripcion}
+              valor={producto.descripcion}
               cols={2}
               multiline
             />
-            <Campo
+            <CampoTutorial
               label="Público objetivo"
-              valor={datosProducto.publico_objetivo}
+              valor={producto.publico_objetivo}
               multiline
             />
-            <Campo
+            <CampoTutorial
               label="Estado"
-              valor={
-                datosProducto.estado === 1 ? "Continuado" : "Descontinuado"
-              }
+              valor={producto.estado === 1 ? "Continuado" : "Descontinuado"}
             />
           </div>
         </section>
@@ -126,62 +134,43 @@ const Confirmacion = () => {
         <section className="mb-8">
           <h3 className="text-4xl font-bold mb-6">Campaña</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Campo label="Nombre" valor={datosCampana.nombre} />
-            <Campo label="Objetivo" valor={datosCampana.objetivo} />
-            <Campo
+            <CampoTutorial label="Nombre" valor={campana.nombre} />
+            <CampoTutorial label="Objetivo" valor={campana.objetivo} />
+            <CampoTutorial
               label="Mensaje clave"
-              valor={datosCampana.mensaje_clave}
+              valor={campana.mensaje_clave}
               cols={2}
               multiline
             />
-            <Campo
+            <CampoTutorial
               label="Canales de distribución"
-              valor={datosCampana.canales_distribucion}
+              valor={campana.canales_distribucion}
             />
-            <Campo
+            <CampoTutorial
               label="Fecha de inicio"
-              valor={formatearFecha(datosCampana.f_inicio)}
+              valor={formatearFecha(campana.f_inicio)}
             />
-            <Campo
+            <CampoTutorial
               label="Fecha final"
-              valor={formatearFecha(datosCampana.f_fin)}
+              valor={formatearFecha(campana.f_fin)}
             />
-            <Campo label="Presupuesto" valor={datosCampana.presupuesto} />
+            <CampoTutorial label="Presupuesto" valor={campana.presupuesto} />
           </div>
         </section>
 
+        {/* Botón de confirmación */}
         <div className="flex justify-center mt-10">
           <CustomButton
             texto="OK"
-            onClick={() => {
+            onClick={async () => {
               const id_usuario = localStorage.getItem("id_usuario");
-              localStorage.setItem(`tutorial_completado_${id_usuario}`, "true");
-              window.location.replace("/users/adminproductos");
+              await tutorialCompletadoActualizar(id_usuario);
+              navigate("/users/adminproductos");
             }}
             extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md hover:bg-[#1a3169]"
           />
         </div>
       </div>
-    </div>
-  );
-};
-
-const Campo = ({ label, valor, multiline = false, cols = 1 }) => {
-  return (
-    <div className={`col-span-${cols}`}>
-      <label className="block text-sm font-medium mb-1">{label}:</label>
-      {multiline ? (
-        <div className="w-full border rounded px-3 py-2 text-sm bg-gray-50 whitespace-pre-wrap overflow-auto max-h-60">
-          {valor}
-        </div>
-      ) : (
-        <div
-          className="w-full border rounded px-3 py-2 text-sm bg-gray-50 truncate"
-          title={valor}
-        >
-          {valor}
-        </div>
-      )}
     </div>
   );
 };

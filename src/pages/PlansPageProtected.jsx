@@ -30,7 +30,7 @@ const PlansPageProtected = () => {
 
         if (res.ok && data.activa === true) {
             console.log("Usuario tiene suscripción activa");
-          navigate("/users/bienvenida"); // Usuario ya tiene suscripción, redirige al dashboard
+          navigate("/users/adminproductos"); // Usuario ya tiene suscripción, redirige al dashboard
         }
         else{
             console.log("No tienes suscripción activa");
@@ -50,14 +50,12 @@ const PlansPageProtected = () => {
       description:
         "Diseñado para aquellas empresas que están comenzando a posicionarse en su nicho y quieren mantenerse activas.",
       features: [
-        "Top 10 tendencias y comparación de hasta 3 palabras clave.",
-        "Visualización por país y evolución en 3 meses.",
+        "Top 5 tendencias y comparación palabras clave.",
+        "Visualización de gráficas de popularidad de palabras clave.",
+        "Visualización de gráficas de popularidad en Reddit, YouTube y Web.",
+        "Análisis con IA."
       ],
       excludedFeatures: [
-        "Acceso a 12 meses de datos y comparación de hasta 6 palabras.",
-        "Exportación de datos y explicaciones por IA.",
-        "Notificaciones en tiempo real y predicciones con IA.",
-        "Reportes estratégicos y filtrado por por ciudad/estado/país.",
       ],
     },
   ];
@@ -66,7 +64,7 @@ const PlansPageProtected = () => {
     <div className="bg-primary-500 min-h-screen py-12">
       <div className="container mx-auto px-4">
         <h1 className="text-6xl font-bold text-center text-white mb-16">
-          Elije el plan ideal
+          Suscríbete a Trendify
         </h1>
 
         <div className="flex justify-center">
