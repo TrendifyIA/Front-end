@@ -141,7 +141,12 @@ const ProveedorTutorial = ({ children }) => {
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.mensaje || "Error al registrar los datos");
+      if (!(producto.ruta_img instanceof File)) {
+        throw new Error("Elegir de nuevo la imagen del producto");
+      }
+      else {
+        throw new Error(data.mensaje || "Error al registrar los datos");
+      }
     }
     setIdEmpresa(data.empresa.id_empresa);
     setIdProducto(data.producto.id_producto);
