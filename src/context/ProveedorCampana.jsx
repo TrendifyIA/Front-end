@@ -3,7 +3,13 @@
  * @author Min Che Kim, Jennyfer Jasso
  * @description Proveedor de contexto para las campañas. Maneja la lógica de obtención y almacenamiento de campañas por producto.
  */
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { ContextoProducto } from "./ProveedorProducto";
 
 /**
@@ -23,9 +29,13 @@ const ProveedorCampana = ({ children }) => {
   const [campana, setCampana] = useState(null);
   const [todasLasCampanas, setTodasLasCampanas] = useState([]);
   const [campanasPorProducto, setCampanasPorProducto] = useState({});
-  
+
   const [cargandoCampanas, setCargandoCampanas] = useState(true);
   const { productos } = useContext(ContextoProducto);
+
+  const getToken = () => {
+    return localStorage.getItem("token");
+  };
 
   /**
    * Función para obtener los datos de la campaña relacionada a un producto específico.
@@ -34,8 +44,16 @@ const ProveedorCampana = ({ children }) => {
    * @returns {Promise<Object|null>} - Retorna los datos de la campaña si existe, o null si no hay campaña.
    */
   const obtenerDatosCampana = useCallback(async (idProducto) => {
+    const token = getToken();
+
     const res = await fetch(
-      `http://127.0.0.1:8080/campana/campanas/${idProducto}`
+      `http://127.0.0.1:8080/campana/campanas/${idProducto}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
@@ -46,12 +64,13 @@ const ProveedorCampana = ({ children }) => {
     return null;
   }, []);
 
-  
   /**
    * Efecto que carga las campañas cuando cambia el listado de productos
    * Realiza peticiones paralelas para obtener las campañas de cada producto
    */
   useEffect(() => {
+    const token = getToken();
+
     if (!productos || productos.length === 0) {
       setCargandoCampanas(false);
       return;
@@ -61,7 +80,12 @@ const ProveedorCampana = ({ children }) => {
 
     // Crear un array de promesas, una por cada producto
     const promesas = productos.map((producto) =>
-      fetch(`http://127.0.0.1:8080/campana/campanas/${producto.id_producto}`)
+      fetch(`http://127.0.0.1:8080/campana/campanas/${producto.id_producto}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then((response) => response.json())
         .then((data) => ({ id_producto: producto.id_producto, campanas: data }))
     );
@@ -88,7 +112,6 @@ const ProveedorCampana = ({ children }) => {
       });
   }, [productos]);
 
-
   /**
    * Crea una nueva campaña en el sistema y actualiza el estado local
    *
@@ -99,11 +122,13 @@ const ProveedorCampana = ({ children }) => {
    * @returns {Promise<void>}
    */
   const crearCampana = async (data) => {
+    const token = getToken();
     try {
       const response = await fetch("http://127.0.0.1:8080/campana/crear", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
@@ -117,7 +142,13 @@ const ProveedorCampana = ({ children }) => {
 
       // Actualizar el estado de campanas
       const campanasResponse = await fetch(
-        `http://127.0.0.1:8080/campana/campanas/${data.id_producto}`
+        `http://127.0.0.1:8080/campana/campanas/${data.id_producto}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const campanasData = await campanasResponse.json();
 
@@ -144,6 +175,8 @@ const ProveedorCampana = ({ children }) => {
    * @returns {Promise<void>}
    */
   const actualizarCampana = async (id_campana, data) => {
+    const token = getToken();
+
     try {
       const response = await fetch(
         `http://127.0.0.1:8080/campana/actualizar-campana/${id_campana}`,
@@ -151,6 +184,7 @@ const ProveedorCampana = ({ children }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         }
@@ -164,7 +198,13 @@ const ProveedorCampana = ({ children }) => {
 
       // Actualizar el estado de campanas
       const campanasResponse = await fetch(
-        `http://127.0.0.1:8080/campana/campana/${id_campana}`
+        `http://127.0.0.1:8080/campana/campana/${id_campana}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const campanasActualizado = await campanasResponse.json();
       setTodasLasCampanas((prevCampanas) =>
@@ -184,7 +224,7 @@ const ProveedorCampana = ({ children }) => {
       console.error("Error actualizando campaña:", err.message);
       throw err;
     }
-  }
+  };
 
   /**
    * Elimina una campaña del sistema y actualiza el estado local
@@ -194,8 +234,10 @@ const ProveedorCampana = ({ children }) => {
    * @param {number} id_producto - ID del producto asociado a la campaña
    * @throws {Error} Si la eliminación falla
    * @returns {Promise<void>}
-  **/
+   **/
   const eliminarCampana = async (id_campana, id_producto) => {
+    const token = getToken();
+
     try {
       const response = await fetch(
         `http://127.0.0.1:8080/campana/eliminar-campana/${id_campana}`,
@@ -203,7 +245,8 @@ const ProveedorCampana = ({ children }) => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -215,7 +258,13 @@ const ProveedorCampana = ({ children }) => {
 
       // Actualizar el estado de campanas
       const campanasResponse = await fetch(
-        `http://127.0.0.1:8080/campana/campanas/${id_producto}`
+        `http://127.0.0.1:8080/campana/campanas/${id_producto}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const campanasData = await campanasResponse.json();
 
@@ -227,12 +276,11 @@ const ProveedorCampana = ({ children }) => {
       setTodasLasCampanas((prevCampanas) =>
         prevCampanas.filter((campana) => campana.id_campana !== id_campana)
       );
-
     } catch (error) {
       console.error("Error eliminando campaña:", error.message);
       throw error;
     }
-  }
+  };
 
   const value = {
     campanas: todasLasCampanas,
@@ -245,11 +293,13 @@ const ProveedorCampana = ({ children }) => {
     eliminarCampana,
     campana,
     obtenerDatosCampana,
-    cargandoCampanas
+    cargandoCampanas,
   };
 
   return (
-    <ContextoCampana.Provider value={value}>{children}</ContextoCampana.Provider>
+    <ContextoCampana.Provider value={value}>
+      {children}
+    </ContextoCampana.Provider>
   );
 };
 
