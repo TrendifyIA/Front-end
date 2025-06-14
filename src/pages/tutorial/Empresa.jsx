@@ -1,6 +1,6 @@
 /**
  * @file Empresa.jsx
- * @author Jennyfer Jasso, Eduardo Rosas Yael Pérez
+ * @author Jennyfer Jasso, Eduardo Rosas, Yael Pérez
  * @description Página de formulario para registrar información de una empresa en el tutorial.
  */
 import {

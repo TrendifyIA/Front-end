@@ -1,6 +1,8 @@
 /**
  * @file Campo.jsx
  * @description Componente de campo de texto reutilizable, editable o solo lectura, con soporte para multilinea y estilos dinámicos.
+ * 
+ * @author Jennyfer Jasso
  */
 
 /**

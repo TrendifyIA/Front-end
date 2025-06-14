@@ -70,7 +70,7 @@ const Campana = (props) => {
           tiempo: Date.now()
         }));
 
-        // ✅ Redirige al finalizar exitosamente
+        // Redirige al finalizar exitosamente
         navigate("/users/resumen-tendencias", {
           state: { id_campana: props.id_campana },
         });

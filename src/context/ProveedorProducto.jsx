@@ -184,6 +184,14 @@ const ProveedorProducto = ({ children }) => {
     }
   };
 
+
+  /**
+   * Elimina un producto por su ID y actualiza el estado de la lista de productos.
+   *
+   * @function eliminarProducto
+   * @param {string|number} id_producto - El ID del producto a eliminar.
+   * @throws {Error} Lanza un error si la petición de eliminación falla.
+   */
   const eliminarProducto = async (id_producto) => {
     try {
       const response = await fetch(
