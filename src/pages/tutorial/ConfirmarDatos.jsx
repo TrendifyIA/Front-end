@@ -1,6 +1,6 @@
 /**
  * @file ConfirmarDatos.jsx
- * @author Jennyfer Jasso, ...
+ * @author Jennyfer Jasso, Alexei Martínez
  * @description Página de confirmación de datos capturados en el tutorial.
  */
 import { useContext } from "react";
