@@ -1,3 +1,9 @@
+/**
+ * @file SimpleLayout.jsx
+ * @author Yael Pérez
+ * @description Layout que permite visualizar solo el logo de Trendify
+ */
+
 import SimpleNav from "../../components/SimpleNav"
 import { Outlet } from "react-router-dom"
 

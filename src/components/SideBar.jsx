@@ -1,3 +1,9 @@
+/**
+ * @file SideBar.jsx
+ * @author Yael Pérez
+ * @description SideBar que se renderiza en el users layout
+ */
+
 import { Link } from 'react-router' // Importa el componente Link de react-router para la navegación
 import Logo from '../assets/images/Trendify.png'
 import { FaRegUser } from 'react-icons/fa6' // Importa el icono de usuario de react-icons

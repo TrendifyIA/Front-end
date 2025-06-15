@@ -1,7 +1,7 @@
 /**
  * Descripción: Visualiza el análisis general de una campaña a través de gráficas interactivas
  *               (líneas, barras, scatter y heatmap) junto con un resumen generado por IA.
- * Autoría: Fernanda Ponce Maciel
+ * Autoría: Fernanda Ponce Maciel, Yael Pérez, Ignacio Solís
  * Fecha: 14 de junio de 2025
  * Requisitos:
  *  - React Router (useLocation, useNavigate)
@@ -363,6 +363,7 @@ const ResumenTendencias9 = () => {
         </Link>
       </div>
 
+      {/*Aquí se pone el resumen IA*/}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
         <p className="text-gray-800 whitespace-pre-wrap">{resumenIA}</p>

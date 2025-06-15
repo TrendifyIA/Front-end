@@ -1,4 +1,10 @@
-import { loadStripe } from "@stripe/stripe-js";
+/**
+ * @file StripeModal.jsx
+ * @author Yael Pérez
+ * @description Componente modal para pagar la suscripción
+ */
+
+import { loadStripe } from "@stripe/stripe-js"; // Carga el elemento de stripe
 import {
   Elements,
   PaymentElement,

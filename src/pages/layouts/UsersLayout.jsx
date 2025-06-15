@@ -1,3 +1,9 @@
+/**
+ * @file UsersLayout.jsx
+ * @author Yael Pérez
+ * @description Layout que permite visualizar la sidebar para los usuarios que inican sesión
+ */
+
 import SideBar from "../../components/SideBar"
 import { Outlet } from "react-router-dom";
 

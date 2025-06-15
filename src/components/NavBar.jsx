@@ -1,4 +1,8 @@
-import React from 'react'
+/**
+ * @file Navbar.jsx
+ * @author Yael Pérez
+ * @description Navbar que se renderiza en el public layout
+ */
 import Logo from '../assets/images/Trendify.png'
 import CustomButton from './CustomButton.jsx'
 import { Link } from 'react-router-dom'
