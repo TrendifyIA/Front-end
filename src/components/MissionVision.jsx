@@ -4,9 +4,9 @@
  * @description Componente que muestra una sección con la misión, visión y valores de la empresa Trendify.
  */
 import React from 'react';
-import { ReactComponent as TargetIcon } from '../assets/icons/target.svg';
-import { ReactComponent as EyeIcon } from '../assets/icons/eye.svg';
-import { ReactComponent as CheckIcon } from '../assets/icons/check.svg';
+import TargetIcon from '../assets/icons/target.svg';
+import EyeIcon from '../assets/icons/eye.svg';
+import CheckIcon from '../assets/icons/check.svg';
 
 /**
  * Componente MissionVision
