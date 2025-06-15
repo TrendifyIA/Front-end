@@ -1,9 +1,23 @@
+/**
+ * Componente: Servicios
+ * Descripción:Muestra una sección visual con tarjetas de servicios ofrecidos por Trendify, cada una 
+ * destacando funcionalidades específicas como análisis con IA, monitoreo estratégico 
+ * y visualización de datos.
+ * Autoría: Fernanda Ponce Maciel
+ * Fecha: 15 de junio de 2025
+ */
+
 import React from "react";
 import imgAI from "../assets/images/ia.png";
 import imgEstrategia from "../assets/images/estrategia.png";
 import imgData from "../assets/images/data.jpg";
 
 const Servicios = () => {
+/**
+   * Lista de servicios disponibles.
+   * Cada objeto incluye título, imagen y lista de puntos clave.
+   */
+  
      const servicios = [
        {
          titulo: "Análisis de Tendencia con Inteligencia Artificial",
