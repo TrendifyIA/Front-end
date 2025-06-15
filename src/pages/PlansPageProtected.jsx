@@ -1,3 +1,9 @@
+/**
+ * @file PlansProtected.jsx
+ * @author Eduardo Rosas
+ * @description Planes protegidos para pagar la suscripción
+ */
+
 import React from "react";
 import PlanCard from "../components/PlanCard";
 import PaymentMethods from "../components/PaymentMethods";

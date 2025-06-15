@@ -50,6 +50,7 @@ const DetalleTendencias10 = () => {
 
   const datosApi = import.meta.env.VITE_API_URL;
 
+  // Obtiene el resumen generado por la IA
   useEffect(() => {
     if (!idCampana) return;
     const fetchResumen = async () => {
@@ -79,6 +80,7 @@ const DetalleTendencias10 = () => {
     fetchResumen();
   }, [idCampana, datosApi]);
 
+  // Obtiene todas las graficas por red social
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -122,6 +124,7 @@ const DetalleTendencias10 = () => {
     );
   };
 
+  // Se definen las fechas para la grafica de mapa de calor
   const allDates = useMemo(() => {
     const fechas = new Set();
     datosReddit.forEach((d) => fechas.add(d._id));
@@ -162,6 +165,7 @@ const DetalleTendencias10 = () => {
       }),
   };
 
+  // Configuración de las graficas
   const options = {
     responsive: true,
     plugins: {

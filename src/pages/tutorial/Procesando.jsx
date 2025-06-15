@@ -1,3 +1,9 @@
+/**
+ * @file Procesando.jsx
+ * @author Alexei Martinez
+ * @description Componente que muestra la ventana procesando
+ */
+
 import React, { useEffect, useState } from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
