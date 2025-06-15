@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 .env
 
-src/components/PreguntaPopup.jsx
-src/components/TeamMember.jsx
-src/components/VerificacionOTP.jsx
-src/pagges/hidden
+!/src/components/PreguntaPopup.jsx
+!/src/components/TeamMember.jsx
+!/src/components/VerificacionOTP.jsx
+!/src/pagges/hidden/*
