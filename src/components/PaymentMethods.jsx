@@ -1,3 +1,8 @@
+/**
+ * @file PaymentMethods.jsx
+ * @author Pablo Alonso
+ * @description Componente que muestra logos de los métodos de pago aceptados en la aplicación Trendify.
+ */
 import React from 'react';
 
 const PaymentMethods = () => {

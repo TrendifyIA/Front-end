@@ -1,3 +1,14 @@
+/**
+ * @file Strengths.jsx
+ * @author Pablo Alonso
+ * @description Componente funcional que muestra una sección de fortalezas.
+ * 
+ * Renderiza una lista de fortalezas destacando las capacidades y valores del equipo o producto.
+ * Cada fortaleza se muestra con un icono de verificación y una breve descripción.
+ * 
+ * @component
+ * @returns {JSX.Element} Sección de fortalezas con título y lista de elementos.
+ */
 import React from 'react';
 
 const Strengths = () => {

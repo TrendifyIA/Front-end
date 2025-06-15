@@ -1,3 +1,12 @@
+/**
+ * @file PriceDisclaimer.jsx
+ * @author Pablo Alonso
+ * @description Componente funcional que muestra un aviso de precios en pesos mexicanos,
+ * acompañado de la bandera de México y un mensaje sobre los métodos de pago. 
+ *
+ * @component
+ * @returns {JSX.Element} Elemento JSX que contiene la bandera de México y el mensaje de aviso de precios.
+ */
 import React from 'react';
 import MexicoFlag from '../assets/images/mexico-flag.svg';
 

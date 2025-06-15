@@ -1,3 +1,19 @@
+/**
+ * @file AboutUsPage.jsx
+ * @author Pablo Alonso
+ * @description Página "Sobre Nosotros" que muestra la misión, visión, fortalezas y miembros del equipo.
+ *
+ * @component
+ * @returns {JSX.Element} Componente de la página "Sobre Nosotros".
+ *
+ * @example
+ * // Uso en rutas de React Router
+ * <Route path="/about" element={<AboutUsPage />} />
+ *
+ * @remarks
+ * Este componente importa y utiliza los componentes MissionVision, Strengths y TeamMember para mostrar la información relevante del equipo.
+ * Las imágenes de los miembros del equipo se importan desde la carpeta de assets.
+ */
 import MissionVision from '../components/MissionVision';
 import Strengths from '../components/Strengths';
 import TeamMember from '../components/TeamMember';

@@ -1,6 +1,6 @@
 /**
  * @file SummaryPage.jsx
- * @author Jennyfer Jasso, Min Che Kim ...
+ * @author Jennyfer Jasso, Min Che Kim, Pablo Alonso, ...
  * @description Página de resumen para mostrar la información registrada en el tutorial.
  */
 import { useContext, useState, useEffect } from "react";

@@ -1,7 +1,23 @@
+/**
+ * @file FAQSection.jsx
+ * @author Pablo Alonso
+ * @description Componente que muestra una sección de preguntas frecuentes (FAQ) en la página de suscripciones.
+ *              Permite agregar y editar preguntas y respuestas de manera sencilla.
+ */
+
 import React from 'react';
 
+/**
+ * Componente funcional que muestra una sección de preguntas frecuentes (FAQ).
+ *
+ * Utiliza React.useMemo para definir una lista de preguntas y respuestas frecuentes,
+ * y las renderiza en un diseño estilizado con Tailwind CSS.
+ *
+ * @component
+ * @returns {JSX.Element} Un contenedor con las preguntas frecuentes y sus respuestas.
+ */
 const FAQSection = () => {
-  const faqs = [
+  const faqs = React.useMemo(() => [
     {
       question: '¿Cuáles son los medios de pago permitidos para comprar una suscripción?',
       answer: 'Tarjeta de débito, tarjeta de crédito, transferencia bancaria, Paypal, Bitcoin y pago en efectivo.',
@@ -14,7 +30,7 @@ const FAQSection = () => {
       question: '¿Las suscripciones anuales se pueden pagar de forma mensual?',
       answer: 'Sí, ofrecemos un plan de pagos mensuales sin intereses.',
     },
-  ];
+  ], []);
 
   return (
     <div className="bg-blue-200 rounded-xl p-8 my-12">

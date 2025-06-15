@@ -1,6 +1,6 @@
 /**
  * @file ProductsPage.jsx
- * @author Min Che Kim, Eduardo Rosas
+ * @author Min Che Kim, Eduardo Rosas, Pablo Alonso
  * @description Página principal que muestra la tabla de productos y sus campañas asociadas.
  *              Permite agregar nuevos productos y gestionar los existentes.
  */
