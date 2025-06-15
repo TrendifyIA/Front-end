@@ -1,3 +1,13 @@
+/**
+ * Descripción: Visualiza el análisis general de una campaña a través de gráficas interactivas
+ *               (líneas, barras, scatter y heatmap) junto con un resumen generado por IA.
+ * Autoría: Fernanda Ponce Maciel
+ * Fecha: 14 de junio de 2025
+ * Requisitos:
+ *  - React Router (useLocation, useNavigate)
+ *  - Chart.js con adaptadores y elementos personalizados
+ *  - API disponible para obtener datos de keywords y resumen IA
+ */
 import React from 'react';
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -45,7 +55,10 @@ const ResumenTendencias9 = () => {
   const campanaId = location.state?.id_campana;
 
   const datosApi = import.meta.env.VITE_API_URL;
-
+/**
+ * useEffect - Obtener resumen generado por IA
+ * Llama al endpoint /api/resumen-campana/:id y actualiza el estado `resumenIA`.
+ */
   useEffect(() => {
     if (!campanaId) return;
     const fetchResumen = async () => {
@@ -103,7 +116,11 @@ const ResumenTendencias9 = () => {
     };
     fetchResumen();
   }, [campanaId, datosApi]);
-
+/**
+ * useEffect - Cargar palabras clave y sus datos de relevancia
+ * Hace múltiples llamadas a la API para cada palabra clave y construye los datasets
+ * que serán graficados.
+ */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -279,7 +296,14 @@ const ResumenTendencias9 = () => {
       state: { palabra, id_campana: campanaId },
     });
   };
-
+/**
+ * Renderizado principal:
+ * - Selector de tipo de gráfica (radio buttons)
+ * - Gráfica (Line, Bar, o Heatmap)
+ * - Checkboxes para cada palabra clave con opción de navegación
+ * - Botón para volver
+ * - Muestra del resumen generado por IA
+ */
   return (
     <div className="pt-6 px-6 w-full">
       {/* Content goes here */}
