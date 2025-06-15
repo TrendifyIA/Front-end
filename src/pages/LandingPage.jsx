@@ -1,3 +1,9 @@
+/**
+ * @file LandingPage.jsx
+ * @author Sandra Herrera
+ * @description Página principal de presentación para la plataforma Trendify.
+ */
+
 import React from "react";
 import Illustration from "../assets/images/landing1.png";
 import ChartIcon from "../assets/images/landing2.png";
@@ -7,9 +13,16 @@ import SurveyIllustration from "../assets/images/landing5.png";
 import Illustration2 from "../assets/images/landing6.png";
 import CustomButton from "../components/CustomButton";
 
+/**
+ * Componente principal de la landing page.
+ *
+ * @component
+ * @returns {JSX.Element} Página de inicio con información y llamados a la acción.
+ */
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[#0c1f57] flex flex-col font-family">
+      {/* Sección principal con título, descripción y botón de acción */}
       <div className="flex flex-1 items-center justify-center px-6">
         <div className="flex flex-col md:flex-row items-center justify-between max-w-8xl w-full mx-auto py-16">
           <div className="text-white md:w-1/2 mb-8 md:mb-0">
@@ -39,6 +52,7 @@ const LandingPage = () => {
         </div>
       </div>
 
+      {/* Sección de características destacadas */}
       <div className="bg-white py-16 px-6">
         <div className="flex items-start gap-4 bg-[#fff] p-4 rounded-lg">
           <div className="space-y-8">
@@ -65,6 +79,7 @@ const LandingPage = () => {
             </div>
           </div>
 
+          {/* Mensaje sobre tendencias */}
           <div className="flex flex-col items-center justify-center bg-white mt-28">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 bg-[#fff] w-full">
               Identifica <br />
@@ -115,6 +130,7 @@ const LandingPage = () => {
             />
           </div>
 
+           {/* Lista de beneficios */}
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Datos que impulsan tu crecimiento
@@ -137,6 +153,7 @@ const LandingPage = () => {
         </div>
       </div>
 
+      {/* Sección de testimonios */}
       <div className="bg-[#E1ECFD] py-36px-6 h-screen justify-center items-center flex">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
@@ -162,3 +179,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
