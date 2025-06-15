@@ -1,6 +1,8 @@
 /**
  * @file Campo.jsx
  * @description Componente de campo de texto reutilizable, editable o solo lectura, con soporte para multilinea y estilos dinámicos.
+ * 
+ * @author Jennyfer Jasso
  */
 
 /**
@@ -25,7 +27,62 @@ const Campo = ({
   cambio = false,
   name,
   onChange,
+  type,
 }) => {
+  let input;
+
+  const inputClassname = `border-2 rounded-[5px] p-2 w-full transition-all duration-200 focus:outline-none focus:[border-color:#02245a]
+            ${type === "number" ? "pl-8 pr-3 py-2" : ""}
+            ${
+              cambio
+                ? "[border-color:#02245a] bg-blue-50"
+                : "border-neutral-400 bg-white"
+            }
+          `;
+
+  if (type === "number") {
+    input = (
+      <div className="relative">
+        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">
+          $
+        </span>
+        <input
+          name={name}
+          value={valor}
+          onChange={onChange}
+          type="number"
+          min="0"
+          step="0.01"
+          className={inputClassname}
+          placeholder="0.00"
+        />
+      </div>
+    );
+  } else if (type === "date") {
+    input = (
+      <input
+        name={name}
+        value={valor}
+        onChange={onChange}
+        className={inputClassname}
+        type="date"
+      />
+    );
+  } else {
+    input = (
+      <input
+        name={name}
+        value={valor}
+        onChange={onChange}
+        className={inputClassname}
+        style={{
+          minHeight: "40px",
+          maxHeight: "80px",
+        }}
+      />
+    );
+  }
+
   return (
     <div className={`col-span-${cols} h-full flex flex-col`}>
       <label className="font-medium mb-2 block">{label}:</label>
@@ -49,22 +106,7 @@ const Campo = ({
         />
       ) : editable ? (
         // Campo editable de una sola línea con detección de cambios
-        <input
-          name={name}
-          value={valor}
-          onChange={onChange}
-          className={`border-2 rounded-[5px] p-2 w-full transition-all duration-200 focus:outline-none focus:[border-color:#02245a]
-            ${
-              cambio
-                ? "[border-color:#02245a] bg-blue-50"
-                : "border-neutral-400 bg-white"
-            }
-          `}
-          style={{
-            minHeight: "40px",
-            maxHeight: "80px",
-          }}
-        />
+        input
       ) : multiline ? (
         // Visualización de campo multilinea
         <div

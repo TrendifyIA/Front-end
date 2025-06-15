@@ -1,28 +1,44 @@
+/**
+ * @file Procesando.jsx
+ * @author  Alexei Martínez
+ * @description Componente que muestra una pantalla de procesamiento a pantalla completa mientras se realiza una operación.
+ */
+
 import React, { useEffect, useState, useContext } from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
-import { ProcesamientoContext } from "../../context/ProveedorProcesado"; // Ajusta la ruta real
+import { ProcesamientoContext } from "../../context/ProveedorProcesado"; 
 
+/**
+ * Procesando
+ *
+ * Este componente muestra una pantalla de procesamiento a pantalla completa mientras se realiza una operación.
+ * Utiliza el contexto `ProcesamientoContext` para determinar si el proceso está en curso o ha finalizado.
+ * 
+ * - Mientras `procesando` es verdadero, muestra una animación de "procesando" y una advertencia para no recargar la página.
+ * - Cuando `procesando` es falso, muestra un mensaje de éxito con un icono de verificación.
+ * 
+ * @component
+ * @returns {JSX.Element} Elemento de React que representa la pantalla de procesamiento o de éxito.
+ *
+ * @example
+ * // Uso típico dentro de una ruta protegida
+ * <Procesando />
+ */
 const Procesando = () => {
   const location = useLocation();
   const { setProcesando } = useContext(ProcesamientoContext);
+  const { procesando } = useContext(ProcesamientoContext);
 
   const [estado, setEstado] = useState("procesando");
 
   useEffect(() => {
-    const timer1 = setTimeout(() => {
+    if (!procesando) {
       setEstado("completado");
-    }, 6000);
-
-    const timer2 = setTimeout(() => {
-      setProcesando(false); // Señal de que ha terminado
-    }, 8000);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [setProcesando]);
+    } else {
+      setEstado("procesando");
+    }
+  }, [procesando]);
 
   return (
     <div className="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">
@@ -42,7 +58,9 @@ const Procesando = () => {
                   key={i}
                   className="w-4 h-4 rounded-full"
                   style={{
-                    backgroundColor: `hsl(${220 + i * 5}, 100%, ${80 - i * 2}%)`,
+                    backgroundColor: `hsl(${220 + i * 5}, 100%, ${
+                      80 - i * 2
+                    }%)`,
                   }}
                 />
               ))}
@@ -52,7 +70,9 @@ const Procesando = () => {
       ) : (
         <div className="flex flex-col items-center justify-center space-y-4 animate-fadeIn">
           <AiOutlineCheckCircle className="text-green-500 text-6xl animate-bounce" />
-          <h2 className="text-2xl font-bold text-green-600">¡Análisis completo!</h2>
+          <h2 className="text-2xl font-bold text-green-600">
+            ¡Análisis completo!
+          </h2>
         </div>
       )}
 

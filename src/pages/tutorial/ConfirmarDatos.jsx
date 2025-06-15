@@ -1,6 +1,6 @@
 /**
  * @file ConfirmarDatos.jsx
- * @author Jennyfer Jasso, ...
+ * @author Jennyfer Jasso, Alexei Martínez
  * @description Página de confirmación de datos capturados en el tutorial.
  */
 import { useContext } from "react";
@@ -25,8 +25,7 @@ const ConfirmacionDatos = () => {
    */
   const handleConfirm = async () => {
     try {
-      const id_usuario = Number(localStorage.getItem("id_usuario"));
-      await registrarDatos(id_usuario);
+      await registrarDatos();
       navegar("/tutorial/resumen");
     } catch (err) {
       alert(err.message);

@@ -11,7 +11,6 @@ import PublicLayout from "./pages/layouts/PublicLayout.jsx";
 import UsersLayout from "./pages/layouts/UsersLayout.jsx";
 import SimpleLayout from "./pages/layouts/SimpleLayout.jsx";
 import TutorialLayout from "./pages/layouts/TutorialLayout.jsx";
-import App from "./App.jsx";
 import Landing from "./pages/LandingPage.jsx";
 import Planes from "./pages/PlansPage.jsx";
 import PlanesProtected from "./pages/PlansPageProtected.jsx";
@@ -43,7 +42,6 @@ import ProveedorEmpresa from "./context/ProveedorEmpresa";
 import ProveedorProducto from "./context/ProveedorProducto";
 import ProveedorCampana from "./context/ProveedorCampana";
 import ProveedorModal from "./context/ProveedorModal.jsx";
-import ProveedorUsuario from "./context/ProveedorUsuario.jsx";
 import { ProveedorProcesado } from "./context/ProveedorProcesado.jsx";
 // import ConfirmacionModal from "./components/ConfirmacionModal.jsx";
 
@@ -54,7 +52,7 @@ const router = createBrowserRouter([
     element: <PublicLayout />,
     children: [
       { index: true, element: <Landing /> },
-      { path: "planes", element: <Planes /> },
+      { path: "suscripcion", element: <Planes /> },
       { path: "servicios", element: <Servicios /> },
       { path: "nosotros", element: <Nosotros /> },
     ],
@@ -73,7 +71,7 @@ const router = createBrowserRouter([
       {
         path: "adminproductos",
         element: (
-          <ProveedorUsuario>
+          <ProveedorEmpresa>
             <ProveedorProducto>
               <ProveedorCampana>
                 <ProveedorModal>
@@ -83,7 +81,7 @@ const router = createBrowserRouter([
                 </ProveedorModal>
               </ProveedorCampana>
             </ProveedorProducto>
-          </ProveedorUsuario>
+          </ProveedorEmpresa>
         ),
       },
       {
@@ -150,16 +148,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/procesando",
-    element: (
-      <Procesando></Procesando>
-    )
-  }
+    element: <Procesando></Procesando>,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ProveedorUsuario>
-      <RouterProvider router={router}></RouterProvider>
-    </ProveedorUsuario>
+    <RouterProvider router={router}></RouterProvider>
   </StrictMode>
 );

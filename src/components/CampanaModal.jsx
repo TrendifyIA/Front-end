@@ -7,6 +7,7 @@
 import { useContext, useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { ContextoCampana } from "../context/ProveedorCampana";
+import Campo from "./Campo";
 
 /**
  * Modal para crear o editar campañas
@@ -15,30 +16,43 @@ import { ContextoCampana } from "../context/ProveedorCampana";
  * @param {Object} props - Propiedades del componente
  * @param {number|null} props.id_campana - ID de la campaña a editar (null para crear nueva)
  * @param {number} props.idProducto - ID del producto asociado a la campaña
- * @param {Object} [props.producto] - Información del producto relacionado (opcional)
  * @param {Object} [props.campana] - Datos de la campaña a editar (opcional)
  * @param {Function} props.onClose - Función para cerrar el modal
- * @param {Function} [props.onSave] - Función a ejecutar después de guardar (opcional)
- * @param {Function} [props.onNuevaCampana] - Función para manejar nueva campaña (opcional)
  * @returns {JSX.Element} Modal con formulario para editar/crear campaña
  */
 const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
-  const [nombre, setNombre] = useState(campana?.nombre || "");
-  const [objetivo, setObjetivo] = useState(campana?.objetivo || "");
-  const [mensajeClave, setMensajeClave] = useState(campana?.mensajeClave || "");
-  const [canales, setCanales] = useState(campana?.canales || "");
-  const [fechaInicio, setFechaInicio] = useState(campana?.fechaInicio || "");
-  const [fechaFinal, setFechaFinal] = useState(campana?.fechaFinal || "");
-  const [presupuesto, setPresupuesto] = useState(campana?.presupuesto || "");
+  // Estado para mensajes de feedback al usuario (éxito/error)
   const [mensaje, setMensaje] = useState(null);
 
-  const [guardar, setGuardar] = useState(true);
-  const [mostrarCampos, setMostrarCampos] = useState(true);
-  const [cargando, setCargando] = useState(false);
+  // Estado del formulario con los datos de la campaña
+  const [form, setForm] = useState({
+    nombre: "",
+    objetivo: "",
+    mensajeClave: "",
+    canales: "",
+    fechaInicio: "",
+    fechaFinal: "",
+    presupuesto: "",
+  });
+
+  const [guardar, setGuardar] = useState(true); // Estado para controlar si se muestra el botón de guardar
+  const [mostrarCampos, setMostrarCampos] = useState(true); // Estado para alternar entre el formulario y el mensaje de éxito
+  const [cargando, setCargando] = useState(false); // Estado para indicar operaciones asíncronas en progreso
+
+  // Estado para guardar la campaña original (para comparar cambios)
+  const [campanaOriginal, setCampanaOriginal] = useState(null);
+
+  // Estado para rastrear qué campos específicos han cambiado
+  const [cambios, setCambios] = useState({});
 
   const { crearCampana, actualizarCampana } = useContext(ContextoCampana);
 
-  // Función para convertir formato de fecha
+  /**
+   * Convierte una fecha en formato ISO a formato YYYY-MM-DD para inputs HTML
+   *
+   * @param {string} dateString - Fecha en formato ISO o string
+   * @returns {string} Fecha en formato YYYY-MM-DD o cadena vacía si es inválida
+   */
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
 
@@ -54,17 +68,33 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
    */
   useEffect(() => {
     if (id_campana) {
-      fetch(`http://127.0.0.1:8080/campana/campana/${id_campana}`)
+      fetch(`http://127.0.0.1:8080/campana/campana/${id_campana}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
-          setNombre(data.nombre || "");
-          setObjetivo(data.objetivo || "");
-          setMensajeClave(data.mensaje_clave || "");
-          setCanales(data.canales_distribucion || "");
-          setFechaInicio(formatDateForInput(data.f_inicio) || "");
-          setFechaFinal(formatDateForInput(data.f_fin) || "");
-          setPresupuesto(data.presupuesto || "");
-          //console.log("Datos de campaña cargados:", data);
+          // Formatear datos
+          const campanaData = {
+            nombre: data.nombre || "",
+            objetivo: data.objetivo || "",
+            mensajeClave: data.mensaje_clave || "",
+            canales: data.canales_distribucion || "",
+            fechaInicio: formatDateForInput(data.f_inicio) || "",
+            fechaFinal: formatDateForInput(data.f_fin) || "",
+            presupuesto: data.presupuesto || "",
+          };
+
+          // Guardar en form para edición
+          setForm(campanaData);
+
+          // Guardar copia original para detectar cambios
+          setCampanaOriginal(campanaData);
+
+          // Resetear cambios
+          setCambios({});
         })
         .catch((err) => {
           console.error("Error al cargar los datos de la campaña:", err);
@@ -73,21 +103,51 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
   }, [id_campana]);
 
   /**
-   * Maneja los cambios en los inputs y resetea mensajes de error
+   * Maneja los cambios en los inputs del formulario
+   * Actualiza el estado del formulario y rastrea qué campos han cambiado
+   * respecto a los valores originales
    *
-   * @param {Function} setter - Función setState para actualizar el valor
-   * @returns {Function} Manejador de eventos para el input
+   * @param {React.ChangeEvent} e - Evento del input
    */
-  const handleInputChange = (setter) => (e) => {
-    setter(e.target.value);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // Actualizar el valor en el formulario
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Si estamos editando, comparar con el valor original
+    if (id_campana && campanaOriginal) {
+      let isChanged = false;
+
+      // Para el campo presupuesto, realizar una comparación numérica normalizada
+      if (name === "presupuesto") {
+        // Convertir ambos valores a números con la misma precisión
+        const currentValue = parseFloat(value) || 0;
+        const originalValue = parseFloat(campanaOriginal[name]) || 0;
+
+        // Comparar con una pequeña tolerancia para números flotantes
+        isChanged = Math.abs(currentValue - originalValue) > 0.001;
+      } else {
+        // Para otros campos, comparación normal
+        isChanged = value !== campanaOriginal[name];
+      }
+
+      setCambios((prev) => ({ ...prev, [name]: isChanged }));
+    }
+
+    // Resetear mensajes de error
     setMensaje(null);
+
+    // Siempre habilitamos el botón de guardar en modo edición
     if (id_campana) {
       setGuardar(true);
     }
   };
 
   /**
-   * Maneja el envío del formulario, validando y guardando la campaña
+   * Maneja el envío del formulario
+   * Valida que todos los campos requeridos estén completos y
+   * crea o actualiza la campaña según corresponda
    *
    * @param {React.FormEvent} e - Evento de formulario
    */
@@ -95,13 +155,13 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
     e.preventDefault();
 
     if (
-      !nombre ||
-      !objetivo ||
-      !mensajeClave ||
-      !canales ||
-      !fechaInicio ||
-      !fechaFinal ||
-      !presupuesto
+      !form.nombre ||
+      !form.objetivo ||
+      !form.mensajeClave ||
+      !form.canales ||
+      !form.fechaInicio ||
+      !form.fechaFinal ||
+      !form.presupuesto
     ) {
       setMensaje({
         tipo: "error",
@@ -113,13 +173,13 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
     const nuevaCampana = {
       // ...campana,
       // id: campana?.id || crypto.randomUUID(),
-      nombre,
-      objetivo,
-      mensaje_clave: mensajeClave,
-      canales_distribucion: canales,
-      f_inicio: fechaInicio,
-      f_fin: fechaFinal,
-      presupuesto,
+      nombre: form.nombre,
+      objetivo: form.objetivo,
+      mensaje_clave: form.mensajeClave,
+      canales_distribucion: form.canales,
+      f_inicio: form.fechaInicio,
+      f_fin: form.fechaFinal,
+      presupuesto: form.presupuesto,
       id_producto: idProducto,
     };
 
@@ -132,11 +192,15 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
         setMensaje(null);
       } else {
         await actualizarCampana(id_campana, nuevaCampana);
-        console.log("id producto:", idProducto);
+        // console.log("id producto:", idProducto);
         setMensaje({
           tipo: "success",
           texto: "La información se ha guardado correctamente.",
         });
+
+        // Actualizar original y resetear cambios
+        setCampanaOriginal(form);
+        setCambios({});
       }
 
       setGuardar(false);
@@ -154,7 +218,7 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center">
-      <div className="relative bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full">
+      <div className="relative bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full max-h-[100vh] overflow-y-auto my-auto">
         {/* Botón de cierre */}
         <button
           onClick={onClose}
@@ -191,98 +255,82 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
           <form onSubmit={handleGuardar}>
             {/* Campos de nombre y objetivo */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block mb-1 font-medium text-gray-700">
-                  Nombre
-                </label>
-                <input
-                  value={nombre}
-                  onChange={handleInputChange(setNombre)}
-                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                  type="text"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-medium text-gray-700">
-                  Objetivo
-                </label>
-                <input
-                  value={objetivo}
-                  onChange={handleInputChange(setObjetivo)}
-                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                  type="text"
-                />
-              </div>
+              <Campo
+                label="Nombre"
+                name="nombre"
+                valor={form.nombre}
+                editable={true}
+                cambio={cambios.nombre}
+                onChange={handleInputChange}
+              />
+              <Campo
+                label="Objetivo"
+                name="objetivo"
+                valor={form.objetivo}
+                editable={true}
+                cambio={cambios.objetivo}
+                onChange={handleInputChange}
+              />
             </div>
 
             {/* Campo de mensaje clave */}
             <div className="mb-4">
-              <label className="block mb-1 font-medium text-gray-700">
-                Mensaje clave
-              </label>
-              <input
-                value={mensajeClave}
-                onChange={handleInputChange(setMensajeClave)}
-                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                type="text"
+              <Campo
+                label="Mensaje clave"
+                name="mensajeClave"
+                valor={form.mensajeClave}
+                editable={true}
+                cambio={cambios.mensajeClave}
+                onChange={handleInputChange}
               />
             </div>
 
             {/* Campo de canales */}
             <div className="mb-4">
-              <label className="block mb-1 font-medium text-gray-700">
-                Canales de distribución
-              </label>
-              <input
-                value={canales}
-                onChange={handleInputChange(setCanales)}
-                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                type="text"
+              <Campo
+                label="Canales de distribución"
+                name="canales"
+                valor={form.canales}
+                editable={true}
+                cambio={cambios.canales}
+                onChange={handleInputChange}
               />
             </div>
 
             {/* Campos de fechas y presupuesto */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
-                <label className="block mb-1 font-medium text-gray-700">
-                  Fecha de inicio
-                </label>
-                <input
-                  value={fechaInicio}
-                  onChange={handleInputChange(setFechaInicio)}
-                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                <Campo
+                  label="Fecha de inicio"
+                  name="fechaInicio"
+                  valor={form.fechaInicio}
+                  editable={true}
+                  cambio={cambios.fechaInicio}
+                  onChange={handleInputChange}
                   type="date"
                 />
               </div>
               <div>
-                <label className="block mb-1 font-medium text-gray-700">
-                  Fecha final
-                </label>
-                <input
-                  value={fechaFinal}
-                  onChange={handleInputChange(setFechaFinal)}
-                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                <Campo
+                  label="Fecha de final"
+                  name="fechaFinal"
+                  valor={form.fechaFinal}
+                  editable={true}
+                  cambio={cambios.fechaFinal}
+                  onChange={handleInputChange}
                   type="date"
                 />
               </div>
               <div>
-                <label className="block mb-1 font-medium text-gray-700">
-                  Presupuesto
-                </label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">
-                    $
-                  </span>
-                  <input
-                    value={presupuesto}
-                    onChange={handleInputChange(setPresupuesto)}
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    className="w-full border rounded-md pl-8 pr-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                    placeholder="0.00"
-                  />
-                </div>
+                <Campo
+                  label="Presupuesto"
+                  name="presupuesto"
+                  valor={form.presupuesto}
+                  editable={true}
+                  cambio={cambios.presupuesto}
+                  onChange={handleInputChange}
+                  type="number"
+                />
               </div>
             </div>
 
@@ -291,9 +339,15 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
               {guardar ? (
                 <button
                   type="submit"
-                  disabled={cargando}
+                  disabled={
+                    cargando ||
+                    (!Object.values(cambios).some(Boolean) && id_campana)
+                  }
                   className={`bg-blue-800 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-md text-sm transition ${
-                    cargando ? "opacity-70 cursor-not-allowed" : ""
+                    cargando ||
+                    (!Object.values(cambios).some(Boolean) && id_campana)
+                      ? "opacity-70 cursor-not-allowed"
+                      : ""
                   }`}
                 >
                   {cargando ? (
@@ -318,7 +372,7 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Creando campaña...
+                      {id_campana ? "Guardando..." : "Creando campaña..."}
                     </span>
                   ) : (
                     "Guardar"

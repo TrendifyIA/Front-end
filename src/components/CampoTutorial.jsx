@@ -1,6 +1,6 @@
 /**
  * @file CampoTutorial.jsx
- * @author Jennyfer Jasso, Pablo
+ * @author Jennyfer Jasso, Pablo Alonso
  * @description Componente auxiliar utilizado para mostrar información estática en formato de etiqueta-valor,
  *              dentro del flujo de tutorial. Soporta campos de una o varias líneas.
  */

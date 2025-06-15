@@ -1,7 +1,25 @@
+/**
+ * @file PlanCard.jsx
+ * @author Pablo Alonso
+ * @description Componente que muestra una tarjeta de plan con información relevante como título, precio, descripción,
+ * características incluidas y excluidas, y un botón de suscripción que varía según la ruta actual.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente.
+ * @param {string} props.title - Título del plan.
+ * @param {string} props.price - Precio del plan.
+ * @param {string} props.description - Descripción breve del plan.
+ * @param {string[]} props.features - Lista de características incluidas en el plan.
+ * @param {string[]} [props.excludedFeatures=[]] - Lista de características excluidas del plan.
+ * @param {boolean} props.isPopular - Indica si el plan es el más popular.
+ *
+ * @returns {JSX.Element} Tarjeta de plan con detalles y botón de suscripción.
+ */
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import StripeModal from "./StripeModal";
 import CustomButton from "./CustomButton";
+
 
 const PlanCard = ({ title, price, description, features, excludedFeatures = [], isPopular }) => {
   const [showStripe, setShowStripe] = useState(false);

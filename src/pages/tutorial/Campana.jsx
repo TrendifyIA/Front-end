@@ -1,6 +1,6 @@
 /**
  * @file Campana.jsx
- * @author Jennyfer Jasso, Eduardo Rosas, ...
+ * @author Jennyfer Jasso, Eduardo Rosas, Sandra Herrera...
  * @description Página de formulario para registrar información de una campaña en el tutorial.
  */
 import { BsBoxSeam, BsArrowLeft, BsArrowRight } from "react-icons/bs";
@@ -177,9 +177,8 @@ const Campana = () => {
 
           <div className="mb-4">
             <label className="block mb-1 font-medium">Mensaje clave</label>
-            <input
+            <textarea
               required
-              type="text"
               name="mensaje_clave"
               value={form.mensaje_clave}
               onChange={handleChange}
@@ -189,9 +188,8 @@ const Campana = () => {
 
           <div className="mb-4">
             <label className="block mb-1 font-medium">Canales de distribución</label>
-            <input
+            <textarea
               required
-              type="text"
               name="canales_distribucion"
               value={form.canales_distribucion}
               onChange={handleChange}

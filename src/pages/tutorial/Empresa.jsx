@@ -1,6 +1,6 @@
 /**
  * @file Empresa.jsx
- * @author Jennyfer Jasso, Eduardo Rosas ...
+ * @author Jennyfer Jasso, Eduardo Rosas, Yael Pérez
  * @description Página de formulario para registrar información de una empresa en el tutorial.
  */
 import {
@@ -197,9 +197,8 @@ const TutorialEmpresa = () => {
 
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Propuesta de valor</label>
-            <input
+            <textarea
               required
-              type="text"
               name="propuesta_valor"
               value={form.propuesta_valor}
               onChange={handleChange}
@@ -211,9 +210,8 @@ const TutorialEmpresa = () => {
             <label className="font-medium">
               Descripción de servicios/productos
             </label>
-            <input
+            <textarea
               required
-              type="text"
               name="descripcion_servicio"
               value={form.descripcion_servicio}
               onChange={handleChange}
@@ -223,9 +221,8 @@ const TutorialEmpresa = () => {
 
           <div className="flex flex-col gap-2 mb-4 w-full">
             <label className="font-medium">Competidores</label>
-            <input
+            <textarea
               required
-              type="text"
               name="competidores"
               value={form.competidores}
               onChange={handleChange}

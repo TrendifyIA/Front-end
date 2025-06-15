@@ -32,7 +32,6 @@ function CheckoutForm({ onClose }) {
       return;
     }
 
-    // ✅ Nuevo formato para activar suscripción
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/usuario/suscripcion`, {
         method: "POST",

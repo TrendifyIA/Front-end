@@ -10,6 +10,7 @@ import CustomButton from "../../components/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import { ContextoTutorial } from "../../context/ProveedorTutorial";
+import { LuMousePointerClick } from "react-icons/lu";
 
 const STORAGE_KEY = "tutorial_producto_form";
 
@@ -36,32 +37,34 @@ const Producto = () => {
           publico_objetivo: "",
           estado: "",
           ruta_img: "",
-          imagenPreview: "",
-          imagenFile: null,
+          img_preview: "",
+          // imagenFile: null,
+          image_name: ""
         };
   });
+
 
   // Almacena el formulario en localStorage cada vez que cambia
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
-
+  
   useEffect(() => {
-    if (form.ruta_img && form.imagenPreview) {
+    if (form.ruta_img && form.img_preview) {
       return;
     }
-    if (form.ruta_img) {
+    if (form.ruta_img && typeof form.ruta_img === "string") {
       const img = new Image();
       img.src = form.ruta_img;
       img.onload = () => {
         setForm((prev) => ({
           ...prev,
-          imagenPreview: img.src,
+          img_preview: img.src,
         }));
       };
     }
   }, []);
-
+  
   /**
    * Maneja el cambio de cualquier input del formulario
    *
@@ -83,13 +86,21 @@ const Producto = () => {
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        // 5MB
+        setMensaje("La imagen no debe exceder los 5MB.");
+        return;
+      }
       setForm((prev) => ({
         ...prev,
-        ruta_img: URL.createObjectURL(file),
-        imagenPreview: URL.createObjectURL(file),
-        imagenFile: file,
+        ruta_img: file,
+        img_preview: URL.createObjectURL(file),
+        image_name: file.name
+        // imagenFile: file,
       }));
+      
     }
+    // console.log("Imagen seleccionada:", file);
   };
 
   /**
@@ -112,10 +123,11 @@ const Producto = () => {
     if (camposIncompletos || !form.ruta_img) {
       setError("Por favor, complete todos los campos y seleccione una imagen.");
       return;
-    }
+    }      
 
     setError("");
     setProducto(form);
+    console.log("Imagen del producto:", form.ruta_img);
     navegar("/tutorial/Campana");
   };
 
@@ -271,9 +283,8 @@ const Producto = () => {
 
           <div className="mb-4">
             <label className="block mb-1 font-medium">Descripción</label>
-            <input
+            <textarea
               required
-              type="text"
               name="descripcion"
               value={form.descripcion}
               onChange={handleChange}
@@ -317,8 +328,6 @@ const Producto = () => {
               htmlFor="imagen"
               className="border-2 border-dashed border-gray-400 rounded p-6 text-center cursor-pointer flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 transition"
             >
-              <BsImage className="text-4xl mb-2" />
-              <span>+ Añadir imagen</span>
               <input
                 type="file"
                 id="imagen"
@@ -327,17 +336,27 @@ const Producto = () => {
                 className="hidden"
                 onChange={handleImageChange}
               />
+              {form.img_preview ? (
+                <>
+                  <img
+                    src={form.img_preview}
+                    alt={`Imagen del producto ${form.nombre}`}
+                    className="w-30 h-30 object-contain mb-2 rounded"
+                  />
+                  <span className="flex items-center gap-1 justify-center">
+                    <LuMousePointerClick /> Cambiar imagen
+                  </span>
+                </>
+              ) : (
+                <>
+                  <BsImage className="text-4xl mb-2" />
+                  <span>+ Añadir imagen</span>
+                </>
+              )}
             </label>
-            {form.imagenPreview && (
-              <img
-                src={form.imagenPreview}
-                alt="Imagen de producto"
-                className="mt-2 max-h-50 rounded shadow"
-              />
-            )}
 
             <p id="nombre-imagen" className="text-sm text-gray-600 mt-2 italic">
-              {form.imageFile ? `Imagen seleccionada: ${form.imageFile}` : ""}
+              {form.ruta_img ? `Imagen seleccionada: ${form.image_name}` : ""}
             </p>
           </div>
 
