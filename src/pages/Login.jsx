@@ -1,6 +1,6 @@
 /**
  * @file Login.jsx
- * @author Eduardo Rosas, Jennyfer Jasso, ...
+ * @author Eduardo Rosas, Jennyfer Jasso, Min Che Kim ...
  * @description Página de inicio de sesión para acceder a Trendify.
  */
 

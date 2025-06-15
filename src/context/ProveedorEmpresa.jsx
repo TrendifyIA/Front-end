@@ -1,6 +1,6 @@
 /**
  * @file ProveedorEmpresa.jsx
- * @author Jennyfer Jasso
+ * @author Jennyfer Jasso, Min Che Kim
  * @description Contexto y proveedor para el manejo de la información de la empresa.
  */
 import { createContext, useCallback, useState } from "react";

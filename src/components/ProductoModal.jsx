@@ -19,12 +19,12 @@ import { ContextoEmpresa } from "../context/ProveedorEmpresa";
  * @component
  * @param {Object} props - Propiedades del componente
  * @param {number|null} props.id_producto - ID del producto a editar (null para crear nuevo)
- * @param {Object} [props.producto] - Datos del producto a editar (opcional)
  * @param {Function} props.onClose - Función para cerrar el modal
- * @param {Function} [props.onSave] - Función a ejecutar después de guardar (opcional)
  * @returns {JSX.Element} Modal con formulario para editar/crear producto
  */
 const ProductoModal = ({ id_producto, onClose }) => {
+  // Estado del formulario con los datos del producto
+
   const [form, setForm] = useState({
     nombre: "",
     categoria: "",
@@ -40,19 +40,30 @@ const ProductoModal = ({ id_producto, onClose }) => {
   // Estado para rastrear qué campos específicos han cambiado
   const [cambios, setCambios] = useState({});
 
+  // Estado para mensajes de feedback al usuario (éxito/error)
   const [mensaje, setMensaje] = useState(null);
 
+ // Estado para controlar si se muestra el botón de guardar
   const [guardar, setGuardar] = useState(true);
+
+  // Estado para alternar entre el formulario y el mensaje de éxito
   const [mostrarCampos, setMostrarCampos] = useState(true);
 
+  // Estado para indicar operaciones asíncronas en progreso
   const [cargando, setCargando] = useState(false);
 
+  // Acceso a funciones del contexto para operaciones CRUD de productos
   const { crearProducto, actualizarProducto } = useContext(ContextoProducto);
   
-    const { empresa, obtenerDatosEmpresa } = useContext(ContextoEmpresa);
+  // Acceso a datos y funciones de la empresa actual
+  const { empresa, obtenerDatosEmpresa } = useContext(ContextoEmpresa);
 
+  // Estado para la URL de previsualización de la imagen
   const [imagePreview, setImagePreview] = useState("");
 
+  /**
+   * Efecto para cargar los datos de la empresa al montar el componente
+   */
   useEffect(() => {
     obtenerDatosEmpresa();
   }, [obtenerDatosEmpresa]);
@@ -136,12 +147,13 @@ const ProductoModal = ({ id_producto, onClose }) => {
   };
 
   /**
-   * Crea un manejador de eventos para inputs que actualiza el estado y resetea mensajes de error
+   * Maneja los cambios en los inputs del formulario
+   * Actualiza el estado del formulario y rastrea qué campos han cambiado
+   * respecto a los valores originales
    *
-   * @param {Function} setter - Función setState para actualizar el valor
-   * @returns {Function} Manejador de eventos para el input
+   * @param {React.ChangeEvent} e - Evento del input
    */
-  const handleInputChange = /*(setter) =>*/ (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     // Actualizar el valor en el formulario

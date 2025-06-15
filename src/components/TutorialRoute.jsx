@@ -1,6 +1,6 @@
 /**
  * @file TutorialRoute.jsx
- * @author Jennyfer Jasso, ...
+ * @author Jennyfer Jasso, Min Che Kim...
  * @description Ruta protegida que redirige si el tutorial ya fue completado.
  */
 import { Navigate } from "react-router-dom";

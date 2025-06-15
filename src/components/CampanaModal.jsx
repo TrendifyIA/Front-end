@@ -16,16 +16,15 @@ import Campo from "./Campo";
  * @param {Object} props - Propiedades del componente
  * @param {number|null} props.id_campana - ID de la campaña a editar (null para crear nueva)
  * @param {number} props.idProducto - ID del producto asociado a la campaña
- * @param {Object} [props.producto] - Información del producto relacionado (opcional)
  * @param {Object} [props.campana] - Datos de la campaña a editar (opcional)
  * @param {Function} props.onClose - Función para cerrar el modal
- * @param {Function} [props.onSave] - Función a ejecutar después de guardar (opcional)
- * @param {Function} [props.onNuevaCampana] - Función para manejar nueva campaña (opcional)
  * @returns {JSX.Element} Modal con formulario para editar/crear campaña
  */
 const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
+  // Estado para mensajes de feedback al usuario (éxito/error)
   const [mensaje, setMensaje] = useState(null);
 
+  // Estado del formulario con los datos de la campaña
   const [form, setForm] = useState({
     nombre: "",
     objetivo: "",
@@ -36,9 +35,9 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
     presupuesto: "",
   });
 
-  const [guardar, setGuardar] = useState(true);
-  const [mostrarCampos, setMostrarCampos] = useState(true);
-  const [cargando, setCargando] = useState(false);  
+  const [guardar, setGuardar] = useState(true); // Estado para controlar si se muestra el botón de guardar
+  const [mostrarCampos, setMostrarCampos] = useState(true); // Estado para alternar entre el formulario y el mensaje de éxito
+  const [cargando, setCargando] = useState(false); // Estado para indicar operaciones asíncronas en progreso
 
   // Estado para guardar la campaña original (para comparar cambios)
   const [campanaOriginal, setCampanaOriginal] = useState(null);
@@ -48,7 +47,12 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
 
   const { crearCampana, actualizarCampana } = useContext(ContextoCampana);
 
-  // Función para convertir formato de fecha
+  /**
+   * Convierte una fecha en formato ISO a formato YYYY-MM-DD para inputs HTML
+   *
+   * @param {string} dateString - Fecha en formato ISO o string
+   * @returns {string} Fecha en formato YYYY-MM-DD o cadena vacía si es inválida
+   */
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
 
@@ -64,14 +68,12 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
    */
   useEffect(() => {
     if (id_campana) {
-      fetch(`http://127.0.0.1:8080/campana/campana/${id_campana}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+      fetch(`http://127.0.0.1:8080/campana/campana/${id_campana}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
           // Formatear datos
@@ -101,10 +103,11 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
   }, [id_campana]);
 
   /**
-   * Maneja los cambios en los inputs y resetea mensajes de error
+   * Maneja los cambios en los inputs del formulario
+   * Actualiza el estado del formulario y rastrea qué campos han cambiado
+   * respecto a los valores originales
    *
-   * @param {Function} setter - Función setState para actualizar el valor
-   * @returns {Function} Manejador de eventos para el input
+   * @param {React.ChangeEvent} e - Evento del input
    */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -124,7 +127,6 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
 
         // Comparar con una pequeña tolerancia para números flotantes
         isChanged = Math.abs(currentValue - originalValue) > 0.001;
-
       } else {
         // Para otros campos, comparación normal
         isChanged = value !== campanaOriginal[name];
@@ -143,7 +145,9 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
   };
 
   /**
-   * Maneja el envío del formulario, validando y guardando la campaña
+   * Maneja el envío del formulario
+   * Valida que todos los campos requeridos estén completos y
+   * crea o actualiza la campaña según corresponda
    *
    * @param {React.FormEvent} e - Evento de formulario
    */
@@ -335,9 +339,13 @@ const CampanaModal = ({ id_campana, idProducto, campana, onClose }) => {
               {guardar ? (
                 <button
                   type="submit"
-                  disabled={cargando || !Object.values(cambios).some(Boolean) && id_campana}
+                  disabled={
+                    cargando ||
+                    (!Object.values(cambios).some(Boolean) && id_campana)
+                  }
                   className={`bg-blue-800 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-md text-sm transition ${
-                    cargando || !Object.values(cambios).some(Boolean) && id_campana
+                    cargando ||
+                    (!Object.values(cambios).some(Boolean) && id_campana)
                       ? "opacity-70 cursor-not-allowed"
                       : ""
                   }`}

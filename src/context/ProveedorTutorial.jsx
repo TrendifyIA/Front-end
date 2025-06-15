@@ -1,6 +1,6 @@
 /**
  * @file ProveedorTutorial.jsx
- * @author Jennyfer Jasso
+ * @author Jennyfer Jasso, Min Che Kim
  * @description Contexto y proveedor para el manejo del tutorial de empresa, producto y campaña.
  */
 import { createContext, useCallback, useState } from "react";
