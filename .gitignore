@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+src/components/PreguntaPopup.jsx
+src/components/TeamMember.jsx
+src/components/VerificacionOTP.jsx
+src/pagges/hidden
