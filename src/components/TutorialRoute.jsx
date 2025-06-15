@@ -1,6 +1,6 @@
 /**
  * @file TutorialRoute.jsx
- * @author Jennyfer Jasso, ...
+ * @author Jennyfer Jasso, Min Che Kim...
  * @description Ruta protegida que redirige si el tutorial ya fue completado.
  */
 import { Navigate } from "react-router-dom";
@@ -21,15 +21,12 @@ const TutorialRoute = ({ children }) => {
   const { tutorialCompletado, obtenerTutorialCompletado } =
     useContext(ContextoTutorial);
   const { empresaRegistrada, isEmpresaRegistrada } = useContext(ContextoEmpresa);
-  const id_usuario = localStorage.getItem("id_usuario");
 
   // Verifica si el usuario ya completo el tutorial
   useEffect(() => {
-    if (id_usuario) {
-      isEmpresaRegistrada(id_usuario);
-      obtenerTutorialCompletado(id_usuario);
-    }
-  }, [id_usuario, obtenerTutorialCompletado, isEmpresaRegistrada]);
+      isEmpresaRegistrada();
+      obtenerTutorialCompletado();
+  }, [obtenerTutorialCompletado, isEmpresaRegistrada]);
 
   if (tutorialCompletado === null || empresaRegistrada === null) {
     return (

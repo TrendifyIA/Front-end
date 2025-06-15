@@ -1,6 +1,6 @@
 /**
  * @file SummaryPage.jsx
- * @author Jennyfer Jasso, ...
+ * @author Jennyfer Jasso, Min Che Kim ...
  * @description Página de resumen para mostrar la información registrada en el tutorial.
  */
 import { useContext, useState, useEffect } from "react";
@@ -28,11 +28,8 @@ const Confirmacion = () => {
 
   // Cargar datos de la empresa
   useEffect(() => {
-    if (idEmpresa) {
-      console.log("Obteniendo datos de la empresa con ID:", idEmpresa);
-      obtenerDatosEmpresa(idEmpresa);
-    }
-  }, [idEmpresa, obtenerDatosEmpresa]);
+    obtenerDatosEmpresa();
+  }, [obtenerDatosEmpresa]);
 
   // Cargar datos del producto
   useEffect(() => {
@@ -163,8 +160,8 @@ const Confirmacion = () => {
           <CustomButton
             texto="OK"
             onClick={async () => {
-              const id_usuario = localStorage.getItem("id_usuario");
-              await tutorialCompletadoActualizar(id_usuario);
+              // const id_usuario = localStorage.getItem("id_usuario");
+              await tutorialCompletadoActualizar();
               navigate("/users/adminproductos");
             }}
             extraClases="bg-[#0c1f57] text-white px-6 py-3 rounded-md hover:bg-[#1a3169]"

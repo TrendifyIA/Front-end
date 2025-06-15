@@ -22,22 +22,19 @@ const ProductsPage = () => {
 
   const { abrirProductoModal } = useContext(ModalContext);
   const { procesando } = useContext(ProcesamientoContext)
-  const { empresa, obtenerDatosEmpresaUsuario } = useContext(ContextoEmpresa);
+  const { empresa, obtenerDatosEmpresa } = useContext(ContextoEmpresa);
 
   // Obtener los datos de la empresa del usuario
-  useEffect(() => {
-    const id_usuario = localStorage.getItem("id_usuario");
-    if (id_usuario) {
-      obtenerDatosEmpresaUsuario(id_usuario);
-    }
-  }, [obtenerDatosEmpresaUsuario]);
+  useEffect(() => {    
+    obtenerDatosEmpresa();
+  }, [obtenerDatosEmpresa]);
 
   //traer datos de la empresa del usuario
-  useEffect(() => {
-    if (empresa) {
-      console.log("Datos de la empresa:", empresa);
-    }
-  }, [empresa]);
+  // useEffect(() => {
+  //   if (empresa) {
+  //     console.log("Datos de la empresa:", empresa);
+  //   }
+  // }, [empresa]);
 
 
   return (

@@ -10,8 +10,7 @@ import {
   useContext,
   useCallback,
 } from "react";
-
-import { UsuarioContext } from "./ProveedorUsuario";
+import { ContextoEmpresa } from "./ProveedorEmpresa";
 
 /**
  * Contexto para compartir datos y funciones relacionadas con productos
@@ -31,30 +30,32 @@ const ProveedorProducto = ({ children }) => {
   const [producto, setProducto] = useState(null);
 
   const [cargandoProductos, setCargandoProductos] = useState(true);
-  const { idEmpresa } = useContext(UsuarioContext);
-  // console.log("idempresa", idEmpresa);
 
-  /**
-   * Función para obtener los datos de un producto por su ID.
-   *
-   * @param {number} idProducto - ID del producto a consultar.
-   * @returns {Promise<Object|null>} Retorna los datos del producto si existe, o null si no se encuentra.
-   */
-  const obtenerDatosProducto = useCallback(async (idProducto) => {
-    const res = await fetch(`http://127.0.0.1:8080/producto/${idProducto}`);
-    const data = await res.json();
-    setProducto(data);
-    return data;
-  }, []);
+  const { empresa, obtenerDatosEmpresa } = useContext(ContextoEmpresa);
+
+  // const token = localStorage.getItem("token");
+  const getToken = () => {
+    return localStorage.getItem("token");
+  };
+
+  useEffect(() => {
+    obtenerDatosEmpresa();
+  }, [obtenerDatosEmpresa]);
 
   /**
    * Efecto que carga los productos cuando se obtiene el ID de la empresa
    * Obtiene todos los productos asociados a la empresa del usuario actual
    */
   useEffect(() => {
-    if (idEmpresa) {
+    const token = getToken();
+    if (empresa && empresa.id_empresa) {
       setCargandoProductos(true);
-      fetch(`http://127.0.0.1:8080/producto/productos/${idEmpresa}`)
+      fetch(`http://127.0.0.1:8080/producto/productos`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then((response) => response.json())
         .then((data) => {
           setProductos(data);
@@ -67,7 +68,27 @@ const ProveedorProducto = ({ children }) => {
           setCargandoProductos(false);
         });
     }
-  }, [idEmpresa]);
+  }, [empresa]);
+
+  
+  /**
+   * Función para obtener los datos de un producto por su ID.
+   *
+   * @param {number} idProducto - ID del producto a consultar.
+   * @returns {Promise<Object|null>} Retorna los datos del producto si existe, o null si no se encuentra.
+   */
+  const obtenerDatosProducto = useCallback(async (idProducto) => {
+    const token = getToken();
+    const res = await fetch(`http://127.0.0.1:8080/producto/${idProducto}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const data = await res.json();
+    setProducto(data);
+    return data;
+  }, []);
 
   /**
    * Crea un nuevo producto en el sistema y actualiza el estado local
@@ -84,6 +105,7 @@ const ProveedorProducto = ({ children }) => {
    * @returns {Promise<void>}
    */
   const crearProducto = async (data) => {
+    const token = getToken();
     try {
       const formData = new FormData();
       formData.append("nombre", data.nombre);
@@ -91,7 +113,7 @@ const ProveedorProducto = ({ children }) => {
       formData.append("descripcion", data.descripcion);
       formData.append("publico_objetivo", data.publico_objetivo);
       formData.append("estado", data.estado);
-      formData.append("id_empresa", idEmpresa);
+      // formData.append("id_empresa", idEmpresa);
 
       // Adjuntar el archivo si está disponible
       if (data.imagenFile) {
@@ -102,6 +124,9 @@ const ProveedorProducto = ({ children }) => {
 
       const resProducto = await fetch("http://127.0.0.1:8080/producto/crear", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 
@@ -110,9 +135,15 @@ const ProveedorProducto = ({ children }) => {
         throw new Error(dataProducto.mensaje || "Error al crear producto");
 
       // Actualizar el estado de productos
-      if (idEmpresa) {
+      if (empresa && empresa.id_empresa) {
         const productosResponse = await fetch(
-          `http://127.0.0.1:8080/producto/productos/${idEmpresa}`
+          `http://127.0.0.1:8080/producto/productos`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const productosData = await productosResponse.json();
         setProductos(productosData);
@@ -141,6 +172,7 @@ const ProveedorProducto = ({ children }) => {
    * @returns {Promise<void>}
    */
   const actualizarProducto = async (id_producto, data) => {
+    const token = getToken();
     try {
       const formData = new FormData();
       formData.append("nombre", data.nombre);
@@ -148,7 +180,7 @@ const ProveedorProducto = ({ children }) => {
       formData.append("descripcion", data.descripcion);
       formData.append("publico_objetivo", data.publico_objetivo);
       formData.append("estado", data.estado);
-      formData.append("id_empresa", idEmpresa);
+      // formData.append("id_empresa", idEmpresa);
 
       // Adjuntar el archivo si está disponible
       if (data.imagenFile) {
@@ -159,6 +191,9 @@ const ProveedorProducto = ({ children }) => {
         `http://127.0.0.1:8080/producto/actualizar-producto/${id_producto}`,
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
         }
       );
@@ -170,7 +205,13 @@ const ProveedorProducto = ({ children }) => {
       }
 
       const productosResponse = await fetch(
-        `http://127.0.0.1:8080/producto/${id_producto}`
+        `http://127.0.0.1:8080/producto/${id_producto}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const productosActualizado = await productosResponse.json();
       setProductos((prevProductos) =>
@@ -193,6 +234,7 @@ const ProveedorProducto = ({ children }) => {
    * @throws {Error} Lanza un error si la petición de eliminación falla.
    */
   const eliminarProducto = async (id_producto) => {
+    const token = getToken();
     try {
       const response = await fetch(
         `http://127.0.0.1:8080/producto/eliminar-producto/${id_producto}`,
@@ -200,6 +242,7 @@ const ProveedorProducto = ({ children }) => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -212,11 +255,16 @@ const ProveedorProducto = ({ children }) => {
 
       // Actualizar el esatdo de productos
       const productosResponse = await fetch(
-        `http://127.0.0.1:8080/producto/productos/${idEmpresa}`
+        `http://127.0.0.1:8080/producto/productos`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const productosData = await productosResponse.json();
       setProductos(productosData);
-      
     } catch (error) {
       console.error("Error eliminando producto:", error.message);
       throw error;

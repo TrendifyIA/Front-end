@@ -1,6 +1,6 @@
 /**
  * @file Empresa.jsx
- * @author Jennyfer Jasso, Yael Pérez
+ * @author Jennyfer Jasso, Yael Pérez, Min Che Kim
  * @description Página de información de la empresa y permite editar la información registrada de la empresa asociada al usuario.
  */
 import { useState, useEffect, useContext } from "react";
@@ -16,7 +16,7 @@ import { FaPencilAlt, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
  * @returns {JSX.Element} Página de información editable de la empresa.
  */
 const Empresa = () => {
-  const { empresa, obtenerDatosEmpresaUsuario, modificarEmpresa } =
+  const { empresa, obtenerDatosEmpresa, modificarEmpresa } =
     useContext(ContextoEmpresa);
   const [editando, setEditando] = useState(false);
   const [form, setForm] = useState(null);
@@ -25,11 +25,8 @@ const Empresa = () => {
 
   // Obtener los datos de la empresa del usuario
   useEffect(() => {
-    const id_usuario = localStorage.getItem("id_usuario");
-    if (id_usuario) {
-      obtenerDatosEmpresaUsuario(id_usuario);
-    }
-  }, [obtenerDatosEmpresaUsuario]);
+    obtenerDatosEmpresa();
+  }, [obtenerDatosEmpresa]);
 
   // Actualiza el formulario local con los datos de la empresa cuando se obtienen
   useEffect(() => {
@@ -66,9 +63,9 @@ const Empresa = () => {
    * Guarda los cambios realizados en la empresa. Notifica el resultado al usuario.
    */
   const guardar = async () => {
-    const exito = await modificarEmpresa(empresa.id_empresa, form);
+    const exito = await modificarEmpresa(form);
     try {
-      const exito = await modificarEmpresa(empresa.id_empresa, form);
+      const exito = await modificarEmpresa(form);
       if (exito) {
         setEditando(false);
         setCambios({});

@@ -1,6 +1,6 @@
 /**
  * @file Campana.jsx
- * @author Jennyfer Jasso, Eduardo Rosas, ...
+ * @author Jennyfer Jasso, Eduardo Rosas, Sandra Herrera...
  * @description Página de formulario para registrar información de una campaña en el tutorial.
  */
 import { BsBoxSeam, BsArrowLeft, BsArrowRight } from "react-icons/bs";
