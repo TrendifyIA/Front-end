@@ -1,6 +1,6 @@
 /**
  * @file DetalleTendencia10.jsx
- * @author Fer Ponce, Pablo Alonso
+ * @author Fer Ponce, Pablo Alonso, Yael Pérez, Ignacio Solís
  * @description Página encargada de mostrar el detalle de tendencias de una palabra específica a traves de Reddit, YouTube y Web.
  *              Permite seleccionar las redes sociales a mostrar y genera un resumen utilizando IA.
  */

@@ -1,4 +1,9 @@
-import React from 'react'
+/**
+ * @file SimpleNav.jsx
+ * @author Yael Pérez
+ * @description Navbar que se renderiza en el simple layout
+ */
+
 import Logo from '../assets/images/Trendify.png'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'

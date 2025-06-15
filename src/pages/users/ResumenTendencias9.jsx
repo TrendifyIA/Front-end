@@ -1,7 +1,7 @@
 /**
  * Descripción: Visualiza el análisis general de una campaña a través de gráficas interactivas
  *               (líneas, barras, scatter y heatmap) junto con un resumen generado por IA.
- * Autoría: Fernanda Ponce Maciel
+ * Autoría: Fernanda Ponce Maciel, Yael Pérez, Ignacio Solís
  * Fecha: 14 de junio de 2025
  * Requisitos:
  *  - React Router (useLocation, useNavigate)
