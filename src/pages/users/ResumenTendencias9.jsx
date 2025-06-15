@@ -363,6 +363,7 @@ const ResumenTendencias9 = () => {
         </Link>
       </div>
 
+      {/*Aquí se pone el resumen IA*/}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h2 className="font-bold text-lg mb-2">Resumen generado por IA</h2>
         <p className="text-gray-800 whitespace-pre-wrap">{resumenIA}</p>
