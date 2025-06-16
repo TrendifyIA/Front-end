@@ -11,6 +11,8 @@ import FAQSection from "../components/FAQSection";
 import PriceDisclaimer from "../components/PriceDisclaimer";
 
 const PlansPage = () => {
+
+  // Constante que define los diferentes tipos de planes
   const plans = [
     {
       title: "Suscripción",
@@ -35,6 +37,7 @@ const PlansPage = () => {
           Suscríbete a Trendify
         </h1>
 
+        {/*Map que recorre los diferentes tipos de arreglos para automatizarlos*/}
         <div className=" flex justify-center">
           {plans.map((plan, index) => (
             <PlanCard key={index} {...plan} />

@@ -27,4 +27,5 @@ dist-ssr
 !/src/components/PreguntaPopup.jsx
 !/src/components/TeamMember.jsx
 !/src/components/VerificacionOTP.jsx
+!/src/components/CodigoEquipo.jsx
 src/pages/hidden/

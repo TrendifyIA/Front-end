@@ -1,3 +1,9 @@
+/**
+ * @file ModalTerminos.jsx
+ * @author Eduardo Rosas
+ * @description Se ponen los terminos y condiciones del sistema
+ */
+
 import React from "react";
 
 const ModalTerminos = ({ onClose }) => {

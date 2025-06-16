@@ -1,3 +1,9 @@
+/**
+ * @file ModalPrivacidad.jsx
+ * @author Eduardo Rosas
+ * @description Se ponen los avisos de privacidad de datos
+ */
+
 import React from "react";
 
 const ModalPrivacidad = ({ onClose }) => {

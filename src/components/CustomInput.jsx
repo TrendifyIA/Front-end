@@ -1,9 +1,15 @@
+/**
+ * @file CustomInput.jsx
+ * @author Kevin Castro
+ * @description Componente que ayuda a manejar los inputs
+ */
+
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 const CustomInput = ({ type = "text", placeholder = "" }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [value, setValue] = useState("");
+  const [isFocused, setIsFocused] = useState(false); // Estado para indicar si se esta escribiendo en el input
+  const [value, setValue] = useState(""); // Estado para indicar si hay un valor en el input
 
   const shouldFloat = isFocused || value;
 
@@ -12,7 +18,7 @@ const CustomInput = ({ type = "text", placeholder = "" }) => {
       <input
         type={type}
         value={value}
-        onFocus={() => setIsFocused(true)}
+        onFocus={() => setIsFocused(true)} 
         onBlur={() => setIsFocused(false)}
         onChange={(e) => setValue(e.target.value)}
         className={`

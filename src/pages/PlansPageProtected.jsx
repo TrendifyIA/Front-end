@@ -15,6 +15,7 @@ import { useEffect } from "react";
 const PlansPageProtected = () => {
     const navigate = useNavigate();
 
+  // Se hace un fecth para iniciar sesión mandando el token
   useEffect(() => {
     const verificarSuscripcion = async () => {
       const token = localStorage.getItem("token");
@@ -23,6 +24,7 @@ const PlansPageProtected = () => {
         return;
       }
 
+      // Se hace un fecth para verificar si el usuario tiene suscripción
       try {
         const res = await fetch("http://127.0.0.1:8080/usuario/verificar", {
           method: "GET",
@@ -49,6 +51,8 @@ const PlansPageProtected = () => {
 
     verificarSuscripcion();
   }, [navigate]);
+
+  // Constante que define los diferentes tipos de planes
   const plans = [
     {
       title: "Suscripción",
@@ -73,6 +77,7 @@ const PlansPageProtected = () => {
           Suscríbete a Trendify
         </h1>
 
+        {/*Map que recorre los diferentes tipos de arreglos para automatizarlos*/}
         <div className="flex justify-center">
           {plans.map((plan, index) => (
             <PlanCard key={index} {...plan} />

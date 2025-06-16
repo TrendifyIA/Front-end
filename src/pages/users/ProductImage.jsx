@@ -1,3 +1,9 @@
+/**
+ * @file ProductImage.jsx
+ * @author Pablo Alonso
+ * @description Componente que acompaña el producto de una imagen para mostrarser.
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 

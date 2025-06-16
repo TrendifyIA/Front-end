@@ -1,3 +1,9 @@
+/**
+ * @file InputPassword.jsx
+ * @author Eduardo Rosas
+ * @description Se usa para poder ver la contraseña cuando se necesite
+ */
+
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
