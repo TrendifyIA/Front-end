@@ -1,13 +1,31 @@
+/**
+ * Descripción: Modal de confirmación para eliminar un producto. 
+ *              Muestra advertencia, permite confirmar o cancelar, y notifica visualmente el éxito de la eliminación.
+ * Autoría: Ignacio Solís
+ * Fecha: 02 de junio de 2025
+ * Requisitos:
+ *  - React
+ *  - react-icons (FaExclamationTriangle, FaCheckCircle)
+ * Props:
+ *  - producto: Objeto con los datos del producto a eliminar (debe tener al menos la propiedad 'nombre').
+ *  - onClose: Función callback para cerrar el modal.
+ *  - onConfirm: Función callback que se ejecuta al confirmar la eliminación.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { FaExclamationTriangle, FaCheckCircle } from 'react-icons/fa';
 
 const EliminarModal = ({ producto, onClose, onConfirm }) => {
   const [eliminado, setEliminado] = useState(false);
 
+  // Reinicia el estado 'eliminado' cuando cambia el producto
   useEffect(() => { 
     setEliminado(false); 
-    }, [producto]);
+  }, [producto]);
 
+  /**
+   * handleConfirmar - Marca como eliminado, espera 2 segundos, ejecuta onConfirm y onClose, y reinicia el estado.
+   */
   const handleConfirmar = () => {
     setEliminado(true);
     setTimeout(() => {
@@ -17,11 +35,18 @@ const EliminarModal = ({ producto, onClose, onConfirm }) => {
     }, 2000);
   };
 
+  /**
+   * handleCancelar - Cierra el modal sin eliminar.
+   */
   const handleCancelar = () => {
     onClose();
   };
 
-
+  /**
+   * Renderizado principal:
+   * - Si no se ha eliminado, muestra advertencia y botones de acción.
+   * - Si se eliminó, muestra mensaje de éxito.
+   */
   return (
     <div className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center">
       <div className="relative bg-white p-9 rounded-md shadow max-w-md w-full text-center transition-all duration-300">
@@ -48,7 +73,7 @@ const EliminarModal = ({ producto, onClose, onConfirm }) => {
                 onClick={handleCancelar}
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-9 py-3 rounded-md text-sm font-medium transition">
                 Cancelar
-            </button>
+              </button>
             </div>
           </>
         ) : (
@@ -66,5 +91,3 @@ const EliminarModal = ({ producto, onClose, onConfirm }) => {
     </div>
   );
 };
-
-export default EliminarModal;

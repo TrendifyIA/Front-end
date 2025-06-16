@@ -60,7 +60,6 @@ const router = createBrowserRouter([
       </SubscribedRoute>
     ),
     children: [
-      { index: true, element: <ProductsPage /> },
       { path: "producto", element: <Producto /> },
       { path: "campana", element: <Campana /> },
       {
