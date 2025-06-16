@@ -7,14 +7,6 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-/**
- * InputPassword es un componente controlado para campos de contraseña con un botón para mostrar u ocultar la contraseña.
- *
- * @param {Object} props - Propiedades del componente.
- * @param {string} props.value - El valor actual del campo de contraseña.
- * @param {function} props.onChange - Función de devolución de llamada para manejar los cambios en el valor del input.
- * @returns {JSX.Element} El componente de entrada de contraseña renderizado con funcionalidad para mostrar/ocultar.
- */
 const InputPassword = ({ value, onChange }) => {
   const [mostrar, setMostrar] = useState(false);
 

@@ -6,14 +6,6 @@
 
 import React from "react";
 
-/**
- * ModalPrivacidad es un componente modal que muestra la información de la política de privacidad.
- *
- * @componente
- * @param {Object} props - Propiedades del componente.
- * @param {Function} props.onClose - Función de devolución de llamada para cerrar el modal.
- * @returns {JSX.Element} El modal renderizado con el contenido de la política de privacidad.
- */
 const ModalPrivacidad = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
