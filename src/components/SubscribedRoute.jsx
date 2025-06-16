@@ -1,3 +1,9 @@
+/**
+ * @file SubscribedRoute.jsx
+ * @author Eduardo Rosas
+ * @description Este componente verifica si el usuario ya tiene suscripción 
+ */
+
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 

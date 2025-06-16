@@ -1,3 +1,9 @@
+/**
+ * @file RegistroUsuario.jsx
+ * @author Eduardo Rosas
+ * @description Pantalla para registrar usuarios
+ */
+
 import React, { useState } from 'react';
 import CustomButton from '../components/CustomButton';
 import ModalTerminos from '../components/ModalTerminos';
