@@ -16,16 +16,12 @@ import Planes from "./pages/PlansPage.jsx";
 import PlanesProtected from "./pages/PlansPageProtected.jsx";
 import Servicios from "./pages/Servicios.jsx";
 import Nosotros from "./pages/AboutUsPage.jsx";
-import Dashboard from "./pages/users/Dashboard.jsx";
-//import RecuperarPassword from "./pages/RecuperarPassword.jsx";
-//import RestablecerPassword from "./pages/RestablecerPassword.jsx";
-//import Perfil from "./pages/users/Perfil.jsx";
+//import Dashboard from "./pages/users/Dashboard.jsx";
 import Registro from "./pages/RegistroUsuario.jsx";
 import Login from "./pages/Login.jsx";
 import ProductsPage from "./pages/users/ProductsPage.jsx";
 import SummaryPage from "./pages/tutorial/SummaryPage.jsx";
 import ConfirmacionDatos from "./pages/tutorial/ConfirmarDatos.jsx";
-import Procesando from "./pages/tutorial/Procesando.jsx";
 import Producto from "./pages/tutorial/Producto.jsx";
 import Campana from "./pages/tutorial/Campana.jsx";
 import TutorialEmpresa from "./pages/tutorial/Empresa.jsx";
@@ -36,7 +32,6 @@ import Empresa from "./pages/users/Empresa.jsx";
 import ProveedorTutorial from "./context/ProveedorTutorial";
 import ResumenTendencias9 from "./pages/users/ResumenTendencias9.jsx";
 import DetalleTendencia10 from "./pages/users/DetalleTendencia10.jsx";
-
 import TutorialRoute from "./components/TutorialRoute.jsx";
 import ProveedorEmpresa from "./context/ProveedorEmpresa";
 import ProveedorProducto from "./context/ProveedorProducto";
@@ -65,7 +60,7 @@ const router = createBrowserRouter([
       </SubscribedRoute>
     ),
     children: [
-      { index: true, element: <Dashboard /> },
+      { index: true, element: <ProductsPage /> },
       { path: "producto", element: <Producto /> },
       { path: "campana", element: <Campana /> },
       {
@@ -145,10 +140,6 @@ const router = createBrowserRouter([
       { path: "resumen", element: <SummaryPage /> },
       { path: "confirmacion", element: <ConfirmacionDatos /> },
     ],
-  },
-  {
-    path: "/procesando",
-    element: <Procesando></Procesando>,
   },
 ]);
 
