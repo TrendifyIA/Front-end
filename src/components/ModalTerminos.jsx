@@ -6,6 +6,15 @@
 
 import React from "react";
 
+/**
+ * ModalTerminos es un componente modal que muestra los "Términos y Condiciones"
+ * para la plataforma Trendify. Superpone la vista actual y presenta una lista desplazable de términos.
+ *
+ * @componente
+ * @param {Object} props - Propiedades del componente.
+ * @param {Function} props.onClose - Función de devolución de llamada para cerrar el modal cuando se hace clic en el botón "Cerrar".
+ * @returns {JSX.Element} El modal renderizado con los términos y condiciones.
+ */
 const ModalTerminos = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">

@@ -1,5 +1,5 @@
 /**
- * @file PlansProtected.jsx
+ * @file PlansPage.jsx
  * @author Eduardo Rosas
  * @description Pantalla de Planes para pagar la suscripción
  */
